@@ -1,0 +1,179 @@
+div.darken {
+	z-index: 200;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0,0,0,0.4);
+	backdrop-filter: blur(30px);
+}
+
+div.loginbox {
+	z-index: 201;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 400px;
+	height: 400px;
+	display: block;
+	transform: translateX(-50%) translateY(-50%);
+}
+
+div.loginbox-pfp {
+	position: absolute;
+	height: 180px;
+	width: 180px;
+	background-image: url("/default.jpg");
+	border-radius: 100%;
+	background-size: cover;
+	background-position: center center;
+	border: none;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.login-tb {
+	white-space: nowrap;
+	overflow-x: scroll;
+	position: absolute;
+	font-size: 18px;
+	background-color: rgba(0,0,0,0.5);
+	height: 36px;
+	line-height: 36px;
+	border-radius: 2px;
+	border: solid 2px rgba(255,255,255,0.3);
+	width: 80%;
+	left: 50%;
+	transform: translateX(-50%);
+	resize: none;
+	outline: none;
+	color: white;
+	font-family: sans-serif;
+	padding: 3px 12px 3px 12px;
+}
+
+.login-tb-red {
+	border: solid 2px rgba(240,32,32,0.8);
+}
+
+/* @font-face { */
+  /* font-family: 'password'; */
+  /* font-style: normal; */
+  /* font-weight: 400; */
+  /* src: url("/password.ttf"); */
+/* } */
+
+/* [conceal]:not(:active):not(:focus) { */
+  /* font-family: 'password'; */
+/* } */
+
+::placeholder {font-family: sans-serif; color: #ccc;}
+
+.info-button {
+	height: 24px;
+	width: 24px;
+	display: block;
+	position: absolute;
+	top: 228px;
+	left: calc(100% - 2px);
+	border-radius: 100%;
+	border: solid 2px #999;
+	color: #999;
+	cursor: pointer;
+	line-height: 24px;
+	text-align: center;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.password-info {
+	background-color: rgba(255,255,255,0.3);
+	border-radius: 0 6px 6px 6px;
+	height: auto;
+	width: 242px;
+	font-size: 18px;
+	position: absolute;
+	top: 240px;
+	left: calc(100% + 36px);
+	display: block;
+	padding: 6px;
+}
+
+.login-tb-pw {
+	font-family: password;
+}
+
+.login-tb:focus {
+	background-color: rgba(0,0,0,0.9);
+}
+
+
+a.login-button {
+	display: inline-block;
+	position: absolute;
+	width: 48px;
+	height: 48px;
+	font-size: 24px;
+	line-height: 48px;
+	border-radius: 100%;
+	color: white;
+	text-align: center;
+	transform: translateX(-50%);
+	cursor: pointer;
+	background-color: rgba(0,0,0, 0.3);
+	border: solid 2px rgba(255,255,255, .1);
+	left: calc(100% + 12px);
+}
+
+@media (max-width: 480px) {
+	a.login-button-submit {
+		top: 360px !important;
+		left: 70%;
+		transform: translateX(-50%);
+	}
+	
+	a.login-button-abort {
+		top: 360px !important;
+		left: 30%;
+		transform: translateX(-50%);
+	}
+	
+	.wrong-password {
+		bottom: -95px !important;
+		height: 10% !important;
+		top: auto !important;
+		position: fixed !important;
+		width: 80% !important;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+}
+
+a.login-button-submit {
+	top: 292px;
+}
+
+a.login-button-abort {
+	top: 0;
+}
+
+a.login-button:hover {
+	background-color: rgba(0,0,0, 0.6);
+}
+
+a.login-button:active {
+	background-color: rgba(255,255,255, 0.3);
+}
+
+div.wrong-password {
+	border: solid 2px #a22;
+	background-color: rgba(220, 42, 42, 0.3);
+	border-radius: 12px;
+	color: white;
+	width: 100%;
+	padding: 6px;
+	position: absolute;
+	top: 400px;
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Desktop</title>
+	<link rel="stylesheet" href="/css/desktop.css">
+	<link rel="stylesheet" href="/css/startmenu.css">
+	<link rel="stylesheet" href="/css/ui.css">
+	<link rel="stylesheet" href="/css/login.css">
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	  let socket = io();
+	</script>
+	<script src="https://kit.fontawesome.com/99a9767404.js" crossorigin="anonymous"></script>
+	<script src="/js/handlers.js" defer></script>
+	<!-- <script src="/js/login.js" defer></script> -->
+	<!-- <script src="/js/util.js" defer></script> -->
+	<script src="/js/init.js" defer></script>
+	<!-- <script src="/js/widgets.js" defer></script> -->
+	<script type="module" src="/js/main.js" defer></script>
+	<!-- <script src="/js/windows.js" defer></script> -->
+  </head>
+  <body><div id="bodydiv" class="container">
+  <!-- CLOCK -->
+	<div class="desktop-clock unselectable" id="desktop-clock-container">
+		<div class="desktop-clock-time unselectable" id="desktop-clock-time">9:50</div>
+		<div class="desktop-clock-date unselectable" id="desktop-clock-date">Monday, January 1st 1900</div>
+	</div>
+	
+	<analog-clock style="visibility: visible;">
+		<clock-handle class="seconds" id="chs" style="--rotation: 0deg;"></clock-handle>
+		<clock-handle class="minutes" id="chm" style="--rotation: 0deg;"></clock-handle>
+		<clock-handle class="hours" id="chh" style="--rotation: 0deg;"></clock-handle>
+		<clock-center></clock-center>
+		</clock-handle>
+	</analog-clock>
+	
+  <!-- TASKBAR -->
+	<div id="taskbar" class="taskbar"><div id="taskbar-home" class="taskbar-button button-home"></div><div id="taskbar-search" class="taskbar-button button-search"></div></div>
+	
+
+  <!-- NOTE WIDGET -->
+	<desktop-widget id="widget-notes" class="no-scrollbar" style="width: 240px; height: 360px;" data-small="false">
+		<div id="widget-notesheader" class="notes-header unselectable">
+			<font class="indent">Notes</font>
+		</div>
+		<widget-button id="toggle-notes" data-small="false" onclick="toggleWidget(this)" class="toggle-button"></widget-button>
+		<div class="notes-body no-scrollbar" id="widget-body-notes" data-small="false">
+			<div class="no-friends unselectable">
+			<i><center>Please log in for notes</center></i>
+			</div>
+		</div>
+	</desktop-widget>
+	
+  
+  <!-- FRIENDS WIDGET -->
+	<desktop-widget id="widget-friends" class="no-scrollbar" style="width: 240px; height: 360px;" data-small="false">
+		<div id="widget-friendsheader" class="friends-header unselectable">
+			<font class="indent">Friends</font>
+		</div>
+		<widget-button id="toggle-notes" data-small="false" onclick="toggleWidget(this)" class="toggle-button"></widget-button>
+		<div class="notes-body no-scrollbar" id="widget-body-friends" data-small="false">
+			<div class="no-friends unselectable">
+			<i><center>Please log in for friends</center></i>
+			</div>
+		</div>
+	</desktop-widget>
+	
+	
+	
+  <!-- SEARCHBOX -->
+	<input type="text" id="searchbar" class="searchbar hiddensearch" rows="1" cols="255"></input>
+	
+  <!-- STARTMENU -->
+	<div id="startmenu" class="startmenu hiddenstart">
+		<div id="startmenu-top" class="startmenu-top"></div>
+		<div id="startmenu-favorites"></div>
+		<div id="startmenu-main" class="startmenu-main"></div>
+		<div id="startmenu-bottom" class="startmenu-bottom"></div>
+	</div>
+	
+	<div id="snapping-prev" class="snapping-preview-full-hidden snapping-preview-full"></div>
+	<noscript>
+	<div class="noscript-ol">
+	<div class="noscript-error">
+		<b>This Website requires Javascript to run. </b><br><br>
+		This is mostly for UI functionality and server requests.<br>
+		Please disable noscript to access this site.
+	</div>
+	</div>
+	</noscript>
+  </div></body>
+</html>

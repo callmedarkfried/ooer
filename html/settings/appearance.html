@@ -1,0 +1,14 @@
+<toggle-switch onclick="toggleSwitch(this)" data-settingname="test"data-enabled=false></toggle-switch>
+<button data-filled=true>Test</button>
+<button data-filled=false>Test</button><br><br><br><br>
+<window-button data-action="minimise"></window-button><window-button data-action="maximise"></window-button><window-button data-action="close"></window-button>
+<br><br><br><br>
+<drop-down data-open="false" onclick="toggleDropdown(this)">
+<dd-h>test1</dd-h>
+<dd-c data-open="false">
+	<dd-e data-selected="true" onclick="dropdownSelect(this)">test1</dd-e>
+	<dd-e data-selected="false" onclick="dropdownSelect(this)">test2</dd-e>
+	<dd-e data-selected="false" onclick="dropdownSelect(this)">test3</dd-e>
+	<dd-e data-selected="false" onclick="dropdownSelect(this)">test4</dd-e>
+</dd-c>
+</drop-down>

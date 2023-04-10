@@ -1,0 +1,287 @@
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+const fs = require("fs")
+app.use(express.static('public'));
+
+let notes = {
+	"test": [{"d": 0, "t": "testoman"},{"d": 10000, "t":"another"}]
+}
+
+//PASSWORDS ARE TEMPORARY AND TO BE REPLACED WITH AN ENCRYPTED VERSION
+// WHOLE THING NEEDS REWORKING
+// A DATABASE SHOULD DO THE TRICK
+
+let friends = {
+	
+}
+
+const desktopSymbols = {
+		symbols: [
+		{
+			pos: ["calc(50% - 10vmin)","calc(50% - 10vmin"],
+			image: "folder-blender.png",
+			type: "folder",
+			name: "Blender",
+			sub: [
+				{
+					image: "",
+					name: "text",
+					type: "internal",
+					event: "request"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				}
+			]
+		},{
+			pos: ["calc(50% - 15vmin)","calc(50% - 60vmin"],
+			image: "github-logo.png",
+			type: "folder",
+			name: "Test",
+			sub: [
+				{
+					image: "",
+					name: "text",
+					type: "internal",
+					event: "request"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				}
+			]
+		},{
+			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
+			image: "youtube.png",
+			type: "folder",
+			name: "Blender",
+			sub: [
+				{
+					image: "",
+					name: "text",
+					type: "internal",
+					event: "request"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					event: "link"
+				}
+			]
+		}
+	]
+	}
+
+
+let users = [
+	{
+		id: "id",
+		password: "password",
+		username: "username",
+		handle: "0000", //4 digit number like discord
+		nickname: "nickname",
+		settings: {
+			some: "settings"
+		},
+		email: "email@example.com",
+		verified: true,
+		registered_since: 0,
+	},
+	{
+		id: "test",
+		password: "test",
+		username: "test_user",
+		handle: "0909",
+		nickname: "for testing",
+		settings: {
+			
+		},
+		email: "test@example.com",
+		verified: true,
+		registered_since: 0,
+	}
+]
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', (socket) => {
+	socket.emit("desktop_symbols", desktopSymbols);
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', msg);
+  });
+  
+  // Setinterval 1s heartbeat, serves as driver for client clock
+  // used to detect lost connection clientside
+  
+  
+  function heartbeat () {
+	  socket.emit("heartbeat", "");
+  }
+  let hb = setInterval(heartbeat, 1000);
+  socket.on("disconnect", ()=>{clearInterval(hb)});
+  
+  
+  
+  // socket.emit("add_dynscript", {js: "alert('test')"})
+  socket.on('login', (msg) => {
+	
+	  let t = users.filter((u) => u.username == msg.username)
+		  
+	  if (t.length == 0) {
+		  socket.emit("wrong_pw", "");
+		  return;
+	  }
+	 if (msg.password == t[0].password) {
+		 
+		  socket.emit("init", {
+			  username: t[0].username,
+			  handle: t[0].handle,
+			  nickname: t[0].nickname,
+			  notes: grabNotes(t[0].id),
+			  friends: friends[t[0].id],
+			  id: t[0].id,
+			  profilePicture: "default.jpg"
+		  })
+		  setTimeout(function () {
+			  
+			socket.emit("notification", {
+				title: "Login successful",
+				image: "default.jpg",
+				description: "You successfully logged in. Congratulations on being capable of doing basic tasks, proud of ya, bozo",
+				clickEvent: {}
+			})
+		  }, 200);
+	  } else {
+		  socket.emit("wrong_pw", "");
+	  }
+  });
+  
+  socket.on('delete_note', (msg) => {
+	  deleteNote(msg.user, msg.index); //user is token
+  })
+  socket.on("add_note", (msg) => {
+	  // ALL USER RELATED STUFF NEEDS TO USE THE ACCORDING SESSION TOKEN!!!
+	  addNote(msg.user, msg.note);
+  })
+  socket.on("request_page", serveSubpage);
+  socket.on("request_settings", (msg) => {
+	serveSettings(msg, socket);
+  });
+  socket.on("logout", (msg) => {
+	  socket.emit("logout_confirm","")
+	  socket.emit("notification", {
+				title: "Logout successful",
+				image: "default.jpg",
+				description: "Well fuck off then, i dont care.",
+				clickEvent: {}
+			})
+  })
+  socket.on("req_subsettings", (msg) => {
+	 reqSettingsSub(socket, msg); 
+  });
+});
+
+function reqSettingsSub(socket, msg) {
+	const html = fs.readFileSync(`./html/settings/${msg.query.split("_")[1]}.html`).toString();
+	socket.emit("sub_settings", {html: html, id: msg.id});
+}
+
+function serveSettings(msg, socket) {
+	const sub = msg.page || "settings_appearance"
+	const html = fs.readFileSync(`./html/settings/${sub.split("_")[1]}.html`).toString();
+	const js = undefined;// `alert("ooo");`
+	socket.emit("add_window", {title: "Settings", "html":fs.readFileSync("./settings.html").toString(), icon: "settings.png", windowClass: "settingswindow", selected: sub, subhtml: html, js: js});
+	let reqS = msg.requested || "appearance";
+	
+}
+
+function deleteNote(user, index) {
+	if (!notes[user] || notes[user].length == 0) return;
+	let newNoteList = [];
+	for (let i = 0; i < notes[user].length; i++) {
+		if (i != index) {
+			newNoteList.push(notes[user][i]);
+		}
+	}
+	
+	notes[user] = newNoteList;
+	
+}
+
+function addNote(user, note) {
+	
+	notes[user] = notes[user] || [];
+	
+	
+	notes[user].push(note);
+}
+
+function grabUsername(token) {
+return users[token].username
+}
+
+function grabNotes(username) {
+	return notes[username]
+}
+
+
+function serveSubpage(msg) {
+}
+
+server.listen(3000, () => {
+  console.log('listening on *:3000');
+});
