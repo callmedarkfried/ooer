@@ -229,6 +229,12 @@ function loginScreen() {
 	loginTBUser.focus();
 }
 
+
+function closeLogin(event) {
+	wrongpw.remove();
+	darkener.remove();
+}
+
 function passwordConditions () {
 	const tb1 = getElement("tb-su-pw")
 	
@@ -242,7 +248,7 @@ function passwordConditions () {
 	
 	let conditions = 0;
 	
-	for (c of conditionIndicators) {
+	for (let c of conditionIndicators) {
 		const e = getElement(c.name)
 		if (tb1.value.match(c.reg)) {
 			conditions++;
@@ -255,7 +261,35 @@ function passwordConditions () {
 	return conditions;
 }
 
+function passwordCheck (event) {
+	const tb1 = document.getElementById("tb-su-pw")
+	const tb2 = document.getElementById("tb-su-pwc")
+	
+	// CHECK IF THERES AN INVALID CHARACTER IN THE PASSWORD 
+	// ONLY ALPHANUMERIC AND ASCII SPECIAL CHARACTERS + ASCII ACCENTED
+	// except multiplication cross and division symbol
+	const invalid = new RegExp("[^A-Z -/:-@\[-`\{-´0-9À-ÖØ-Þßÿ]","gi")
+	if (tb1.value.match(invalid)) {
+		tb1.classList.add("login-tb-red")
+		wrongpw.innerHTML = "<center>Invalid character in password</center>";
+		loginbox.appendChild(wrongpw)
+		return
+	} else {
+		tb1.classList.remove("login-tb-red")
+		wrongpw.innerHTML = "";
+		wrongpw.remove()
+	}
+	
+	const baseConditions = passwordConditions(); // Update infobox
+	
+	// OPTIONAL EXTRA STUFF: password strength estimator;
+	
+	let strength = 0;
+	const extra = new RegExp("[À-ÖØ-Þß]","gi")
+}
+
 function signupScreen() {
+	console.log("signup")
 	darkener.textContent = "";
 	loginbox.textContent = ""; // Resetting to prevent problems
 	
@@ -281,7 +315,7 @@ function signupScreen() {
 		{id: "special", display: "Special Characters"},
 		{id: "length", display: "more than 8 characters long"}
 	]
-	for (o of conditionIndicators) {
+	for (let o of conditionIndicators) {
 		if (o.id == "length") {
 			const t = document.createElement("span");
 			t.textContent = "And be"
@@ -309,7 +343,7 @@ function signupScreen() {
 	{type: "password", style: "top: 263px", placeholder: "Confirm Password", id: "tb-su-pwc"}
 	]
 	var form = [];
-	for (t of textboxes) {
+	for (let t of textboxes) {
 		const s = document.createElement("input");
 		s.type = t.type;
 		s.style = t.style;
@@ -360,6 +394,35 @@ function wrongPW(msg) {
 	loginbox.appendChild(wrongpw);
 }
 
+function passwordCheckFinal (event) {
+	const signupTBPass = document.getElementById("tb-su-pw")
+	const signupTBPassConfirm = document.getElementById("tb-su-pwc")
+	
+	if (signupTBPass.value != signupTBPassConfirm.value) {
+		wrongpw.innerHTML = "<center>Passwords do not match!</center>";
+		signupTBPass.classList.add("login-tb-red")
+		signupTBPassConfirm.classList.add("login-tb-red")
+		loginbox.appendChild(wrongpw)
+	} else {
+		wrongpw.textContent = "";
+		wrongpw.remove;
+		signupTBPass.classList.remove("login-tb-red");
+		signupTBPassConfirm.classList.remove("login-tb-red")
+		wrongpw.remove();
+	}
+	
+	
+	let conditions = passwordConditions();
+	
+	if (conditions < 3) {
+		document.getElementById("pw-info").classList.remove("hidden")
+	} else {
+		document.getElementById("pw-info").classList.add("hidden")
+	}
+	
+	
+	const condLength = document.getElementById("condition-length")
+}
 export {initialise, signupScreen, wrongPW, loginScreen, addLoginButton}
 
 

@@ -1,5 +1,17 @@
 # Devlog
 
+### Day 20
+- Added back calendar widget
+	- Appointments are placeholders
+	- Design isnt final but thats for another day
+	- Cant be moved unlike notes and friends, considering keeping it this way (and not bc i cant figure out how to get it working)
+
+- Closing the login screen is now possible 
+- Signup screen is now accessible again
+	- UI and clientside password checks now working
+	- username and email checks arent working because those require the backend to work too and i dont feel like it
+	- as such, you can not sign up yet (sadge)
+
 ### Day 19
 - Started rewriting things to use modules instead
 	- This should take some time.

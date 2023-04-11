@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="/css/startmenu.css">
 	<link rel="stylesheet" href="/css/ui.css">
 	<link rel="stylesheet" href="/css/login.css">
+	<link rel="stylesheet" href="/css/widgets.css">
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 	  let socket = io();
@@ -68,7 +69,22 @@
 		</div>
 	</desktop-widget>
 	
-	
+
+	<!-- CALENDAR WIDGET -->
+	<calendar-widget id="calendar-widget" style="top: 20px; right: 20px;">
+		<div class="calendar-top unselectable" id="calendar-widgetheader">
+			<a class="month-back" id="month-minus"></a>
+			<div class="calendar-month" id="calendar-month">
+			
+			</div>
+			<a class="month-forward" id="month-plus"></a>
+		</div>
+		<div class="calendar" id="cal">
+		</div>
+		<div class="appointmentlist" id="appointmentlist">
+			
+		</div>
+	</calendar-widget>
 	
   <!-- SEARCHBOX -->
 	<input type="text" id="searchbar" class="searchbar hiddensearch" rows="1" cols="255"></input>

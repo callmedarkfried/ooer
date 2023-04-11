@@ -23,7 +23,11 @@ if (dateFormat) {
 /**
  * @var 
  */
-
+function closeSearchBox(event) {
+	searchbar.classList.add("hiddensearch")
+	searchbar.value = "";
+	setTimeout(()=>{textareafocus = false;}, 200)
+}
 
 /**
  * Shorthand for generating a button with the necessary properties, returns that button
@@ -213,4 +217,4 @@ function closeStartMenu (event) {
 }
 
 export { connLostReset, tick, resetHeartbeat, getElement, cleanup, startmenuBottom, calculateGrid,
-clamp, makeContextMenuTaskbar, makeSubMenuElement, makeButton, closeStartMenu }
+clamp, makeContextMenuTaskbar, makeSubMenuElement, makeButton, closeStartMenu, closeSearchBox }

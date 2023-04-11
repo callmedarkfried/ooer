@@ -30,68 +30,10 @@ function toggleFriends(event) {
 
 
 
-function passwordCheck (event) {
-	const tb1 = document.getElementById("tb-su-pw")
-	const tb2 = document.getElementById("tb-su-pwc")
-	
-	// CHECK IF THERES AN INVALID CHARACTER IN THE PASSWORD 
-	// ONLY ALPHANUMERIC AND ASCII SPECIAL CHARACTERS + ASCII ACCENTED
-	// except multiplication cross and division symbol
-	const invalid = new RegExp("[^A-Z -/:-@\[-`\{-´0-9À-ÖØ-Þßÿ]","gi")
-	if (tb1.value.match(invalid)) {
-		tb1.classList.add("login-tb-red")
-		wrongpw.innerHTML = "<center>Invalid character in password</center>";
-		loginbox.appendChild(wrongpw)
-		return
-	} else {
-		tb1.classList.remove("login-tb-red")
-		wrongpw.innerHTML = "";
-		wrongpw.remove()
-	}
-	
-	const baseConditions = passwordConditions(); // Update infobox
-	
-	// OPTIONAL EXTRA STUFF: password strength estimator;
-	
-	let strength = 0;
-	const extra = new RegExp("[À-ÖØ-Þß]","gi")
-}
 
 
-function passwordCheckFinal (event) {
-	const signupTBPass = document.getElementById("tb-su-pw")
-	const signupTBPassConfirm = document.getElementById("tb-su-pwc")
-	
-	if (signupTBPass.value != signupTBPassConfirm.value) {
-		wrongpw.innerHTML = "<center>Passwords do not match!</center>";
-		signupTBPass.classList.add("login-tb-red")
-		signupTBPassConfirm.classList.add("login-tb-red")
-		loginbox.appendChild(wrongpw)
-	} else {
-		wrongpw.textContent = "";
-		wrongpw.remove;
-		signupTBPass.classList.remove("login-tb-red");
-		signupTBPassConfirm.classList.remove("login-tb-red")
-		wrongpw.remove();
-	}
-	
-	
-	let conditions = passwordConditions();
-	
-	if (conditions < 3) {
-		document.getElementById("pw-info").classList.remove("hidden")
-	} else {
-		document.getElementById("pw-info").classList.add("hidden")
-	}
-	
-	
-	const condLength = document.getElementById("condition-length")
-}
 
-function closeLogin(event) {
-	wrongpw.remove();
-	darkener.remove();
-}
+
 
 function addNoteKeyDown (event) {
 	if (event.keyCode == 13 && !event.shiftKey) {
@@ -114,30 +56,14 @@ function addNote(event) {
 
 // Handles opening and closing of the searchbox
 // prevents rapid reopening thereof
-let textareafocus = false;
-function searchAreaHandler(event) {
-	if (!textareafocus) {
-		if (searchbar.classList.contains("hiddensearch")) {
-			searchbar.classList.remove("hiddensearch")
-			searchbar.focus();
-			textareafocus = true;
-		} else {
-			searchbar.classList.add("hiddensearch")
-			textareafocus = false;
-		}
-	}
-}
+
 
 /* Part of the textbox reopen fix.
    When clicking on the search button while the search bar is open, 
    both the focusout and the search button click events fire. without
    this delay, the searchbox would immediately reopen.
 */ 
-function closeSearchBox(event) {
-	searchbar.classList.add("hiddensearch")
-	searchbar.value = "";
-	setTimeout(()=>{textareafocus = false;}, 200)
-}
+
 
 function openStartMenu(event) {
 	if (startmenu.classList.contains("hiddenstart")) {

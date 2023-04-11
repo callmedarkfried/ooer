@@ -5,6 +5,7 @@ import * as Util from "./util.js"
 import { notification } from "./notification.js";
 import { errorMessage } from "./errormessage.js";
 import * as Login from "./login.js"
+import * as StartMenu from "./startmenu.js"
 
 
 const bodydiv = Util.getElement("bodydiv")
@@ -21,7 +22,7 @@ const clientTick = setInterval(Util.tick, 1000); // Timing might not be entirely
 // Make the DIV element draggable:
 dragElement(Util.getElement("widget-notes"));
 dragElement(Util.getElement("widget-friends"));
-
+dragElement(Util.getElement("calendar-widget"));
 
 
 // Temporarily disabled
@@ -34,9 +35,9 @@ Util.getElement("snapping-prev").addEventListener("click", Util.closeStartMenu)
 Util.getElement("desktop-clock-container").addEventListener("mousedown", Util.closeStartMenu)
 Util.getElement("widget-body-notes").addEventListener("mousedown", Util.closeStartMenu)
 Util.getElement("widget-body-friends").addEventListener("mousedown", Util.closeStartMenu)
-
-// searchbutton.addEventListener("mouseup", searchAreaHandler);
-// searchbar.addEventListener("focusout", closeSearchBox);
+Clock.initCalendar();
+searchbutton.addEventListener("mouseup", StartMenu.searchAreaHandler);
+searchbar.addEventListener("focusout", Util.closeSearchBox);
 startbutton.addEventListener("mouseup", openStartMenu);
 
 setInterval(() => {
