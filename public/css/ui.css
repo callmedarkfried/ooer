@@ -5,7 +5,7 @@ toggle-switch {
 	display: block;
 	border: solid 2px white;
 	overflow: hidden;
-	position: absolute;
+	position: relative;
 	cursor: pointer;
 	white-space: nowrap;
 }

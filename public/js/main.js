@@ -6,7 +6,7 @@ import { notification } from "./notification.js";
 import { errorMessage } from "./errormessage.js";
 import * as Login from "./login.js"
 import * as StartMenu from "./startmenu.js"
-
+import * as DesktopSymbol from "./desktopSymbols.js"
 
 const bodydiv = Util.getElement("bodydiv")
 
@@ -43,6 +43,8 @@ startbutton.addEventListener("mouseup", openStartMenu);
 setInterval(() => {
 	// More flexible than before, also not as big
 	// console.log(document.getElementsByTagName("desktop-widget"))
+	// Am not sure if this is the best way to do it. But its the least complicated one
+	// the alternative involved like a dozen event listeners, maybe later
 	
 	const widgets = document.getElementsByTagName("desktop-widget");
 	const wh = window.innerHeight;
@@ -78,7 +80,11 @@ socket.on("wrong_pw", Login.wrongPW)
 socket.on("heartbeat", Util.resetHeartbeat);
 socket.on("init", Login.initialise);
 socket.on("notification", notification); // Push notification
-//socket.on("desktop_symbols", setupDesktopSymbols); // Why did i do this?
+socket.on("desktop_symbols", DesktopSymbol.setupDesktopSymbols); // Why did i do this?
+socket.on("add_window", WindowManagement.addWindow);
+socket.on("sub_settings", (msg) => {
+	Util.getElement(`settings-main${msg.id}`).innerHTML = msg.html
+});
+// I dont think those will be added back anytime soon
 // socket.on("add_dynscript", addJS); // Dynamic scripts
 // socket.on("add_dynscript_g", addJSG); // same but global
-socket.on("add_window", WindowManagement.addWindow);

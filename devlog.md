@@ -11,6 +11,7 @@
 	- UI and clientside password checks now working
 	- username and email checks arent working because those require the backend to work too and i dont feel like it
 	- as such, you can not sign up yet (sadge)
+	- Settings are now working again (at least it actually loads the correct pages now)
 
 ### Day 19
 - Started rewriting things to use modules instead
