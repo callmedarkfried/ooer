@@ -1,0 +1,5 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore Start Server.lnk file
+Start Server.lnk
