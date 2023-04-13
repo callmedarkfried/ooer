@@ -6,6 +6,8 @@
 	--error-information: DodgerBlue;
 }
 
+
+
 @media (max-width: 480px) {
 	:root {
 		--taskbar-height: 60px;
@@ -68,6 +70,8 @@ body {
 	background-size: cover;background-attachment: fixed; 
 	font-family: sans-serif;
 	color: white;
+	font-family: Roboto, sans-serif;
+	font-weight: 200;
 }
 
 .unselectable {
@@ -82,7 +86,6 @@ user-select: none; /* Standard */
 div.desktop-clock {
 	position: fixed;
 	color: white;
-	font-family: sans-serif;
 	left: 50%;
 	transform: translateX(-50%);
 	top: 10%;
@@ -92,7 +95,7 @@ div.desktop-clock {
 
 div.desktop-clock-time {
 	filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.3));
-	font-weight: lighter;
+	font-weight: 200;
 	font-size: 12vh;
 	height: 80%;
 	position: relative;
@@ -100,9 +103,11 @@ div.desktop-clock-time {
 
 div.desktop-clock-date {
 	filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.3));
-	font-size: 2vh;
+	font-size: 3vh;
 	position: relative;
 	top: -6.0vh;
+	font-family: Roboto;
+	font-weight: 400;
 }
 
 div.contextmenu {
@@ -193,7 +198,9 @@ div.taskbar-button:hover {
 
 
 div.notes-header {
-	background-color: rgba(127,127,255,0.1);
+	font-size: 24px;
+	margin-left: 6px;
+	/* background-color: rgba(127,127,255,0.1);
 	font-size: 24px;
 	line-height: 36px;
 	width: 100%;
@@ -202,7 +209,7 @@ div.notes-header {
 	border-bottom: solid rgba(255,255,255,0.2) 1px;
 	left: 0;
 	top: 0;
-	cursor: pointer;
+	cursor: pointer; */
 }
 
 font.indent {
@@ -294,6 +301,10 @@ font.indent {
 	overflow-y: scroll;
 }
 
+.notes-body[data-small="true"] {
+	visibility: hidden;
+}
+
 .notes-element {
 	background-color: rgba(255,255,255,0.1);
 	margin-top: 3px;
@@ -302,8 +313,8 @@ font.indent {
 	position: relative;
 	margin-top: 3px;
 	margin-bottom: 3px;
-	width: calc(100% - 18px);
-	left: 3px;
+	width: calc(100% - 24px);
+	left: 0;
 	min-height: 52px;
 	border-radius: 12px;
 	z-index: 3;
@@ -321,7 +332,7 @@ font.indent {
 
 .addnote-textfield {
 	padding: 3px;
-	width: calc(100% - 12px);
+	width: calc(100% - 24px);
 	border-radius: 3px;
 	height: 52px;
 	background-color: rgba(0,0,0,0.2);
@@ -341,7 +352,8 @@ font.indent {
 .notedate {
 	font-size: 12px;
 	color: #ccc;
-	font-family: Helvetica, sans-serif;
+	font-family: Roboto, sans-serif;
+	font-weight: 400;
 	top: -6px;
 	position: relative;
 }
@@ -616,7 +628,7 @@ div.windowbody {
 .desktop-symbol {
 	position: fixed;
 	z-index: -1;
-	width: 20vmin;
+	width: 15vmin;
 	aspect-ratio: 3 / 2;
 	display: block;
 	border-radius: 3px;
@@ -642,9 +654,9 @@ div.windowbody {
 .desktop-symbol-image {
 	position: absolute;
 	left: 50%;
-	transform: translateX(-50%);
-	height: 10vmin;
-	width: 10vmin;
+	transform: translateX(-50%); 
+	aspect-ratio: 1 / 1;
+	width: 50%;
 	background-size: cover;
 	filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.6));
 }
@@ -657,88 +669,15 @@ div.windowbody {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	text-align: center;
-	top: 10vmin;
+	bottom: 0;
 	font-size: 2vmin;
 	line-height: 3vmin;
 	filter: drop-shadow(0px 0px 3px black);
-}
-
-div.smallwidget {
-	resize: none !important;
-	height: 36px !important;
-	width: 240px !important;
-	min-height: 36px !important;
-	min-width: 240px !important;
-	max-height: 36px !important;
-	max-width: 240px !important;
-	transition: height 0.2s, width 0.2s;
+	font-family: Roboto, sans-serif;
+	font-weight: 400;
 }
 
 
-div.notes {
-	position: fixed;
-	left: 10px;
-	top: 10px;
-	border-radius: 12px;
-	display: block;
-	resize: both;
-	overflow: auto;
-	min-width: 240px;
-	min-height: 360px;
-	max-width: 50%;
-	max-height: 90%;
-	background-color: rgba(255,255,255,0.1);
-	filter: drop-shadow(0px 0px 3px black);
-	backdrop-filter: blur(15px);
-	transition: height 0.2s, width 0.2s;
-}
-div.friendswidget {
-	z-index: 0;
-	position: fixed;
-	left: calc(100% - 250px);
-	top: 10px;
-	border-radius: 12px;
-	display: block;
-	resize: both;
-	overflow: auto;
-	min-width: 240px;
-	min-height: 360px;
-	max-width: 50%;
-	max-height: 90%;
-	background-color: rgba(255,255,255,0.1);
-	filter: drop-shadow(0px 0px 3px black);
-	backdrop-filter: blur(15px);
-}
-
-div.friends-header {
-	background-color: rgba(127,127,255,0.1);
-	font-size: 24px;
-	line-height: 36px;
-	width: 100%;
-	display: block;
-	height: 36px;
-	border-bottom: solid rgba(255,255,255,0.2) 1px;
-	left: 0;
-	top: 0;
-}
-
-
-div.friendsbody {
-	position: absolute;
-	width: 100%;
-	height: calc(100% - 38px);
-}
-
-div.no-friends {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 100%;
-	transform: translateX(-50%) translateY(-50%);
-	color: #fff;
-	filter: drop-shadow(0px 0px 1px black);
-	cursor: pointer;
-}
 
 div.notification-popup {
 	position: fixed;
@@ -877,56 +816,4 @@ div.notification-popup-hidden {
 	display: block;
 	padding: 12px;
 	font-size: 18px;
-}
-
-analog-clock {
-	position: fixed;
-	top: 60%;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 200px;
-	height: 200px;
-	border-radius: 100%;
-	border: solid 3px white;
-	display: block;
-}
-
-clock-center {
-	height: 6px;
-	width: 6px;
-	border-radius: 6px;
-	background-color: white;
-	top: 50%;
-	left: 50%;
-	position: absolute;
-	transform: translateX(-50%) translateY(-50%);
-}
-
-clock-handle {
-	position: absolute;
-	display: block;
-	top: 50%;
-	left: 50%;
-	transform: translateX(-50%) translateY(-100%) rotate(var(--rotation));
-	transform-origin: bottom center;
-	border-radius: 10px;
-}
-
-
-clock-handle.seconds {
-	width: 2px;
-	height: 90px;
-	background-color: aqua;
-}
-
-clock-handle.minutes {
-	width: 3px;
-	height: 80px;
-	background-color: white;
-}
-
-clock-handle.hours {
-	width: 5px;
-	height: 60px;
-	background-color: white;
 }

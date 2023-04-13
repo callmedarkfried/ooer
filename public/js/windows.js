@@ -3,6 +3,13 @@ import { errorMessage } from "./errormessage.js";
 import { dragElement } from "./dragging.js";
 import { login } from "./auth.js";
 
+/**
+ * @file windows.js
+ * @author Smittel
+ * @name Windows
+ * @module Windows
+ */
+
 let activewindow = undefined;
 let windows = [];
 
@@ -14,16 +21,44 @@ const taskbarContextMenuElements = [
 	{type: "button", text: "Close", handler: closeCtxTb}
 ]
 
+/**
+ * Creates a window with the given properties. Can be called on the clientside (not recommended) or via a server request.
+ * Pushes the window to the array. It is important, that it receives the length of said array to correctly assign the IDs, which is why the Window class itself is not exported. 
+ * @function addWindow
+ * @see Window
+ * @name addWindow
+ * @param {object} args <code>{<br>
+ * &emsp;title: Title of the window,<br>
+ * &emsp;html: full html including styling information. No head, no body tag, just the innerHTML of the "div",<br>
+ * &emsp;js: Javascript code that is associated with the window. Optional. Will be removed when window is closed. Avoid intervals.,<br>
+ * &emsp;icon: The icon that will be shown in the taskbar,<br>
+ * &emsp;windowClass: Identify the type of window.<br>
+ * &emsp;((sub: Specific property of windowClass settingswindow, can potentially be used for other purposes. Used to identify the subscreen of the window, in the case of the settings it identifies the selected category)),<br>
+ * &emsp;((subhtml: when using subscreens, this is where the html goes. More information: see "Window")),<br>
+ * }</code>
+ */
 function addWindow(args) {
 	const w = new Window(windows.length, args);
 	windows.push(w);
 }
 
+/**
+ * @class module:Windows.Window
+ * @memberof Windows
+ * @name Window
+ * @param {int} id The id of the Window. Please use the addWindow() function.
+ * @param {object} args Same thing, please use addWindow() and refer to its documentation.
+ * @description You can look at the "settings.html" in the root folder of the project to get a rough idea of how its done. In general, its best to start with the style information. Write it as if you would write an actual website, only do not use &lt;head&gt;, &lt;body&gt; etc. You can and should include &lt;style&gt; Information. When using subpages, its recommended that you dynamically change the window body or the relevant parts with JS, the windowClass settingswindow does have subpages, but it can lead to problems.
+ */
 class Window {
-	
-	javascript;
-	html;
-	defaultWidth;
+	/**
+	 * Holds the script tag associated with the window
+	 * @member {DOMElement} javascript
+	 * @inner
+	 * @name javascript
+	 * @access private
+	 */
+	#javascript;
 	windowObject;
 	id = -1;
 	windowbody;
@@ -109,9 +144,15 @@ class Window {
 		errorMessage(this.windowbody, 0b0_11_1_000, "test4","oman", []);
 	}
 	
+	/**
+	 * Deletes itself and removes all its associated properties. It is important that you do not just call it but instead replace the variable with the return value or set it to null manually, else it lives on in memory.
+	 * @method module:Windows.Window#deleteWindow
+	 * @inner
+	 * @returns null
+	 */
 	deleteWindow() {
-		if (this.javascript != undefined) {
-			this.javascript.remove();
+		if (this.#javascript != undefined) {
+			this.#javascript.remove();
 		}
 		this.windowObject.remove();
 		this.taskbarIcon.remove();
@@ -302,8 +343,7 @@ function closeWindowT(target) {
 
 function closeAllWindows() {
 	for (let w of windows) {
-		w.windowObject.remove();
-		w = null;
+		w = w.deleteWindow();
 	}
 	windows = [];
 }
@@ -328,7 +368,7 @@ function addJSG (msg) {
 	dynScriptsGlobal.push(tag);
 }
 
-export {activewindow, taskbarContextMenuElements, addWindow, Window, refreshWindows, closeAllWindows}
+export {activewindow, taskbarContextMenuElements, addWindow, refreshWindows, closeAllWindows}
 
 
 // addWindow({"title": "ooer.ooo", "type": "website", "url": "https://ooer.ooo"})

@@ -1,4 +1,6 @@
 import * as Util from "./util.js";
+import { login } from "./auth.js";
+import { dayMonthYearNoName, hourMinutes } from "./clock.js";
 let noteslist = [];
 
 function setNotes(n) {
@@ -33,7 +35,7 @@ function noteBodyInner() {
 	if (noteslist.length == 0) {
 		refreshZeroNotes();
 	} else {
-		for (n of noteslist) {
+		for (let n of noteslist) {
 			// The note itself
 			let note = document.createElement("div");
 			note.classList.add("notes-element");
@@ -46,7 +48,7 @@ function noteBodyInner() {
 			{classList: ["note-controls", "edit-note"], display: "✎", handle: editNoteHandler}
 			]
 			
-			for (b of buttons) {
+			for (let b of buttons) {
 				var e = document.createElement("a");
 				e.classList.add(...b.classList, "unselectable");
 				e.innerHTML = `<center>${b.display}<center>`;
@@ -72,6 +74,31 @@ function refreshZeroNotes() {
 	}
 }
 
+function toggleFriends(event) {
+	console.log(event.target);
+	let target = document.getElementById("friendswidget");
+	widgetToggleSave(target);
+	
+	document.getElementById("friendsbody").classList.toggle("hidden");
+	event.target.innerHTML = `<center>${target.classList.contains("smallwidget")?"▾":"▴"}</center>`;
+}
+
+function addNoteKeyDown (event) {
+	if (event.keyCode == 13 && !event.shiftKey) {
+		let noteOBJ = {"d": Date.now(), "t": document.getElementById("addnote-textfield").value.replaceAll("<", "&lt;").replaceAll(">","&gt;").trim().replaceAll(/\n/g, "<br>")}
+		noteslist.push(noteOBJ);
+		// This will also get some sort of session token and whatnot
+		socket.emit("add_note", { user: login.id, note: noteOBJ});
+		noteBodyInner();
+	}
+}
+
+function addNote(event) {
+	let target = document.getElementById("addnote-textfield")
+	Util.getElement("startmenu").classList.add("hiddenstart")
+	target.classList.remove("hidden");
+	target.focus()
+}
 
 function friendslist (friends) {
 	
@@ -91,4 +118,42 @@ function friendslist (friends) {
 	}
 }
 
-export {setNotes, noteBodyInner, friendslist}
+
+
+function widgetToggleSave(target) {
+	let oldHeight = target.oldHeight;
+	target.oldHeight = target.style.height;
+	target.style.height = oldHeight;
+	let oldWidth = target.oldWidth;
+	target.oldWidth = target.style.width;
+	target.style.width = oldWidth;
+}
+
+function toggleWidget(e) {
+	e = e.target;
+	Util.getElement("startmenu").classList.add("hiddenstart")
+	let target = e.parentNode;
+	e.dataset.small = (e.dataset.small == "false");
+	widgetToggleSave(target);
+	const c = e.nextElementSibling;
+	c.dataset.small = c.dataset.small == "false";
+	target.dataset.small = (target.dataset.small == "false");
+}
+
+
+	// This basically just saves the size information of the widget so when you expand it again
+	// it retains its size
+	// This general approach is useful for windows too
+function toggleNotes(event) {
+	let target = document.getElementById("widget-notes")
+	widgetToggleSave(target);
+	Util.getElement("notes-body").classList.toggle("hidden");
+	let addNoteButton = Util.getElement("add-notes")
+	if (addNoteButton != null) {
+		addNoteButton.classList.toggle("hidden")
+	}
+	event.target.innerHTML = `<center>${target.classList.contains("smallwidget")?"▾":"▴"}</center>`;
+}
+
+
+export {setNotes, noteBodyInner, friendslist, toggleWidget}

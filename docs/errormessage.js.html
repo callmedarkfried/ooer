@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: errormessage.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: errormessage.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { makeButton, connLostReset } from "./util.js";
+function btnOk() {
+	return [makeButton("OK", true)];
+}
+
+function btnCancelOk() {
+	return [makeButton("Cancel", false), makeButton("OK", true)];
+}
+
+function btnAbortRetryIgnore() {
+	return [
+		makeButton("Abort", false),
+		makeButton("Retry", true),
+		makeButton("Ignore", false)
+	]
+}
+
+function btnYesNoCancel() {
+	return [
+		makeButton("Yes", true),
+		makeButton("No", false),
+		makeButton("Cancel", false)
+	]
+}
+
+function btnYesNo() {
+	return [
+		makeButton("Yes", true),
+		makeButton("No", false)
+	]
+}
+
+function btnRetryCancel() {
+	return [
+		makeButton("Retry", true),
+		makeButton("Cancel", false)
+	]
+}
+
+const errorBoxFunctions = [
+	btnOk,
+	btnCancelOk,
+	btnAbortRetryIgnore,
+	btnYesNoCancel,
+	btnYesNo,
+	btnRetryCancel
+]
+
+/**
+ * Generates and renders an error message using a similar system to VB MsgBox. 
+ * The type of error message can be defined via a seven-bit integer as such:
+&lt;style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+.tg .tg-re1e{background-color:#656565;border-color:inherit;text-align:left;vertical-align:top}
+.tg .tg-c6of{background-color:#ffffff;border-color:inherit;text-align:left;vertical-align:top}
+.tg .tg-ne6m{background-color:#656565;border-color:inherit;color:#333333;text-align:left;vertical-align:top}
+&lt;/style>&lt;table class="tg">&lt;thead>&lt;tr>&lt;th class="tg-0pky" colspan="4">Values&lt;/th>&lt;th class="tg-0pky">Meaning&lt;/th>&lt;/tr>&lt;/thead>&lt;tbody>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">000&lt;/td>&lt;td class="tg-0pky">OK&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">001&lt;/td>&lt;td class="tg-0pky">CANCEL OK&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">010&lt;/td>&lt;td class="tg-0pky">ABORT RETRY IGNORE&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">011&lt;/td>&lt;td class="tg-0pky">YES NO CANCEL&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">100&lt;/td>&lt;td class="tg-0pky">YES NO&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">101&lt;/td>&lt;td class="tg-0pky">RETRY CANCEL&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-c6of">0&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">Parent not blocked&lt;br>&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-c6of">1&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">Parent blocked&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">00&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">CRITICAL&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">01&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">QUESTION&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">10&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">EXCLAMATION&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">11&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">INFORMATION&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-c6of">0&lt;/td>&lt;td class="tg-ne6m">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">Visually parented to window&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-c6of">1&lt;/td>&lt;td class="tg-ne6m">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">Visually not tied to window&lt;/td>&lt;/tr>&lt;/tbody>&lt;/table>
+ * @function errorMessage
+ * @param {object} parent - DOM Object that the error message will be bound to.
+ * @param {number} layout - Integer defining the type of error message, refer to function description
+ * @param {string} title - Title of the error message
+ * @param {string} text - The error message text
+ * @param {object} functions - Array of functions that determine the behaviour of the buttons
+ * @returns {object} - Optional. Returns the full error message object with all children.
+ */
+function errorMessage(parent, layout, title, text, functions) {
+	// console.log(parent)
+	//   F8421
+	// xxxx000 OK
+	// xxxx001 CANCEL OK
+	// xxxx010 ABORT RETRY IGNORE
+	// xxxx011 YES NO CANCEL
+	// xxxx100 YES NO
+	// xxxx101 RETRY CANCEL
+	// xxx0xxx Application not blocked
+	// xxx1xxx Application blocked
+	// x00xxxx CRITICAL
+	// x01xxxx QUESTION
+	// x10xxxx EXCLAMATION
+	// x11xxxx INFORMATION
+	// 0xxxxxx Parented to window
+	// 1xxxxxx Global
+	// Functions: array, maps directly to order of buttons.
+	// eg abort retry ignore in that order. undefined or null will be ignored.
+	const buttons = layout % 8;
+	const blocked = (layout >> 3) % 2;
+	const symbol = (layout >> 4) % 4;
+	const scope = (layout >> 6);
+	
+	// window-button[data-action="close"]
+	const dbb = document.createElement("dialog-box");    // Main dialog box
+	
+	const dbh = document.createElement("dialog-header"); // Header
+	dbh.innerHTML = `&lt;font class="indent">${title}&lt;/font>`;
+	
+	const dbx = document.createElement("window-button"); // Close button
+	dbx.style = "width: 45px !important";
+	dbx.dataset.action = "close";
+	dbx.addEventListener("mouseup", errorBoxCloseButton);
+	
+	const dbwc = document.createElement("div");			 // Close button container
+	dbwc.classList.add("windowControls");
+	dbwc.style = "width: 50px !important";
+	dbwc.appendChild(dbx);
+	
+	dbb.append(dbh, dbwc);
+	
+	const symbols = [
+	{s: `&lt;i class="fa-regular fa-circle-xmark fa-4x">&lt;/i>`, c: "error-critical"},
+	{s: `&lt;i class="fa-solid fa-circle-question fa-4x">&lt;/i>`, c: "error-question"},
+	{s: `&lt;i class="fa-solid fa-triangle-exclamation fa-4x">&lt;/i>`, c: "error-exclamation"},
+	{s: `&lt;i class="fa-solid fa-circle-exclamation fa-4x">&lt;/i>`, c: "error-information"}
+	]
+	
+	const dbc = document.createElement("div");	// Dialog box body
+	dbc.classList.add("err-body");
+	
+	const errortext = document.createElement("div");
+	errortext.classList.add("err-body-text");
+	errortext.textContent = text;
+	
+	const errsym = document.createElement("div");
+	errsym.classList.add("err-body-symbol");
+	errsym.innerHTML = `&lt;font style="color: var(--${symbols[symbol].c});">${symbols[symbol].s}&lt;/font>`
+	
+	const buttoncontainer = document.createElement("div");
+	buttoncontainer.classList.add("err-btn-container");
+	
+	const darken = document.createElement("div");
+	darken.id = `errorDarkener${Math.round(Math.random()* 100000000)}`
+	darken.classList.add("error-darken");
+	darken.appendChild(dbb);
+	
+	
+	const buttonlist = errorBoxFunctions[buttons]();
+	if (functions) {
+		for (let i = 0; i &lt; buttonlist.length; i++) {
+			buttonlist[i].addEventListener("click", (event) => {
+				if (functions[i] != undefined) {
+					functions[i](event);
+				}
+				darken.remove();
+			});
+		}
+	}
+	buttoncontainer.append(...buttonlist);
+	dbc.append(errsym, errortext);
+	dbc.appendChild(buttoncontainer);
+	// window.appendChild(dbb);
+	dbb.append(dbc)
+	
+	parent.appendChild(darken);
+	
+	return darken
+}
+
+function errorBoxCloseButton(event) {
+	let db = event.target.parentNode.parentNode;
+	if (db.parentNode.id.match(/errorDarkener\d+/g)) db = db.parentNode;
+	db.remove();
+	if (db.dataset.id == "connectionLost") {
+		connLostReset();
+	}
+}
+
+
+
+
+
+export {errorMessage}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analog">analog</a></li><li><a href="global.html#dayMonthYear">dayMonthYear</a></li><li><a href="global.html#dayMonthYearNoName">dayMonthYearNoName</a></li><li><a href="global.html#errorMessage">errorMessage</a></li><li><a href="global.html#hourMinutes">hourMinutes</a></li><li><a href="global.html#setLogin">setLogin</a></li><li><a href="global.html#userLogOut">userLogOut</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Apr 13 2023 16:38:03 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

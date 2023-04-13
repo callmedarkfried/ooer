@@ -112,3 +112,84 @@ calendar-widget {
 	margin-top: 6px;
 	margin-bottom: 6px;
 }
+
+div.smallwidget {
+	resize: none !important;
+	height: 36px !important;
+	width: 240px !important;
+	min-height: 36px !important;
+	min-width: 240px !important;
+	max-height: 36px !important;
+	max-width: 240px !important;
+	transition: height 0.2s, width 0.2s;
+}
+
+
+div.notes {
+	position: fixed;
+	left: 10px;
+	top: 10px;
+	border-radius: 12px;
+	display: block;
+	resize: both;
+	overflow: auto;
+	min-width: 240px;
+	min-height: 360px;
+	max-width: 50%;
+	max-height: 90%;
+	background-color: rgba(255,255,255,0.1);
+	filter: drop-shadow(0px 0px 3px black);
+	backdrop-filter: blur(15px);
+	transition: height 0.2s, width 0.2s;
+}
+div.friendswidget {
+	z-index: 0;
+	position: fixed;
+	left: calc(100% - 250px);
+	top: 10px;
+	border-radius: 12px;
+	display: block;
+	resize: both;
+	overflow: auto;
+	min-width: 240px;
+	min-height: 360px;
+	max-width: 50%;
+	max-height: 90%;
+	background-color: rgba(255,255,255,0.1);
+	filter: drop-shadow(0px 0px 3px black);
+	backdrop-filter: blur(15px);
+}
+
+div.friends-header {
+	
+	font-size: 24px;
+	margin-left: 6px;
+	/* background-color: rgba(127,127,255,0.1);
+	font-size: 24px;
+	line-height: 36px;
+	width: 100%;
+	display: block;
+	height: 36px;
+	border-bottom: solid rgba(255,255,255,0.2) 1px;
+	left: 0;
+	top: 0; */
+}
+
+
+div.friendsbody {
+	position: absolute;
+	width: 100%;
+	height: calc(100% - 38px);
+}
+
+div.no-friends {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	transform: translateX(-50%) translateY(-50%);
+	color: #fff;
+	filter: drop-shadow(0px 0px 1px black);
+	cursor: pointer;
+	font-weight: 300;
+}

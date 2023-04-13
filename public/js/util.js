@@ -1,16 +1,60 @@
-import { clockTick } from "./clock.js";
+
 import { errorMessage } from "./errormessage.js";
+import { clockTick } from "./clock.js";
 /**
  * @file Contains some useful functions to be used elsewhere
  * @author Smittel (https://github.com/callmedarkfried)
  * @name Utilities
- * @namespace Utilities
+ * @module Utilities
  */
 
-let noteslist = []
-// it needs to grab the notes from the server via socket request.
-// TO DO: log in
 
+
+/**
+ * Similar to python, different syntax
+ * @name range
+ * @function
+ * @param {number} x The range of the final Array
+ * @returns {Array} An array of the next n numbers starting from the first number
+ * @example (5).range(5) -> [5, 6, 7, 8, 9]
+ * (5).range(-3) -> [5, 4, 3]
+ */
+Number.prototype.range = function (x) {
+	let p = [];
+	if (x > 0) {
+		for (let  i = 0; i < x; i++) {
+			p.push(i + Number(this))
+		}
+	} else {
+		for (let  i = 0; i < Math.abs(x); i++) {
+			p.push(Number(this) - i)
+		}
+	}
+	return p;
+}
+
+/**
+ * Returns an Array containing the numbers from the first to the second number.
+ * @name to 
+ * @function
+ * @param {int} x 
+ * @returns {Array} - Array containing the numbers from a to b
+ * @example (5).to(10) -> [5, 6, 7, 8, 9, 10]
+ */
+Number.prototype.to = function (x) {
+	if(typeof(x) !== 'number') throw new TypeError("Argument must be a number!");
+	let p = [];
+	if (this > x) {
+		for (let i = this; i >= x; i--) {
+			p.push(i)
+		} 
+	} else {
+		for (let i = this; i<=x; i++) {
+			p.push(i)
+		}
+	}
+	return p;
+}
 
 
 const dateFormat = new Intl.DateTimeFormat([], { hour: 'numeric', hour12: true }).resolvedOptions().hour12;
@@ -21,9 +65,12 @@ if (dateFormat) {
 }
 
 /**
- * @var 
+ * Not to be called manually. Closes the search bar when it loses focus.
+ * Timeout prevents weird behaviour when closing the search bar by clicking the search button.
+ * @param {event} event 
  */
 function closeSearchBox(event) {
+	const searchbar = getElement("searchbar");
 	searchbar.classList.add("hiddensearch")
 	searchbar.value = "";
 	setTimeout(()=>{textareafocus = false;}, 200)
@@ -69,6 +116,13 @@ function makeSubMenuElement (data) {
 	return subE
 }
 
+/**
+ * Data Object: {text: string, type: "divider"|"button", handler: function}
+ * @function
+ * @param {Array<Object>} data Array of DOM Elements 
+ * @param {number} id 
+ * @returns {DOMElement} The finished context menu
+ */
 function makeContextMenuTaskbar(data, id) {
 	const menu = document.createElement("div");
 	menu.dataset.hidden = true;
@@ -116,52 +170,9 @@ function calculateGrid(n) {
 }
 
 
-function startmenuBottom() {
-	
-	const startmenu = getElement("startmenu");
-	const smBottom = getElement("startmenu-bottom");
-	smBottom.classList.add("startmenu-bottom");
-	smBottom.id = "startmenu-bottom";
-	const center = document.createElement("center");
-	
-	const bottomButtons = [
-		{
-			id: "sm-btm-gh",
-			image: "github-full.png",
-			link: "https://github.com/callmedarkfried",
-			event: null
-		},{
-			id: "sm-btm-yt",
-			image: "youtube_full.png",
-			link: "https://youtube.com/smittel",
-			event: null
-		},
-	]
-
-	for (let c of bottomButtons) {
-		let e = document.createElement("a");
-		e.href = c.link;
-		e.classList.add("startmenu-bottom-button");
-		e.style = `background-image: url('${c.image}');`;
-		e.id = c.id
-		if (c.link != null) {
-			e.target = "_blank"
-		}
-		if (c.event != null) {
-			e.addEventListener("mouseup", e.event);
-		}
-		center.appendChild(e);
-	}
-	smBottom.appendChild(center);
-	startmenu.appendChild(smBottom);
-}
-
-
-
-
 /**
  * Removes trailing null elements from array
- * Example: [0, null, 3, 6, null, null] => [0, null, 3, 6]
+ * @example: cleanup([0, null, 3, 6, null, null]) -> [0, null, 3, 6]
  * @param {Array} e - Original array
  * @return {Array} - Trimmed array
  */
@@ -216,5 +227,5 @@ function closeStartMenu (event) {
 	document.getElementById("startmenu").classList.add("hiddenstart")
 }
 
-export { connLostReset, tick, resetHeartbeat, getElement, cleanup, startmenuBottom, calculateGrid,
+export { connLostReset, tick, resetHeartbeat, getElement, cleanup, calculateGrid,
 clamp, makeContextMenuTaskbar, makeSubMenuElement, makeButton, closeStartMenu, closeSearchBox }

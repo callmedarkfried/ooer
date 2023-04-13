@@ -7,16 +7,17 @@ import { errorMessage } from "./errormessage.js";
 import * as Login from "./login.js"
 import * as StartMenu from "./startmenu.js"
 import * as DesktopSymbol from "./desktopSymbols.js"
+import * as Widget from "./widgets.js"
 
-const bodydiv = Util.getElement("bodydiv")
+/**
+ * @file main.js
+ * @author Smittel
+ * @name Main
+ * @namespace Main
+ */
 
-const noteWidget = Util.getElement("widget-notes");
-const friendsWidget = Util.getElement("widget-friends");
-const searchbar = Util.getElement("searchbar");
-const searchbutton = Util.getElement("taskbar-search");
 
-const startmenu = Util.getElement("startmenu");
-const startbutton = Util.getElement("taskbar-home");
+
 
 const clientTick = setInterval(Util.tick, 1000); // Timing might not be entirely accurate in my tests, doesnt have to be tho.
 // Make the DIV element draggable:
@@ -30,19 +31,29 @@ dragElement(Util.getElement("calendar-widget"));
 // document.addEventListener('contextmenu', event => event.preventDefault());
 
 
+Util.getElement("toggle-notes").addEventListener("click", Widget.toggleWidget);
+Util.getElement("toggle-friends").addEventListener("click", Widget.toggleWidget);
 
 Util.getElement("snapping-prev").addEventListener("click", Util.closeStartMenu)
 Util.getElement("desktop-clock-container").addEventListener("mousedown", Util.closeStartMenu)
 Util.getElement("widget-body-notes").addEventListener("mousedown", Util.closeStartMenu)
 Util.getElement("widget-body-friends").addEventListener("mousedown", Util.closeStartMenu)
 Clock.initCalendar();
-searchbutton.addEventListener("mouseup", StartMenu.searchAreaHandler);
-searchbar.addEventListener("focusout", Util.closeSearchBox);
-startbutton.addEventListener("mouseup", openStartMenu);
 
+Util.getElement("taskbar-search").addEventListener("mouseup", StartMenu.searchAreaHandler);
+Util.getElement("searchbar").addEventListener("focusout", Util.closeSearchBox);
+Util.getElement("taskbar-home").addEventListener("mouseup", openStartMenu);
+
+/**
+ * A fairly fast interval. Prevents widgets from being moved off-screen.
+ * In theory you could still get them back by zooming out but thats a usability nightmare 
+ * So I just prevent that from happening. You can remove it if you want.<br>
+ * (anonymous)
+ * @name Widget_Interval
+ * @memberof Main
+ */
 setInterval(() => {
 	// More flexible than before, also not as big
-	// console.log(document.getElementsByTagName("desktop-widget"))
 	// Am not sure if this is the best way to do it. But its the least complicated one
 	// the alternative involved like a dozen event listeners, maybe later
 	
@@ -70,18 +81,43 @@ setInterval(() => {
 	}
 	
 	
-}, 20);
+}, 100);
 
 
 Login.addLoginButton();
-Util.startmenuBottom();
+StartMenu.startmenuBottom();
 // SOCKET LISTENERS
+socket.on("logout_confirm", Login.logoutHandle);
 socket.on("wrong_pw", Login.wrongPW)
 socket.on("heartbeat", Util.resetHeartbeat);
 socket.on("init", Login.initialise);
-socket.on("notification", notification); // Push notification
+/**
+ * Listens for push notifications
+ * @listens notification Server push notifications
+ * @ignore
+ * @memberof Main
+ */
+socket.on("notification", notification);
+/**
+ * This will probably be removed again, since it doesnt really add anything
+ * @memberof Main
+ * @ignore
+ * @listens desktop_symbols Server provides the desktop symbols and their placement
+ */
 socket.on("desktop_symbols", DesktopSymbol.setupDesktopSymbols); // Why did i do this?
+/**
+ * Server response when user requests a window
+ * @memberof Main
+ * @ignore
+ * @listens add_window The window data including scripts, html, styling etc.
+ */
 socket.on("add_window", WindowManagement.addWindow);
+/**
+ * The specific settings categories are served separately, will probably be changed at some point.
+ * @memberof Main
+ * @ignore
+ * @listens sub_settings The HTML, styling, scripts for a settings category
+ */
 socket.on("sub_settings", (msg) => {
 	Util.getElement(`settings-main${msg.id}`).innerHTML = msg.html
 });

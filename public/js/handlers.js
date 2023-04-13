@@ -1,59 +1,6 @@
 
 let dynScripts = [];
 let dynScriptsGlobal = [];
-
-function widgetToggleSave(target) {
-	let oldHeight = target.oldHeight;
-	target.oldHeight = target.style.height;
-	target.style.height = oldHeight;
-	let oldWidth = target.oldWidth;
-	target.oldWidth = target.style.width;
-	target.style.width = oldWidth;
-}
-
-
-
-
-
-
-
-
-function toggleFriends(event) {
-	console.log(event.target);
-	let target = document.getElementById("friendswidget");
-	widgetToggleSave(target);
-	
-	document.getElementById("friendsbody").classList.toggle("hidden");
-	event.target.innerHTML = `<center>${target.classList.contains("smallwidget")?"▾":"▴"}</center>`;
-}
-
-
-
-
-
-
-
-
-
-function addNoteKeyDown (event) {
-	if (event.keyCode == 13 && !event.shiftKey) {
-		console.log(login)
-		let noteOBJ = {"d": Date.now(), "t": document.getElementById("addnote-textfield").value.replaceAll("<", "&lt;").replaceAll(">","&gt;").trim().replaceAll(/\n/g, "<br>")}
-		noteslist.push(noteOBJ);
-		// This will also get some sort of session token and whatnot
-		socket.emit("add_note", { user: login.id, note: noteOBJ});
-		noteBodyInner();
-	}
-}
-
-function addNote(event) {
-	let target = document.getElementById("addnote-textfield")
-	getElement("startmenu").classList.add("hiddenstart")
-	target.classList.remove("hidden");
-	target.focus()
-}
-
-
 // Handles opening and closing of the searchbox
 // prevents rapid reopening thereof
 
@@ -164,7 +111,7 @@ function changeNicknameTextbox(event) {
 		const id = event.target.id.replaceAll("nickname-edit", "");
 		const warn = document.getElementById(`nickname-warning${id}`)
 		const invalid = new RegExp("[^A-Z -/:-@\[-`\{-´0-9À-ÖØ-Þßÿ]€","gi")
-		let t = getElement(`nickname-edit${id}`)
+		let t = document.getElementById(`nickname-edit${id}`)
 		if (event.target.value.length < 2 || event.target.value.length > 32) {
 			warn.classList.remove("hidden");
 			warn.textContent = "Nicknames must be between 2 and 32 characters long"
@@ -207,24 +154,6 @@ function editPfp (event) {
 
 
 
-
-socket.on("logout_confirm", (msg) => {
-	for (w of windows) {
-		closeWindowT(w);
-	}
-	console.log("test")
-	getElement("widget-body-notes").innerHTML = `
-			<div class="no-friends unselectable">
-			<i><center>Please log in for notes</center></i>
-			</div>`
-	getElement("add-notes").remove();
-	getElement("widget-body-friends").innerHTML = `<div class="no-friends unselectable"><i></i><center><i> Please login for friends</i><center><i></i></center></center></div>`
-	getElement("startmenu-top").textContent = ""
-	getElement("startmenu-main").textContent = ""
-	getElement("startmenu-favorites").textContent = ""
-	getElement("startmenu-favorites").className = "";
-	addLoginButton();
-})
 
 
 
@@ -270,26 +199,4 @@ function dropdownSelect(e) {
 	e.dataset.selected = "true";
 }
 
-function toggleWidget(e) {
-	getElement("startmenu").classList.add("hiddenstart")
-	let target = e.parentNode;
-	e.dataset.small = (e.dataset.small == "false");
-	widgetToggleSave(target);
-	target.dataset.small = (target.dataset.small == "false");
-}
-
-
-	// This basically just saves the size information of the widget so when you expand it again
-	// it retains its size
-	// This general approach is useful for windows too
-function toggleNotes(event) {
-	let target = document.getElementById("widget-notes")
-	widgetToggleSave(target);
-	document.getElementById("notes-body").classList.toggle("hidden");
-	let addNoteButton = document.getElementById("add-notes")
-	if (addNoteButton != null) {
-		addNoteButton.classList.toggle("hidden")
-	}
-	event.target.innerHTML = `<center>${target.classList.contains("smallwidget")?"▾":"▴"}</center>`;
-}
 

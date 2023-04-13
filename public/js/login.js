@@ -2,6 +2,7 @@ import { getElement } from "./util.js";
 import * as Widgets from "./widgets.js";
 import * as Auth from "./auth.js";
 import { closeStartMenu } from "./util.js";
+import { closeAllWindows } from "./windows.js";
 
 const darkener = document.createElement("div");
 const loginbox = document.createElement("div");
@@ -423,6 +424,22 @@ function passwordCheckFinal (event) {
 	
 	const condLength = document.getElementById("condition-length")
 }
-export {initialise, signupScreen, wrongPW, loginScreen, addLoginButton}
+
+function logoutHandle(msg) {
+	closeAllWindows();
+	getElement("widget-body-notes").innerHTML = `
+			<div class="no-friends unselectable">
+			<i><center>Please log in for notes</center></i>
+			</div>`
+	getElement("add-notes").remove();
+	getElement("widget-body-friends").innerHTML = `<div class="no-friends unselectable"><i></i><center><i> Please login for friends</i><center><i></i></center></center></div>`
+	getElement("startmenu-top").textContent = ""
+	getElement("startmenu-main").textContent = ""
+	getElement("startmenu-favorites").textContent = ""
+	getElement("startmenu-favorites").className = "";
+	addLoginButton();
+}
+
+export {initialise, signupScreen, wrongPW, loginScreen, addLoginButton, logoutHandle}
 
 

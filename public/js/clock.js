@@ -41,7 +41,12 @@ function getSuffix(n) {
 	let index = Math.min(n % 10, 4)
 	return n + suffixes[index]
 };
-
+/**
+ * Returns a formatted string with a "standard" way of writing dates.
+ * "Standard" in this case meaning the way i would write them, though it should be easily understandable
+ * @param {Date} date 
+ * @returns {String}
+ */
 function dayMonthYear(date) {
 	let year = date.getFullYear();
 	let month = monthnames[date.getMonth()];
@@ -50,6 +55,11 @@ function dayMonthYear(date) {
 	return `${dayOfWeek}, ${month} ${dayOfMonth} ${year}`
 };
 
+/**
+ * Returns a formatted string in the format 'month name' 'day' 'year'
+ * @param {Date} date 
+ * @returns {String}
+ */
 function dayMonthYearNoName(date) {
 	let year = date.getFullYear();
 	let month = monthnames[date.getMonth()];

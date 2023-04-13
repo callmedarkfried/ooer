@@ -325,7 +325,21 @@ widget-button:hover {
 }
 
 desktop-widget {
+	min-width: 240px;
+	min-height: 360px;
+	background-color: rgba(255,255,255,0.1);
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
 	position: fixed;
+	left: 20px;
+	border-radius: 12px;
+	top: 20px;
+	display: block;
+	padding: 6px;
+	z-index: 0;
+	resize: both;
+	overflow: auto;
+	/* position: fixed;
 	border-radius: 12px;
 	display: block;
 	resize: both;
@@ -336,7 +350,7 @@ desktop-widget {
 	max-height: 90%;
 	background-color: rgba(255,255,255,0.1);
 	filter: drop-shadow(0px 0px 3px black);
-	backdrop-filter: blur(15px);
+	backdrop-filter: blur(15px); */
 }
 
 desktop-widget[data-small="true"] {
@@ -348,4 +362,61 @@ desktop-widget[data-small="true"] {
 	min-width: 240px !important;
 	max-height: 36px !important;
 	max-width: 240px !important;
+}
+
+
+analog-clock {
+	position: fixed;
+	top: 60%;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 200px;
+	height: 200px;
+	border-radius: 100%;
+	border: solid 3px white;
+	display: block;
+}
+
+clock-center {
+	height: 6px;
+	width: 6px;
+	border-radius: 6px;
+	background-color: white;
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	transform: translateX(-50%) translateY(-50%);
+}
+
+clock-handle {
+	position: absolute;
+	display: block;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-100%) rotate(var(--rotation));
+	transform-origin: bottom center;
+	border-radius: 10px;
+}
+
+
+clock-handle.seconds {
+	width: 2px;
+	height: 90px;
+	background-color: aqua;
+}
+
+clock-handle.minutes {
+	width: 3px;
+	height: 80px;
+	background-color: white;
+}
+
+clock-handle.hours {
+	width: 5px;
+	height: 60px;
+	background-color: white;
+}
+
+.calendar-month {
+	font-weight: 300;
 }

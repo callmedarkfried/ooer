@@ -1,5 +1,16 @@
 # Devlog
 
+### Day 22
+- Documenting
+
+### Day 21
+- Fixed logout
+- Changed no javascript message
+- Added fonts (variations of Roboto because im creative like that)
+- Changed notes and friends widgets slightly
+	- Not final
+
+
 ### Day 20
 - Added back calendar widget
 	- Appointments are placeholders
