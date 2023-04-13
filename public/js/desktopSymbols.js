@@ -1,4 +1,9 @@
 import { calculateGrid, makeSubMenuElement, getElement } from "./util.js";
+
+/**
+ * Sets up desktop symbols
+ * @param {Array} list List of Desktop symbols received by the server
+ */
 function setupDesktopSymbols(list) {
 	const symbols = list.symbols;
 	
@@ -41,6 +46,7 @@ function setupDesktopSymbols(list) {
 		getElement("bodydiv").appendChild(s);
 	}
 }
+
 
 function closeDesktopFolder(event, symbol) {
 	getElement("startmenu").classList.add("hiddenstart");
