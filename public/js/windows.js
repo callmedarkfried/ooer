@@ -27,15 +27,16 @@ const taskbarContextMenuElements = [
  * @function addWindow
  * @see Window
  * @name addWindow
- * @param {object} args <code>{<br>
- * &emsp;title: Title of the window,<br>
- * &emsp;html: full html including styling information. No head, no body tag, just the innerHTML of the "div",<br>
- * &emsp;js: Javascript code that is associated with the window. Optional. Will be removed when window is closed. Avoid intervals.,<br>
- * &emsp;icon: The icon that will be shown in the taskbar,<br>
- * &emsp;windowClass: Identify the type of window.<br>
- * &emsp;((sub: Specific property of windowClass settingswindow, can potentially be used for other purposes. Used to identify the subscreen of the window, in the case of the settings it identifies the selected category)),<br>
- * &emsp;((subhtml: when using subscreens, this is where the html goes. More information: see "Window")),<br>
- * }</code>
+ * @param {object} args 
+ * @param {string} args.title Title of the window
+ * @param {string} args.html full html including styling information. No head, no body tag, just the innerHTML of the "div"
+ * @param {string=} args.js Javascript code that is associated with the window. Optional. Will be removed when window is closed. Avoid intervals.
+ * @param {string} args.icon The icon that will be shown in the taskbar
+ * @param {string=} args.width Optional default width of window
+ * @param {string=} args.height Optional default height of window
+ * @param {string=} args.windowClass windowClass: Identify the type of window. Dont use.
+ * @param {string=} args.sub  Specific property of windowClass settingswindow, can potentially be used for other purposes. Used to identify the subscreen of the window, in the case of the settings it identifies the selected category
+ * @param {string=} args.subhtml when using subscreens, this is where the html goes. More information: see "Window"
  */
 function addWindow(args) {
 	const w = new Window(windows.length, args);
@@ -125,7 +126,8 @@ class Window {
 		this.windowObject.appendChild(this.windowbody);
 		main.appendChild(this.windowObject);
 		this.windowObject.addEventListener("mousedown", activeWindowChange);
-		this.windowObject.style = `width: ${args.width || (window.innerWidth * 0.7)}px; height:${args.height || (window.innerHeight * 0.7)}px;`;
+		this.windowObject.style.width = args.width || (window.innerWidth * 0.7) + "px";
+		this.windowObject.style.height =  args.height || (window.innerHeight * 0.7) + "px";
 		activewindow = this.windowObject;
 		dragElement(this.windowObject);
 		refreshWindows(this.windowObject);
@@ -139,11 +141,11 @@ class Window {
 			this.javascript = addScript(args.js);
 		}
 		
-		errorMessage(this.windowbody, 0b0_00_1_000, "test1","oman", []);
-		errorMessage(this.windowbody, 0b0_01_1_000, "test2","oman", []);
-		errorMessage(this.windowbody, 0b0_10_1_000, "test3","oman", []);
-		errorMessage(this.windowbody, 0b0_11_1_000, "test4","oman", []);
-	}
+	// 	errorMessage(this.windowbody, 0b0_00_1_000, "test1","oman", []);
+	// 	errorMessage(this.windowbody, 0b0_01_1_000, "test2","oman", []);
+	// 	errorMessage(this.windowbody, 0b0_10_1_000, "test3","oman", []);
+	// 	errorMessage(this.windowbody, 0b0_11_1_000, "test4","oman", []);
+	 }
 	
 	/**
 	 * Deletes itself and removes all its associated properties. <b>It is important that you do not just call it but instead replace the variable with the return value or set it to null manually, else it lives on in memory.</b>

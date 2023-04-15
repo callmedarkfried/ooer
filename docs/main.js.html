@@ -144,7 +144,7 @@ const desktopSymbols = {
 			image: "/images/logo.png",
 			type: "page",
 			name: "Test",
-			data: "app_name", //identifier of application or page to request from server
+			data: "terminal", //identifier of application or page to request from server
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 20vmin"],
 			image: "youtube.png",
@@ -252,9 +252,15 @@ io.on('connection', (socket) => {
 	  // ALL USER RELATED STUFF NEEDS TO USE THE ACCORDING SESSION TOKEN!!!
 	  addNote(msg.user, msg.note);
   })
-  socket.on("request_page", serveSubpage);
+  socket.on("request_page", (msg) => {
+	serveSubpage(msg, socket);
+  });
   socket.on("request_settings", (msg) => {
 	serveSettings(msg, socket);
+  });
+  socket.on("terminal_req", (msg) => {
+	let response = terminal(msg);
+	socket.emit("terminal_res", response)
   });
   socket.on("logout", (msg) => {
 	  socket.emit("logout_confirm","")
@@ -269,6 +275,14 @@ io.on('connection', (socket) => {
 	 reqSettingsSub(socket, msg); 
   });
 });
+
+function terminal({cmd, fp, id}) {
+	return {
+		res: "command executed",
+		fp: "~home\\folder",
+		id: id
+	}
+}
 
 function reqSettingsSub(socket, msg) {
 	const html = fs.readFileSync(`./html/settings/${msg.query.split("_")[1]}.html`).toString();
@@ -314,8 +328,58 @@ function grabNotes(username) {
 }
 
 
-function serveSubpage({requested}) {
+function serveSubpage({requested}, socket) {
 	console.log(requested)
+	switch(requested) {
+		case "terminal":
+			let js = `
+			function terminalMain() {
+				let terminalinput = document.getElementById("terminal-input");
+				let terminallabel = document.getElementById("terminal-label");
+				let terminalcontent = document.getElementById("terminal-past");
+				terminallabel.dataset.path = "~home"; //This is the filepath
+				terminalinput.dataset.rand = Math.round(Math.random() * 100000000);
+				console.log(terminalinput.dataset.rand)
+				terminalinput.id = terminalinput.id + terminalinput.dataset.rand;
+				terminallabel.id = terminallabel.id + terminalinput.dataset.rand;
+				terminallabel.textContent = terminallabel.dataset.path + ">"
+				terminalcontent.id = terminalcontent.id + terminalinput.dataset.rand;
+				socket.on("terminal_res", ({res, fp, id}) => {
+					console.log(id, terminalinput.dataset.rand)
+					if (id != terminalinput.dataset.rand) return;
+					terminallabel.dataset.path = fp;
+					let entry = document.createElement("p");
+					entry.style = "line-height: 14px; margin: 0;";
+					entry.textContent = res;
+					terminalcontent.appendChild(entry);
+					terminallabel.textContent = terminallabel.dataset.path + ">";
+				})
+				let terminalWindowBody = terminalinput.parentNode.parentNode;
+				terminalWindowBody.addEventListener("click", (event) => {
+					terminalinput.focus();
+				}) 
+				terminalinput.addEventListener("keydown", (event) => {
+					if (event.key == "Enter") {
+						event.preventDefault();
+						socket.emit("terminal_req", {cmd: terminalinput.textContent, fp: terminallabel.dataset.path, id: terminalinput.dataset.rand})
+						let entry = document.createElement("p");
+						entry.style = "line-height: 14px; margin: 0;"
+						entry.textContent = terminallabel.textContent + " " + terminalinput.textContent;
+						terminalinput.textContent = "";
+						terminalcontent.appendChild(entry)
+					}
+				})
+			}
+			terminalMain();
+
+			`
+			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal.html").toString(), icon: "settings.png", js: js, width: "800px", height: "480px"});
+			break;
+	}
+}
+
+function serveTerminal(msg, socket) {
+	
 }
 
 server.listen(3000, () => {
@@ -330,13 +394,13 @@ server.listen(3000, () => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Auth.html">Auth</a></li><li><a href="module-Clock.html">Clock</a></li><li><a href="module-DesktopSymbol.html">DesktopSymbol</a></li><li><a href="module-Dragging.html">Dragging</a></li><li><a href="module-ErrorMessage.html">ErrorMessage</a></li><li><a href="module-Login.html">Login</a></li><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Widget.html">Widget</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-ErrorMessage-Buttons.html">Buttons</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="module-Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4range">Number․prototype․range</a></li><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4to">Number․prototype․to</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Auth.html">Auth</a></li><li><a href="module-Clock.html">Clock</a></li><li><a href="module-DesktopSymbol.html">DesktopSymbol</a></li><li><a href="module-Dragging.html">Dragging</a></li><li><a href="module-ErrorMessage.html">ErrorMessage</a></li><li><a href="module-Login.html">Login</a></li><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Widget.html">Widget</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-ErrorMessage-Buttons.html">Buttons</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="module-Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4range">Number․prototype․range</a></li><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4to">Number․prototype․to</a></li><li><a href="global.html#terminalKeyDownEvent">terminalKeyDownEvent</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 15 2023 02:15:00 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 15 2023 20:34:20 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

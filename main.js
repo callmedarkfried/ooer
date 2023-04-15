@@ -11,9 +11,9 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const fs = require("fs")
+const fs = require("fs");
+const Terminal = require("./terminal.js")
 app.use(express.static('public'));
-
 let notes = {
 	"test": [{"d": 0, "t": "testoman"},{"d": 10000, "t":"another"}]
 }
@@ -115,8 +115,8 @@ const desktopSymbols = {
 			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
 			image: "/images/logo.png",
 			type: "page",
-			name: "Test",
-			data: "app_name", //identifier of application or page to request from server
+			name: "Terminal",
+			data: "terminal", //identifier of application or page to request from server
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 20vmin"],
 			image: "youtube.png",
@@ -224,9 +224,15 @@ io.on('connection', (socket) => {
 	  // ALL USER RELATED STUFF NEEDS TO USE THE ACCORDING SESSION TOKEN!!!
 	  addNote(msg.user, msg.note);
   })
-  socket.on("request_page", serveSubpage);
+  socket.on("request_page", (msg) => {
+	serveSubpage(msg, socket);
+  });
   socket.on("request_settings", (msg) => {
 	serveSettings(msg, socket);
+  });
+  socket.on("terminal_req", (msg) => {
+	let response = terminal(msg, socket);
+	socket.emit("terminal_res", response)
   });
   socket.on("logout", (msg) => {
 	  socket.emit("logout_confirm","")
@@ -241,6 +247,31 @@ io.on('connection', (socket) => {
 	 reqSettingsSub(socket, msg); 
   });
 });
+
+function terminal({cmd, fp, id}, socket) {
+	let commandTokens = cmd.split(" ");
+	switch (commandTokens[0]) {
+		case "nav":
+		case "navigate":
+			return Terminal.nav(commandTokens, fp, id);
+		case "say":
+		case "echo":
+		case "print":
+			return Terminal.echo(commandTokens, fp, id);
+		case "clear":
+			return Terminal.clear(commandTokens, fp, id);
+		case "cmd":
+			serveSubpage({requested: "terminal"}, socket) ;
+			return {res: "",fp: fp, id: id}
+		default:
+			return Terminal.help(null, fp, id);
+	}
+	return {
+		res: "",
+		fp: "C>folder/subfolder",
+		id: id
+	}
+}
 
 function reqSettingsSub(socket, msg) {
 	const html = fs.readFileSync(`./html/settings/${msg.query.split("_")[1]}.html`).toString();
@@ -286,8 +317,17 @@ function grabNotes(username) {
 }
 
 
-function serveSubpage({requested}) {
-	console.log(requested)
+function serveSubpage({requested}, socket) {
+	switch(requested) {
+		case "terminal":
+			let js = fs.readFileSync("./terminal/terminal.js").toString()
+			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal/terminal.html").toString(), icon: "settings.png", js: js, width: "800px", height: "480px"});
+			break;
+	}
+}
+
+function serveTerminal(msg, socket) {
+	
 }
 
 server.listen(3000, () => {

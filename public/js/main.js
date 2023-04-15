@@ -124,3 +124,10 @@ socket.on("sub_settings", (msg) => {
 // I dont think those will be added back anytime soon
 // socket.on("add_dynscript", addJS); // Dynamic scripts
 // socket.on("add_dynscript_g", addJSG); // same but global
+/**
+ * Triggered by keydown event in terminal textbox
+ * @param {HTMLDivElement} elmnt 
+ */
+function terminalKeyDownEvent(elmnt) {
+	console.log()
+}

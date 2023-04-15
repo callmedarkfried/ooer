@@ -1,0 +1,85 @@
+<style type="text/css">
+    * {
+        --console-background: #121212;
+    }
+    .console-background {
+        background-color: var(--console-background);
+        overflow-x: hidden;
+        overflow-y: scroll;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        font-family: monospace;
+        font-size: 14px;
+        box-sizing: border-box;
+        padding: 12px;
+        display: block;
+    }
+
+    .terminal{
+        width: 100%;
+        height: auto;
+        bottom: 0;
+        border: none;
+        color: white;
+        display: block;
+        position: relative;
+    }
+
+    .terminal-textbox {
+        white-space: pre-wrap;
+        background-color: transparent;
+        min-width: 1ch;
+        color: white;
+        width: 100%;
+        display: inline-block;
+        position: relative;
+        height: auto;
+        text-overflow: clip;
+        overflow: hidden;
+        left: 1ch;
+    }
+
+    /* .terminal-textbox::after {
+        content: "_";
+    } */
+
+    .terminal-textbox:focus {
+        border: none;
+        outline: none;
+    }
+
+    .terminal-in-label {
+        height: 100%;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        width: max-content;
+        position: relative;
+    }
+    .input-container {
+        display: grid;
+        width: 100%;
+        font-size: 14px;
+        line-height: 14px;
+        position: relative;
+        bottom: 0;
+        grid-template-columns: auto auto;
+        justify-content: left;
+        left: 0;
+    }
+
+    .path {
+        color: #5aeee0;
+    }
+
+</style>
+<div class="console-background">
+    <div class="terminal" id="terminal-past">
+
+    </div>
+    <div class="input-container">
+        <div class="terminal-in-label" id="terminal-label"><span style="line-height: 14px; margin: 0;" id="path" class="path">C&gt;folder</span>&gt;</div>
+        <div type="text" rows="1" class="terminal-textbox" name="terminal-input" id="terminal-input" contenteditable="true"></div>
+    </div>
+</div>

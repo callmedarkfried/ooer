@@ -1,7 +1,28 @@
 # Devlog
 
+### Day 24
+- Terminal
+	- Design basically finished
+	- Terminal commands are handled serverside
+	- commands so far:
+	- nav (alias: navigate)
+		- nav with no argument returns the current directory
+		- nav < moves up one folder
+		- nav </</ etc moves up as many folders as theres <
+		- nav (/)foldername moves to the folder
+		- nav (/)folder1/folder2/folder3 navigates to subfolders
+		- There is no filesystem yet so naturally theres no checking if a folder exists
+	- clear 
+		- clears console
+	- echo (alias: say, print)
+		- simply repeats what you tell it to say. 
+	- cmd
+		- opens another terminal
+	- Terminals have the wrong taskbar icon currently
+
 ### Day 22-23
 - Documenting
+- Simplified code for desktop symbols
 
 ### Day 21
 - Fixed logout
