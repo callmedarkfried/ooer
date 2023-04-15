@@ -59,13 +59,6 @@
     
 
     
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>Smittel (https://github.com/callmedarkfried)</li>
-        </ul>
-    </dd>
-    
 
     
 
@@ -76,7 +69,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line4">line 4</a>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -112,6 +105,134 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".connLost"><span class="type-signature">(static) </span>connLost<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>When the connection to the server is lost, this will be set to the error message to prevent multiple error messages popping up when the connection is lost.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line243">line 243</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".heartbeatCounter"><span class="type-signature">(static) </span>heartbeatCounter<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Gets reset regularly by server heartbeat signals.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line227">line 227</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -122,7 +243,7 @@
     
 
     
-    <h4 class="name" id="~calculateGrid"><span class="type-signature">(inner) </span>calculateGrid<span class="signature">(n)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id=".calculateGrid"><span class="type-signature">(static) </span>calculateGrid<span class="signature">(n)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
     
 
     
@@ -172,7 +293,7 @@
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">number</span>
 
 
             
@@ -223,7 +344,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line166">line 166</a>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line183">line 183</a>
     </li></ul></dd>
     
 
@@ -265,7 +386,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;number></span>
 
 
     </dd>
@@ -283,7 +404,7 @@
     
 
     
-    <h4 class="name" id="~clamp"><span class="type-signature">(inner) </span>clamp<span class="signature">(lower, value, upper)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id=".clamp"><span class="type-signature">(static) </span>clamp<span class="signature">(lower, value, upper)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
 
     
@@ -430,7 +551,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line157">line 157</a>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line173">line 173</a>
     </li></ul></dd>
     
 
@@ -458,6 +579,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <p>Clamped value</p>
+</div>
+
 
 
 <dl>
@@ -484,7 +609,7 @@
     
 
     
-    <h4 class="name" id="~cleanup"><span class="type-signature">(inner) </span>cleanup<span class="signature">(e)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id=".cleanup"><span class="type-signature">(static) </span>cleanup<span class="signature">(e)</span><span class="type-signature"> &rarr; {Array.&lt;Window>}</span></h4>
     
 
     
@@ -534,7 +659,7 @@
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;Window></span>
 
 
             
@@ -585,7 +710,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line226">line 226</a>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -614,9 +739,7 @@
 
         
 <div class="param-desc">
-    <ul>
-<li>Trimmed array</li>
-</ul>
+    <p>Trimmed array</p>
 </div>
 
 
@@ -627,7 +750,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;Window></span>
 
 
     </dd>
@@ -645,7 +768,7 @@
     
 
     
-    <h4 class="name" id="~closeSearchBox"><span class="type-signature">(inner) </span>closeSearchBox<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".closeSearchBox"><span class="type-signature">(static) </span>closeSearchBox<span class="signature">(event)</span><span class="type-signature"></span></h4>
     
 
     
@@ -696,7 +819,7 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
             <td class="type">
             
                 
-<span class="param-type">event</span>
+<span class="param-type">FocusEvent</span>
 
 
             
@@ -747,7 +870,7 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line72">line 72</a>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -783,7 +906,7 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
     
 
     
-    <h4 class="name" id="~makeContextMenuTaskbar"><span class="type-signature">(inner) </span>makeContextMenuTaskbar<span class="signature">(data, id)</span><span class="type-signature"> &rarr; {DOMElement}</span></h4>
+    <h4 class="name" id=".closeStartMenu"><span class="type-signature">(static) </span>closeStartMenu<span class="signature">(event)</span><span class="type-signature"></span></h4>
     
 
     
@@ -791,7 +914,419 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
 
 
 <div class="description">
-    <p>Data Object: {text: string, type: &quot;divider&quot;|&quot;button&quot;, handler: function}</p>
+    <p>Closes the start menu when different elements are clicked. Needs to be added to most things unless theres an event that fires when somehting other than a div is clicked. &quot;focusout&quot; does not do the trick sadly.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">MouseEvent</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line275">line 275</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+<h5>Listens to Events:</h5>
+<ul>
+    <li>event:click</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".connLostReset"><span class="type-signature">(static) </span>connLostReset<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>When the user closes the lost connection textbox, <code>connLost</code> gets reset, meaning if the connection isnt reestablished, the error can pop up again. if it is reestablished, nothing will happen and operations can resume as usual (i think)</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line250">line 250</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".makeButton"><span class="type-signature">(static) </span>makeButton<span class="signature">(text, filled)</span><span class="type-signature"> &rarr; {HTMLButtonElement}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Shorthand for generating a button with the necessary properties, returns that button</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The button text</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>filled</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>whether the button is highlighted or not</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line84">line 84</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>A button</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">HTMLButtonElement</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".makeContextMenuTaskbar"><span class="type-signature">(static) </span>makeContextMenuTaskbar<span class="signature">(data, id)</span><span class="type-signature"> &rarr; {HTMLDivElement}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Creates a context menu for the task bar icons. Will probably be replaced by a more general function soon</p>
 </div>
 
 
@@ -843,7 +1378,105 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
 
             
 
-            <td class="description last"><p>Array of DOM Elements</p></td>
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">"divider"</span>
+|
+
+<span class="param-type">"button"</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>handler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -907,7 +1540,7 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line126">line 126</a>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line141">line 141</a>
     </li></ul></dd>
     
 
@@ -947,7 +1580,7 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
     </dt>
     <dd>
         
-<span class="param-type">DOMElement</span>
+<span class="param-type">HTMLDivElement</span>
 
 
     </dd>
@@ -965,7 +1598,7 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
     
 
     
-    <h4 class="name" id="~makeSubMenuElement"><span class="type-signature">(inner) </span>makeSubMenuElement<span class="signature">(data)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id=".makeSubMenuElement"><span class="type-signature">(static) </span>makeSubMenuElement<span class="signature">(data)</span><span class="type-signature"> &rarr; {HTMLAnchorElement}</span></h4>
     
 
     
@@ -1015,7 +1648,7 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
             
@@ -1025,122 +1658,9 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
 
             
 
-            <td class="description last"><p>Object containing basic style and behaviour</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line94">line 94</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="~range"><span class="type-signature">(inner) </span>range<span class="signature">(x)</span><span class="type-signature"> &rarr; {Array}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Similar to python, different syntax</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
+            <td class="description last"><p>Object containing basic style and behaviour</p>
+                <h6>Properties</h6>
+                
 
 <table class="params">
     <thead>
@@ -1164,13 +1684,13 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>image</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">string</span>
 
 
             
@@ -1180,256 +1700,20 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
 
             
 
-            <td class="description last"><p>The range of the final Array</p></td>
+            <td class="description last"><p>URL to image of sub menu icon</p></td>
         </tr>
 
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line13">line 13</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>An array of the next n numbers starting from the first number</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>(5).range(5) -> [5, 6, 7, 8, 9](5).range(-3) -> [5, 4, 3]</code></pre>
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="~startmenuBottom"><span class="type-signature">(inner) </span>startmenuBottom<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>creates the bottom row of the start menu containing either frequently or recently used apps, havent decided yet</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line177">line 177</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>Have the function actually populate the bottom row instead of creating dummy elements</li>
-        </ul>
-    </dd>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="~to"><span class="type-signature">(inner) </span>to<span class="signature">(x)</span><span class="type-signature"> &rarr; {Array}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Returns an Array containing the numbers from the first to the second number.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>text</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">string</span>
 
 
             
@@ -1439,7 +1723,66 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Name of the sub menu element</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">"internal"</span>
+|
+
+<span class="param-type">"external"</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Internal links are opened in windows, external links are opened in new tabs</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If internal, its a function, if external, its a link</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -1480,7 +1823,7 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line36">line 36</a>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -1508,12 +1851,6 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <ul>
-<li>Array containing the numbers from a to b</li>
-</ul>
-</div>
-
 
 
 <dl>
@@ -1522,7 +1859,7 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
     </dt>
     <dd>
         
-<span class="param-type">Array</span>
+<span class="param-type">HTMLAnchorElement</span>
 
 
     </dd>
@@ -1533,9 +1870,180 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
 
 
 
-    <h5>Example</h5>
+
+        
+            
+
     
-    <pre class="prettyprint"><code>(5).to(10) -> [5, 6, 7, 8, 9, 10]</code></pre>
+
+    
+    <h4 class="name" id=".resetHeartbeat"><span class="type-signature">(static) </span>resetHeartbeat<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Resets the heartbeatCounter</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line234">line 234</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".tick"><span class="type-signature">(static) </span>tick<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Gets called every seconds. Increments heartbeatCounter and throws the error dialog box when the connection is lost for more than 3 seconds. It also calls the clockTick to update the time once per second.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_js_util.js.html">public/js/util.js</a>, <a href="public_js_util.js.html#line258">line 258</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1555,13 +2063,13 @@ Timeout prevents weird behaviour when closing the search bar by clicking the sea
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analog">analog</a></li><li><a href="global.html#dayMonthYear">dayMonthYear</a></li><li><a href="global.html#dayMonthYearNoName">dayMonthYearNoName</a></li><li><a href="global.html#errorMessage">errorMessage</a></li><li><a href="global.html#hourMinutes">hourMinutes</a></li><li><a href="global.html#setLogin">setLogin</a></li><li><a href="global.html#userLogOut">userLogOut</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Auth.html">Auth</a></li><li><a href="module-Clock.html">Clock</a></li><li><a href="module-DesktopSymbol.html">DesktopSymbol</a></li><li><a href="module-Dragging.html">Dragging</a></li><li><a href="module-ErrorMessage.html">ErrorMessage</a></li><li><a href="module-Login.html">Login</a></li><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Widget.html">Widget</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-ErrorMessage-Buttons.html">Buttons</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="module-Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4range">Number․prototype․range</a></li><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4to">Number․prototype․to</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Apr 13 2023 16:38:03 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 15 2023 02:15:00 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

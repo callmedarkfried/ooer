@@ -1,4 +1,7 @@
-
+/**
+ * @file handlers.js
+ * Will soon be removed.
+ */
 let dynScripts = [];
 let dynScriptsGlobal = [];
 // Handles opening and closing of the searchbox
@@ -149,16 +152,6 @@ function changeNicknameTextbox(event) {
 function editPfp (event) {
 	alert("Imagine this being a file explorer")
 }
-
-
-
-
-
-
-
-
-
-
 
 function settingsButton(e) {
 	let child = Array.from(e.parentNode.childNodes).filter(el => el.nodeName != "#text")

@@ -1,25 +1,81 @@
+/**
+ * @file login.js
+ * @author Smittel
+ */
 import { getElement } from "./util.js";
 import * as Widgets from "./widgets.js";
 import * as Auth from "./auth.js";
 import { closeStartMenu } from "./util.js";
 import { closeAllWindows } from "./windows.js";
 
+/**
+ * Contains functionality relating to login and signup
+ * @todo Implement proper signup including communication with back end.
+ * @module Login
+ */
+
+
+
+/**
+ * The login/signup background, blurs and darkens everything except the form
+ * @member
+ * @memberof module:Login
+ * @type {HTMLDivElement}
+ */
 const darkener = document.createElement("div");
+
+/**
+ * The div containing the login/signup form
+ * @member
+ * @memberof module:Login
+ * @type {HTMLDivElement}
+ */
+
 const loginbox = document.createElement("div");
+
+/**
+ * A small error message. Not a dialog box, just a small error
+ * @member
+ * @memberof module:Login
+ * @type {HTMLDivElement}
+ */
 const wrongpw = document.createElement("div")
+
 wrongpw.classList.add("wrong-password")
 
+/**
+ * Sends a server request for the user settings
+ * @param {MouseEvent} event 
+ */
 function openUserSettings(event) {
 	closeStartMenu()
 	socket.emit("request_settings", {})
 }
 
+/**
+ * Sends a request to the server to open the Settings with a specific category
+ * @param {string} sub The settings category to open by default
+ * @memberof module:Login
+ */
 function openUserSettingsS(sub) {
 	closeStartMenu()
 	socket.emit("request_settings", {"page": sub})
 }
 
-
+/**
+ * Technically not supposed to be called other than through the specific socket message
+ * @param {Object} msg
+ * @param {string} msg.username The username
+ * @param {string} msg.handle A 4 digit number. Basically like discord does it
+ * @param {string} msg.nickname The nickname of the user
+ * @param {Object[]} msg.notes List of all notes by the user
+ * @param {Object[]} msg.friends List of friends
+ * @param {number} msg.id Unique identifier
+ * @param {string} msg.profilePicture The url of the users profile picture
+ * @param {string} msg.token not yet implemented, contains the authentification token
+ * @memberof module:Login
+ * 
+ */
 function initialise (msg) {
 	darkener.remove();
 	const usernameField = document.createElement("div");
@@ -121,6 +177,10 @@ function initialise (msg) {
 	Auth.setLogin(msg);
 }
 
+/**
+ * Creates the "login" and "sign up" buttons in the start menu, if the user is not "authentificated"
+ * @memberof module:Login
+ */
 function addLoginButton () {
 	var sm = getElement("startmenu");
 	var lb = document.createElement("div");
@@ -146,7 +206,10 @@ function addLoginButton () {
 	sm.append(topDiv);
 }
 
-
+/**
+ * Creates the login form
+ * @memberof module:Login
+ */
 function loginScreen() {
 	darkener.textContent = "";
 	loginbox.textContent = ""
@@ -230,12 +293,21 @@ function loginScreen() {
 	loginTBUser.focus();
 }
 
-
+/**
+ * Closes the login form when user clicks the (x) button
+ * @listens mouseup
+ * @memberof module:Login
+ * @param {MouseEvent=} event 
+ */
 function closeLogin(event) {
 	wrongpw.remove();
 	darkener.remove();
 }
 
+/**
+ * Calculates the strength of a password only based on the types of characters a password contains, not the length
+ * @returns {number} "Strength" of password
+ */
 function passwordConditions () {
 	const tb1 = getElement("tb-su-pw")
 	
@@ -262,6 +334,13 @@ function passwordConditions () {
 	return conditions;
 }
 
+/**
+ * Checks which conditions are met and updates UI accordingly
+ * @listens input
+ * @memberof module:Login
+ * @param {Event=} event 
+ * @returns {number}
+ */
 function passwordCheck (event) {
 	const tb1 = document.getElementById("tb-su-pw")
 	const tb2 = document.getElementById("tb-su-pwc")
@@ -289,6 +368,10 @@ function passwordCheck (event) {
 	const extra = new RegExp("[À-ÖØ-Þß]","gi")
 }
 
+/**
+ * Sets up sign up screen
+ * @memberof module:Login
+ */
 function signupScreen() {
 	console.log("signup")
 	darkener.textContent = "";
@@ -389,12 +472,23 @@ function signupScreen() {
 	form[0].focus()
 }
 
+/**
+ * Adds the small error telling the user that the password was wrong.
+ * @param {Object=} msg typically empty
+ */
 function wrongPW(msg) {
 	wrongpw.remove()
 	wrongpw.innerHTML = "<center>Incorrect username or password. Please try again!</center>"
 	loginbox.appendChild(wrongpw);
 }
 
+/**
+ * Does some clientside checks for password match and conditions met.
+	* Could be circumvented fairly easily, thats why the server has to check too and send a response accordingly, but maybe this can be used to reduce server CPU time slightly, the reasoning being that the average joe will use the form instead of reading the docs and sending a custom message to the server just to have an easier to crack password.
+ * @listens mouseup
+ * @memberof module:Login
+ * @param {MouseEvent} event 
+ */
 function passwordCheckFinal (event) {
 	const signupTBPass = document.getElementById("tb-su-pw")
 	const signupTBPassConfirm = document.getElementById("tb-su-pwc")
@@ -425,6 +519,11 @@ function passwordCheckFinal (event) {
 	const condLength = document.getElementById("condition-length")
 }
 
+/**
+ * On user logout: close windows, reset widgets, reset start menu, add back login/signup buttons
+ * @memberof module:Login
+ * @param {Object=} msg 
+ */
 function logoutHandle(msg) {
 	closeAllWindows();
 	getElement("widget-body-notes").innerHTML = `

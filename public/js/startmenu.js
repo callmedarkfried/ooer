@@ -3,8 +3,12 @@ import { getElement } from "./util.js";
 let textareafocus = false;
 /**
  * @file startmenu.js
- * @description Contains functionality related to the start menu
  * @author Smittel
+ */
+
+/**
+ * 
+ * @description Contains functionality related to the start menu
  * @module Startmenu
  * @exports searchAreaHandler
  */
@@ -13,6 +17,7 @@ let textareafocus = false;
  * @function
  * @listens click
  * @param {event} event 
+ * @memberof module:Startmenu
  */
 function searchAreaHandler(event) {
 	if (!textareafocus) {
@@ -30,6 +35,7 @@ function searchAreaHandler(event) {
 /**
  * creates the bottom row of the start menu containing either frequently or recently used apps, havent decided yet
  * @function
+ * @memberof module:Startmenu
  * @todo Have the function actually populate the bottom row instead of creating dummy elements
  */
 function startmenuBottom() {

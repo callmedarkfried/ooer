@@ -1,6 +1,6 @@
 # Devlog
 
-### Day 22
+### Day 22-23
 - Documenting
 
 ### Day 21

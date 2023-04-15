@@ -43,19 +43,14 @@ function addWindow(args) {
 }
 
 /**
- * @class module:Windows.Window
- * @memberof Windows
- * @name Window
- * @param {int} id The id of the Window. Please use the addWindow() function.
- * @param {object} args Same thing, please use addWindow() and refer to its documentation.
- * @description You can look at the "settings.html" in the root folder of the project to get a rough idea of how its done. In general, its best to start with the style information. Write it as if you would write an actual website, only do not use &lt;head&gt;, &lt;body&gt; etc. You can and should include &lt;style&gt; Information. When using subpages, its recommended that you dynamically change the window body or the relevant parts with JS, the windowClass settingswindow does have subpages, but it can lead to problems.
+ * @class
+ * @memberof module:Windows
  */
 class Window {
 	/**
 	 * Holds the script tag associated with the window
-	 * @member {DOMElement} javascript
-	 * @inner
-	 * @name javascript
+	 * @member
+	 * @memberof module:Windows.Window
 	 * @access private
 	 */
 	#javascript;
@@ -63,7 +58,13 @@ class Window {
 	id = -1;
 	windowbody;
 	taskbarIcon;
-	
+	/**
+	 * @constructor
+	 * @param {int} id The id of the Window. Please use the addWindow() function.
+	 * @param {object} args Same thing, please use addWindow() and refer to its documentation.
+     * @description You can look at the "settings.html" in the root folder of the project to get a rough idea of how its done. In general, its best to start with the style information. Write it as if you would write an actual website, only do not use &lt;head&gt;, &lt;body&gt; etc. You can and should include &lt;style&gt; Information. When using subpages, its recommended that you dynamically change the window body or the relevant parts with JS, the windowClass settingswindow does have subpages, but it can lead to problems.
+	 * @memberof module:Windows.Window
+	 */
 	constructor (id, args) {
 		this.windowObject = document.createElement("div");
 		this.windowbody = document.createElement("div");
@@ -145,9 +146,9 @@ class Window {
 	}
 	
 	/**
-	 * Deletes itself and removes all its associated properties. It is important that you do not just call it but instead replace the variable with the return value or set it to null manually, else it lives on in memory.
-	 * @method module:Windows.Window#deleteWindow
-	 * @inner
+	 * Deletes itself and removes all its associated properties. <b>It is important that you do not just call it but instead replace the variable with the return value or set it to null manually, else it lives on in memory.</b>
+	 * @method
+	 * @memberof module:Windows.Window
 	 * @returns null
 	 */
 	deleteWindow() {
@@ -159,15 +160,33 @@ class Window {
 		return null;
 	}
 	
+	/**
+	 * Applies the given set of CSS classes referred to by their name to a window.
+	 * @method 
+	 * @memberof module:Windows.Window
+	 * @param {string[]} classList 
+	 */
 	setClass(classList) {
 		window.classList.add(...classList);
 	}
 	
+	/**
+	 * Sets the innerHTML of the window body to the provided HTML
+	 * @param {string} html The HTML plus style of the window body
+	 * @method
+	 * @memberof module:Windows.Window
+	 */
 	windowHTML(html) {
 		this.windowbody.innerHTML = html;
 	}
 }
 
+/**
+ * Creates and returns the buttons for minimising, maximising and closing
+ * @param {Window[]} windows Required for setting the correct id
+ * @returns {DOMElement:div} div element containing the buttons
+ * @memberof module:Windows
+ */
 function windowControlButtons(windows) {
 	let b = [];
 	const actions = ["minimise", "maximise", "close"];
@@ -181,6 +200,12 @@ function windowControlButtons(windows) {
 	return b;
 }
 
+/**
+ * Creates a script object that gets loaded and executed. Cannot be executed from outside this module. Not that it matters for security or anything, but it means that scripts need to come with a corresponding window and cant just be added in the background. There is ways around it, no doubt. I'll have to look into it, but this thing isnt nearly far enough into development to even get a version number so what gives.
+ * @param {string} js String containing the javascript to be added
+ * @memberof module:Windows
+ * @returns {DOMElement:script}
+ */
 function addScript(js) {
 	const script = document.createElement("script");
 	script.innerHTML = js;
@@ -189,6 +214,12 @@ function addScript(js) {
 	return script;
 }
 
+/**
+ * Just for readability.
+ * @param {number} id 
+ * @memberof module:Windows
+ * @returns {DOMElement:div}
+ */
 function makeWindowControls(id) {
 	const windowControls = document.createElement("div");
 	windowControls.id = `window${id}controls`;
@@ -196,6 +227,13 @@ function makeWindowControls(id) {
 	return windowControls;
 }
 
+/**
+ * Just for readability.
+ * @param {number} id 
+ * @param {string} title 
+ * @memberof module:Windows
+ * @returns {DOMElement:div}
+ */
 function makeWindowHeader(id, title) {
 	const windowHeader = document.createElement("div");
 	windowHeader.id = `window${id}header`;
@@ -204,6 +242,15 @@ function makeWindowHeader(id, title) {
 	return windowHeader;
 }
 
+/**
+ * Listens for click events on taskbar icons, does one of a few things:<br>
+ * If window is minimised, it un-minimises it.<br>
+ * If a window is in the foreground, it minimises the window<br>
+ * If the window is not in the foreground (aka the active window), it puts that window over all other windows.
+ * @listens "click"
+ * @memberof module:Windows
+ * @param {event} event 
+ */
 function taskbarIconClicked(event) {
 	event.stopPropagation()
 	Util.closeStartMenu(event);
@@ -218,6 +265,13 @@ function taskbarIconClicked(event) {
 	
 }
 
+/**
+ * Creates a task bar icon with all necessary properties and returns it
+ * @param {number} id 
+ * @param {string} icon URL to icon
+ * @memberof module:Windows
+ * @returns {DOMElement:div}
+ */
 function makeTaskBarIcon(id, icon) {
 	const taskbarIcon = document.createElement("div");
 	taskbarIcon.classList.add("taskbar-button", "button-other");
@@ -228,6 +282,12 @@ function makeTaskBarIcon(id, icon) {
 	return taskbarIcon;
 }
 
+/**
+ * Dont touch, dont use, dont be near it. Theres no reason. This just sets up the settings window. If you can use it for something else, great, but i doubt it to be quite honest.
+ * @param {Object} args 
+ * @memberof module:Windows
+ * @method
+ */
 function settingswindow(args) {
 	Util.getElement(args.selected || "settings_appearance").dataset.selected = "true";
 	const pfp = Util.getElement("sidebar-pfp-top")
@@ -255,6 +315,12 @@ function settingswindow(args) {
 	main.innerHTML = args.subhtml;
 }
 
+/**
+ * Takes an instance of Window as an argument and pulls the corresponding window on screen to the foreground
+ * @method
+ * @memberof module:Windows
+ * @param {Window} active 
+ */
 function refreshWindows(active) {
 	for (let i = 0; i < windows.length; i++) {
 		if (windows[i] == null) continue;
@@ -267,6 +333,12 @@ function refreshWindows(active) {
 	}
 }
 
+/**
+ * Anonymous interval preventing windows from being moved off screen. Optional, similar to the widgets one.
+ * @name SizeInterval
+ * @method
+ * @memberof module:Windows
+ */
 setInterval(() => {for (let w of windows) {
 	if (w == null || 
 		w.windowObject.dataset.minimised == "true" || 
@@ -286,10 +358,24 @@ setInterval(() => {for (let w of windows) {
 	w.windowObject.style.width = boundedWidth + "px"
 }}, 10)
 
+
+/**
+ * Closes the window via the context menu
+ * @memberof module:Windows
+ * @param {event} event 
+ * @memberof module:Windows
+ * @listens click
+ */
 function closeCtxTb (event) {
 	closeWindowT(Util.getElement(`window${event.target.dataset.id}`))
 }
 
+/**
+ * Minimises the window via the context menu
+ * @memberof module:Windows
+ * @param {event} event 
+ * @listens click
+ */
 function minimiseCtxTb (event) {
 	event.stopPropagation()
 	setTimeout(()=>{
@@ -298,6 +384,12 @@ function minimiseCtxTb (event) {
 	event.target.textContent = window.dataset.minimised=="true"?"Show":"Minimise";}, 1)
 }
 
+/**
+ * Maximises the window via the context menu
+ * @param {event} event 
+ * @listens click
+ * @memberof module:Windows
+ */
 function maximiseCtxTb (event) {
 	event.stopPropagation();
 	setTimeout(()=>{
@@ -306,7 +398,12 @@ function maximiseCtxTb (event) {
 	event.target.textContent = window.classList.contains("maximised-window")?"Windowed mode":"Maximise";},1);
 }
 
-
+/**
+ * Listens for clicks on windows to change the window that should be in focus
+ * @memberof module:Windows
+ * @listens click
+ * @param {event} event 
+ */
 function activeWindowChange(event) {
 	event.stopPropagation();
 	let target = event.target;
@@ -318,12 +415,25 @@ function activeWindowChange(event) {
 	Util.closeStartMenu();	
 }
 
+/**
+ * Minimises all windows. Could be either keydown or mouse click, depending on how its going to be actually implemented
+ * @todo Implement
+ * @memberof module:Windows
+ * @param {event} event
+ * @listens keydown 
+ */
 function minimiseAll(event) {
 	for (w of windows) {
 		w.dataset.minimised = "true";
 	}
 }
 
+/**
+ * Grabs the corresponding highest relevant parent of the close button of a window and passes it to the function that actually closes it.
+ * @memberof module:Windows
+ * @param {event} event 
+ * @listens click
+ */
 function closeWindow(event) {
 	let target = event.target;
 	// console.log(target)
@@ -333,6 +443,11 @@ function closeWindow(event) {
 	closeWindowT(target)
 }
 
+/**
+ * Closes the window and removes the object from the array
+ * @memberof module:Windows
+ * @param {DOMElement:div} target 
+ */
 function closeWindowT(target) {
 	let id = target.dataset.id;
 	let toBeClosed = windows.filter((a) => {if (a==null) {return false}; return target.id == a.windowObject.id})[0];
@@ -340,7 +455,9 @@ function closeWindowT(target) {
 	windows = Util.cleanup(windows);
 }
 
-
+/**
+ * Closes all windows, removes all associated script tags, resets the windows array. Called after logout. 
+ */
 function closeAllWindows() {
 	for (let w of windows) {
 		w = w.deleteWindow();
@@ -348,8 +465,18 @@ function closeAllWindows() {
 	windows = [];
 }
 
-// Receives JS data and links it to window
-// Kinda scuffed, is basically relying on the arrays for windows and dynamic scripts to be synced at all times. 
+// 
+//
+
+/** 
+ * Receives JS data and links it to window 
+ * Kinda scuffed, is basically relying on the arrays for windows and dynamic scripts to be synced at all times. 
+ * @param {object} msg 
+ * @param {number} id 
+ * @memberof module:Windows
+ * @returns {DOMElement:script}
+ * @deprecated
+ */
 function addJS (msg, id) {
 	const tag = document.createElement("script");
 	tag.type = "text/javascript";
@@ -359,7 +486,13 @@ function addJS (msg, id) {
 	return tag;
 }
 
-// Removing global dynamic scripts is both easier and harder than the window linked scripts
+
+/**
+ * Receives a js script as a string and loads it into the DOM as a script tag without linking it to a window. 
+ * @memberof module:Windows
+ * @param {object} msg 
+ * @deprecated
+ */
 function addJSG (msg) {
 	const tag = document.createElement("script");
 	tag.type = "text/javascript";

@@ -26,15 +26,44 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { makeButton, connLostReset } from "./util.js";
+            <pre class="prettyprint source linenums"><code>/**
+ * @file errormessage.js
+ * @author Smittel
+ */
+import { makeButton, connLostReset } from "./util.js";
+/**
+ * Errormessages
+ * @module ErrorMessage
+ */
+
+/**
+ * Shorthands used by the msgbox parser that automatically create the buttons with the correct highlighting for default buttons.
+ * @namespace Buttons
+ */
+
+/**
+ * Creates and returns a "OK" Button
+ * @memberof module:ErrorMessage~Buttons
+ * @returns {HTMLButtonElement[]}
+ */
 function btnOk() {
 	return [makeButton("OK", true)];
 }
 
+/**
+ * Creates and returns "Cancel" and "OK" Buttons
+ * @memberof module:ErrorMessage~Buttons
+ * @returns {HTMLButtonElement[]}
+ */
 function btnCancelOk() {
 	return [makeButton("Cancel", false), makeButton("OK", true)];
 }
 
+/**
+ * Creates and returns "Abort", "Retry" and "Ignore" buttons
+ * @memberof module:ErrorMessage~Buttons
+ * @returns {HTMLButtonElement[]}
+ */
 function btnAbortRetryIgnore() {
 	return [
 		makeButton("Abort", false),
@@ -43,6 +72,11 @@ function btnAbortRetryIgnore() {
 	]
 }
 
+/**
+ * Creates and returns "Yes", "No" and "Cancel" Button
+ * @memberof module:ErrorMessage~Buttons
+ * @returns {HTMLButtonElement[]}
+ */
 function btnYesNoCancel() {
 	return [
 		makeButton("Yes", true),
@@ -51,6 +85,11 @@ function btnYesNoCancel() {
 	]
 }
 
+/**
+ * Creates and returns a "Yes" and "No" Button
+ * @memberof module:ErrorMessage~Buttons
+ * @returns {HTMLButtonElement[]}
+ */
 function btnYesNo() {
 	return [
 		makeButton("Yes", true),
@@ -58,6 +97,11 @@ function btnYesNo() {
 	]
 }
 
+/**
+ * Creates and returns a "Retry" and "Cancel" Button
+ * @memberof module:ErrorMessage~Buttons
+ * @returns {HTMLButtonElement[]}
+ */
 function btnRetryCancel() {
 	return [
 		makeButton("Retry", true),
@@ -65,6 +109,12 @@ function btnRetryCancel() {
 	]
 }
 
+/**
+ * Array containing the functions that create the buttons for the message box in the correct order according to the bitmap specification
+ * @see errorMessage
+ * @member
+ * @memberof module:ErrorMessage
+ */
 const errorBoxFunctions = [
 	btnOk,
 	btnCancelOk,
@@ -89,12 +139,14 @@ const errorBoxFunctions = [
 .tg .tg-ne6m{background-color:#656565;border-color:inherit;color:#333333;text-align:left;vertical-align:top}
 &lt;/style>&lt;table class="tg">&lt;thead>&lt;tr>&lt;th class="tg-0pky" colspan="4">Values&lt;/th>&lt;th class="tg-0pky">Meaning&lt;/th>&lt;/tr>&lt;/thead>&lt;tbody>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">000&lt;/td>&lt;td class="tg-0pky">OK&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">001&lt;/td>&lt;td class="tg-0pky">CANCEL OK&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">010&lt;/td>&lt;td class="tg-0pky">ABORT RETRY IGNORE&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">011&lt;/td>&lt;td class="tg-0pky">YES NO CANCEL&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">100&lt;/td>&lt;td class="tg-0pky">YES NO&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">101&lt;/td>&lt;td class="tg-0pky">RETRY CANCEL&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-c6of">0&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">Parent not blocked&lt;br>&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xx&lt;/td>&lt;td class="tg-c6of">1&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">Parent blocked&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">00&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">CRITICAL&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">01&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">QUESTION&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">10&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">EXCLAMATION&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-c6of">11&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">INFORMATION&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-c6of">0&lt;/td>&lt;td class="tg-ne6m">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">Visually parented to window&lt;/td>&lt;/tr>&lt;tr>&lt;td class="tg-c6of">1&lt;/td>&lt;td class="tg-ne6m">xx&lt;/td>&lt;td class="tg-re1e">x&lt;/td>&lt;td class="tg-re1e">xxx&lt;/td>&lt;td class="tg-0pky">Visually not tied to window&lt;/td>&lt;/tr>&lt;/tbody>&lt;/table>
  * @function errorMessage
- * @param {object} parent - DOM Object that the error message will be bound to.
+ * @param {HTMLDivElement} parent - DOM Object that the error message will be bound to.
  * @param {number} layout - Integer defining the type of error message, refer to function description
  * @param {string} title - Title of the error message
  * @param {string} text - The error message text
- * @param {object} functions - Array of functions that determine the behaviour of the buttons
- * @returns {object} - Optional. Returns the full error message object with all children.
+ * @param {function[]} functions - Array of functions that determine the behaviour of the buttons
+ * @returns {HTMLDivElement} - Can be saved to a variable, doesnt have to be. It is added to the DOM either way.
+ * @todo Add all remaining types of message boxes according to the specifications
+ * @memberof module:ErrorMessage
  */
 function errorMessage(parent, layout, title, text, functions) {
 	// console.log(parent)
@@ -187,6 +239,12 @@ function errorMessage(parent, layout, title, text, functions) {
 	return darken
 }
 
+/**
+ * Closes a dialog box. If it is a connection lost error, it will reset the &lt;code>connLost&lt;/code> variable, so it can reappear if the connection isnt reestablished
+ * @memberof module:ErrorMessage
+ * @param {MouseEvent} event 
+ * @listens mouseup
+ */
 function errorBoxCloseButton(event) {
 	let db = event.target.parentNode.parentNode;
 	if (db.parentNode.id.match(/errorDarkener\d+/g)) db = db.parentNode;
@@ -210,13 +268,13 @@ export {errorMessage}</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analog">analog</a></li><li><a href="global.html#dayMonthYear">dayMonthYear</a></li><li><a href="global.html#dayMonthYearNoName">dayMonthYearNoName</a></li><li><a href="global.html#errorMessage">errorMessage</a></li><li><a href="global.html#hourMinutes">hourMinutes</a></li><li><a href="global.html#setLogin">setLogin</a></li><li><a href="global.html#userLogOut">userLogOut</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Auth.html">Auth</a></li><li><a href="module-Clock.html">Clock</a></li><li><a href="module-DesktopSymbol.html">DesktopSymbol</a></li><li><a href="module-Dragging.html">Dragging</a></li><li><a href="module-ErrorMessage.html">ErrorMessage</a></li><li><a href="module-Login.html">Login</a></li><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Widget.html">Widget</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-ErrorMessage-Buttons.html">Buttons</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="module-Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4range">Number․prototype․range</a></li><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4to">Number․prototype․to</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Apr 13 2023 16:38:03 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 15 2023 02:05:34 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,4 +1,9 @@
 import { closeAllWindows } from "./windows.js";
+/**
+ * Everything here is temporary!
+ * @todo Implement proper authentification
+ * @module Auth
+ */
 // TEMPORARY MEASURE
 let login = {};
 /**
@@ -11,7 +16,6 @@ function setLogin(l) {
 
 /**
  * Will be changed once theres actual authentification and sessions
- * @todo Implement proper authentification
  * @param {event} event 
  */
 function userLogOut(event) {

@@ -1,3 +1,10 @@
+/**
+ * @file main.js
+ * @author Smittel
+ * @name Server
+ * @description I really dont feel like documenting this rn, any questions hmu
+ */
+
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -26,32 +33,33 @@ const desktopSymbols = {
 			image: "folder-blender.png",
 			type: "folder",
 			name: "Blender",
+			data: null, // null for folders
 			sub: [
 				{
 					image: "",
 					name: "text",
 					type: "internal",
-					event: "request"
+					data: "request"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				}
 			]
 		},{
@@ -59,67 +67,62 @@ const desktopSymbols = {
 			image: "github-logo.png",
 			type: "folder",
 			name: "Test",
+			data: null,
 			sub: [
 				{
 					image: "",
 					name: "text",
 					type: "internal",
-					event: "request"
+					data: "request"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				},{
 					image: "",
 					name: "text",
 					type: "external",
-					event: "link"
+					data: "link"
 				}
 			]
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
+			image: "/images/logo.png",
+			type: "page",
+			name: "Test",
+			data: "app_name", //identifier of application or page to request from server
+		},{
+			pos: ["calc(50% - 15vmin)","calc(50% - 20vmin"],
 			image: "youtube.png",
-			type: "folder",
+			type: "link",
 			name: "Blender",
-			sub: [
-				{
-					image: "",
-					name: "text",
-					type: "internal",
-					event: "request"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					event: "link"
-				}
-			]
+			data: "url", //url for links (external)
 		}
 	]
 	}
@@ -160,7 +163,10 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-	socket.emit("desktop_symbols", desktopSymbols);
+	setTimeout(() => {
+		socket.emit("desktop_symbols", desktopSymbols);
+	}, 100);
+	
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);
   });
@@ -280,7 +286,8 @@ function grabNotes(username) {
 }
 
 
-function serveSubpage(msg) {
+function serveSubpage({requested}) {
+	console.log(requested)
 }
 
 server.listen(3000, () => {

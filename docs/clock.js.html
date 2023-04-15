@@ -26,7 +26,14 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file clock.js
+ * @description Displays time, parses dates etc.
+ * @exports clockTick,hourMinutes,dayMonthYear,dayMonthYearNoName,getSuffix,renderCalendar,initCalendar
+ * @author Smittel
+ * @module Clock
+ */
+
 import { getElement } from "./util.js";
 const monthnames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const weekdays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
@@ -60,7 +67,8 @@ function analog(date) {
  * @function getSuffix
  * @param {int} n
  * @returns {string} - Number plus suffix
- * @memberof clock
+ * @example Clock.getSuffix(5); -> "5th"
+ * Clock.getSuffix(3); -> "3rd"
  */
 function getSuffix(n) {
 	n = n % 100;
@@ -73,7 +81,7 @@ function getSuffix(n) {
  * Returns a formatted string with a "standard" way of writing dates.
  * "Standard" in this case meaning the way i would write them, though it should be easily understandable
  * @param {Date} date 
- * @returns {String}
+ * @returns {String} Weekday, Monthname DD YYYY
  */
 function dayMonthYear(date) {
 	let year = date.getFullYear();
@@ -85,6 +93,7 @@ function dayMonthYear(date) {
 
 /**
  * Returns a formatted string in the format 'month name' 'day' 'year'
+ * @function
  * @param {Date} date 
  * @returns {String}
  */
@@ -96,6 +105,9 @@ function dayMonthYearNoName(date) {
 	
 };
 
+/**
+ * Updates the clock display
+ */
 function clockTick() {
 	let currDate = new Date(Date.now());
 	analog(currDate)
@@ -106,11 +118,24 @@ function clockTick() {
 }
 
 // CALENDAR ///////////////////////////////////////////////////////////////////////////////
-const getDays = (year, month) => {
+
+
+/**
+ * Returns the number of days in a given month
+ * @method
+ * @name getDays
+ * @param {number} year 
+ * @param {number} month 
+ * @returns {number} Number of days in month
+ */
+function getDays (year, month) {
     return new Date(year, month+1, 0).getDate();
 };
 
-
+/**
+ * @member appointments
+ * @description Temporary, will be replaced by server response
+ */
 var appointments = [
 	{"date": new Date(2023, 2, 3), "name": "placeholder"},
 	{"date": new Date(2023, 2, 1), "name": "appointments"},
@@ -152,10 +177,14 @@ minus.addEventListener("click", (event) => {
 });
 
 function initCalendar() {
-	console.log("selectedMonth, selectedYear")
 	renderCalendar(selectedMonth, selectedYear);
 }
 
+/**
+ * Renders the calendar with a given month and year
+ * @param {number} month 0 through 11
+ * @param {number} year full year (4 digits)
+ */
 function renderCalendar(month, year) {
 	var dateArray = [];
 	var firstOfMonth = new Date(year, month, 0);
@@ -196,20 +225,17 @@ function renderCalendar(month, year) {
 	}
 	for (let i = 0; i &lt; getDays(year, month); i++) {
 		const t = document.createElement("div");
-		t.classList.add("calendar-date-block");
-		t.innerHTML = i + 1
+		t.classList.add("calendar-date-block", "unselectable");
+		t.innerHTML = i + 1;
+		const filter = (a) => {
+			return a.date.getDate() == i+1 &amp;&amp; a.date.getMonth() == month &amp;&amp; a.date.getFullYear() == year
+		}
+		if(appointments.filter(filter).length != 0) {
+			t.dataset.appointment = "true"
+		}
+		t.dataset.valid = "true"
 		daytable.push(t);
 	}
-
-	// var table = "";
-	
-	// 	table += "&lt;tr>"
-	// 	for (let j = 0; j &lt; 7; j++) {
-	// 		var check = new Date(year, month, i*7 + j - offset);
-	// 		table += `&lt;td class="tableElementCal ${appointments.find(search => search.date.getTime() === check.getTime()) !== undefined?"appointment":""}">${dateArray[i*7 + j] || ""}&lt;/td>`
-	// 	}
-	// 	table += "&lt;/tr>"
-	// }
 	getElement("cal").textContent = "";
 	getElement("cal").append(...daytable);
 	
@@ -227,15 +253,13 @@ function datifyDay(i) {
 	return `${days[i.getDay()]}, ${months[i.getMonth()]} ${i.getDate()}${suffix} ${i.getFullYear()}`;
 }
 
+/**
+ * Returns a date string
+ * @param {Date} i Date object
+ * @returns Parsed Date in the format [Month] [Day] [Year] 
+ */
 function datifyShort(i) {
-	var suff = ["st", "nd", "rd", "th"];
-	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	
-	var suffix = suff[(Math.min(4, i.getDate()%10) - 1) % 4];
-	if (i.getDate() >= 11 &amp;&amp; i.getDate() &lt;= 13) {
-		suffix = "th";
-	}
-	return `${months[i.getMonth()]} ${i.getDate()}${suffix} ${i.getFullYear()}`;
+	return `${monthnames[i.getMonth()]} ${getSuffix(i.getDate())} ${i.getFullYear()}`;
 }
 
 function datifyShortTime(i) {
@@ -245,7 +269,7 @@ function datifyShortTime(i) {
 	if (i.getDate() >= 11 &amp;&amp; i.getDate() &lt;= 13) {
 		suffix = "th";
 	}
-	return `${monthnames[i.getMonth()]} ${i.getDate()}${suffix} ${i.getFullYear()}, ${("00" + i.getHours()).slice(-2)}:${("00" + i.getMinutes()).slice(-2)}`;
+	return `${monthnames[i.getMonth()]} ${getSuffix(i.getDate())} ${i.getFullYear()}, ${("00" + i.getHours()).slice(-2)}:${("00" + i.getMinutes()).slice(-2)}`;
 }
 // END CALENDAR ///////////////////////////////////////////////////////////////////////////////
 clockTick();
@@ -261,13 +285,13 @@ export { clockTick ,hourMinutes, dayMonthYear, dayMonthYearNoName, getSuffix, re
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analog">analog</a></li><li><a href="global.html#dayMonthYear">dayMonthYear</a></li><li><a href="global.html#dayMonthYearNoName">dayMonthYearNoName</a></li><li><a href="global.html#errorMessage">errorMessage</a></li><li><a href="global.html#hourMinutes">hourMinutes</a></li><li><a href="global.html#setLogin">setLogin</a></li><li><a href="global.html#userLogOut">userLogOut</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Auth.html">Auth</a></li><li><a href="module-Clock.html">Clock</a></li><li><a href="module-DesktopSymbol.html">DesktopSymbol</a></li><li><a href="module-Dragging.html">Dragging</a></li><li><a href="module-ErrorMessage.html">ErrorMessage</a></li><li><a href="module-Login.html">Login</a></li><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Widget.html">Widget</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-ErrorMessage-Buttons.html">Buttons</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="module-Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4range">Number․prototype․range</a></li><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4to">Number․prototype․to</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Apr 13 2023 16:38:03 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 15 2023 02:05:34 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

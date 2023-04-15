@@ -26,135 +26,301 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as Clock from "./clock.js";
-import { dragElement } from "./dragging.js";
-import * as WindowManagement from "./windows.js";
-import * as Util from "./util.js"
-import { notification } from "./notification.js";
-import { errorMessage } from "./errormessage.js";
-import * as Login from "./login.js"
-import * as StartMenu from "./startmenu.js"
-import * as DesktopSymbol from "./desktopSymbols.js"
-import * as Widget from "./widgets.js"
-
-/**
+            <pre class="prettyprint source linenums"><code>/**
  * @file main.js
  * @author Smittel
- * @name Main
- * @namespace Main
+ * @name Server
+ * @description I really dont feel like documenting this rn, any questions hmu
  */
 
-console.log((5).range(3))
-console.log((5).range(-3))
-console.log((3).to(5))
-console.log((3).to(-5))
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+const fs = require("fs")
+app.use(express.static('public'));
 
+let notes = {
+	"test": [{"d": 0, "t": "testoman"},{"d": 10000, "t":"another"}]
+}
 
-const clientTick = setInterval(Util.tick, 1000); // Timing might not be entirely accurate in my tests, doesnt have to be tho.
-// Make the DIV element draggable:
-dragElement(Util.getElement("widget-notes"));
-dragElement(Util.getElement("widget-friends"));
-dragElement(Util.getElement("calendar-widget"));
+//PASSWORDS ARE TEMPORARY AND TO BE REPLACED WITH AN ENCRYPTED VERSION
+// WHOLE THING NEEDS REWORKING
+// A DATABASE SHOULD DO THE TRICK
 
-
-// Temporarily disabled
-// Will be uncommented once the custom context menus are a thing
-// document.addEventListener('contextmenu', event => event.preventDefault());
-
-
-Util.getElement("toggle-notes").addEventListener("click", Widget.toggleWidget);
-Util.getElement("toggle-friends").addEventListener("click", Widget.toggleWidget);
-
-Util.getElement("snapping-prev").addEventListener("click", Util.closeStartMenu)
-Util.getElement("desktop-clock-container").addEventListener("mousedown", Util.closeStartMenu)
-Util.getElement("widget-body-notes").addEventListener("mousedown", Util.closeStartMenu)
-Util.getElement("widget-body-friends").addEventListener("mousedown", Util.closeStartMenu)
-Clock.initCalendar();
-
-Util.getElement("taskbar-search").addEventListener("mouseup", StartMenu.searchAreaHandler);
-Util.getElement("searchbar").addEventListener("focusout", Util.closeSearchBox);
-Util.getElement("taskbar-home").addEventListener("mouseup", openStartMenu);
-
-/**
- * A fairly fast interval. Prevents widgets from being moved off-screen.
- * In theory you could still get them back by zooming out but thats a usability nightmare 
- * So I just prevent that from happening. You can remove it if you want.&lt;br>
- * (anonymous)
- * @name Widget_Interval
- * @memberof Main
- */
-setInterval(() => {
-	// More flexible than before, also not as big
-	// Am not sure if this is the best way to do it. But its the least complicated one
-	// the alternative involved like a dozen event listeners, maybe later
+let friends = {
 	
-	const widgets = document.getElementsByTagName("desktop-widget");
-	const wh = window.innerHeight;
-	const ww = window.innerWidth;
-	
-	for (let w of widgets) {
-		let height = parseInt(w.style.height);
-		let width  = parseInt(w.style.width);
-		let top    = parseInt(w.style.top);
-		let left   = parseInt(w.style.left);
-		
-		let minheight = 360;
-		
-		if (w.dataset.small == "true") {
-			minheight = 36;
-			height = 36;
+}
+
+const desktopSymbols = {
+		symbols: [
+		{
+			pos: ["calc(50% - 10vmin)","calc(50% - 10vmin"],
+			image: "folder-blender.png",
+			type: "folder",
+			name: "Blender",
+			data: null, // null for folders
+			sub: [
+				{
+					image: "",
+					name: "text",
+					type: "internal",
+					data: "request"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				}
+			]
+		},{
+			pos: ["calc(50% - 15vmin)","calc(50% - 60vmin"],
+			image: "github-logo.png",
+			type: "folder",
+			name: "Test",
+			data: null,
+			sub: [
+				{
+					image: "",
+					name: "text",
+					type: "internal",
+					data: "request"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				},{
+					image: "",
+					name: "text",
+					type: "external",
+					data: "link"
+				}
+			]
+		},{
+			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
+			image: "/images/logo.png",
+			type: "page",
+			name: "Test",
+			data: "app_name", //identifier of application or page to request from server
+		},{
+			pos: ["calc(50% - 15vmin)","calc(50% - 20vmin"],
+			image: "youtube.png",
+			type: "link",
+			name: "Blender",
+			data: "url", //url for links (external)
 		}
-		
-		w.style.top  = Util.clamp(0, top,  wh - height) + "px";
-		w.style.left = Util.clamp(0, left, ww - width) + "px"
-		w.style.height = Util.clamp(minheight, height, wh * 0.9) + "px";
-		w.style.width  = Util.clamp(240, width, ww * 0.5) + "px";
+	]
+	}
+
+
+let users = [
+	{
+		id: "id",
+		password: "password",
+		username: "username",
+		handle: "0000", //4 digit number like discord
+		nickname: "nickname",
+		settings: {
+			some: "settings"
+		},
+		email: "email@example.com",
+		verified: true,
+		registered_since: 0,
+	},
+	{
+		id: "test",
+		password: "test",
+		username: "test_user",
+		handle: "0909",
+		nickname: "for testing",
+		settings: {
+			
+		},
+		email: "test@example.com",
+		verified: true,
+		registered_since: 0,
+	}
+]
+
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', (socket) => {
+	setTimeout(() => {
+		socket.emit("desktop_symbols", desktopSymbols);
+	}, 100);
+	
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', msg);
+  });
+  
+  // Setinterval 1s heartbeat, serves as driver for client clock
+  // used to detect lost connection clientside
+  
+  
+  function heartbeat () {
+	  socket.emit("heartbeat", "");
+  }
+  let hb = setInterval(heartbeat, 1000);
+  socket.on("disconnect", ()=>{clearInterval(hb)});
+  
+  
+  
+  // socket.emit("add_dynscript", {js: "alert('test')"})
+  socket.on('login', (msg) => {
+	
+	  let t = users.filter((u) => u.username == msg.username)
+		  
+	  if (t.length == 0) {
+		  socket.emit("wrong_pw", "");
+		  return;
+	  }
+	 if (msg.password == t[0].password) {
+		 
+		  socket.emit("init", {
+			  username: t[0].username,
+			  handle: t[0].handle,
+			  nickname: t[0].nickname,
+			  notes: grabNotes(t[0].id),
+			  friends: friends[t[0].id],
+			  id: t[0].id,
+			  profilePicture: "default.jpg"
+		  })
+		  setTimeout(function () {
+			  
+			socket.emit("notification", {
+				title: "Login successful",
+				image: "default.jpg",
+				description: "You successfully logged in. Congratulations on being capable of doing basic tasks, proud of ya, bozo",
+				clickEvent: {}
+			})
+		  }, 200);
+	  } else {
+		  socket.emit("wrong_pw", "");
+	  }
+  });
+  
+  socket.on('delete_note', (msg) => {
+	  deleteNote(msg.user, msg.index); //user is token
+  })
+  socket.on("add_note", (msg) => {
+	  // ALL USER RELATED STUFF NEEDS TO USE THE ACCORDING SESSION TOKEN!!!
+	  addNote(msg.user, msg.note);
+  })
+  socket.on("request_page", serveSubpage);
+  socket.on("request_settings", (msg) => {
+	serveSettings(msg, socket);
+  });
+  socket.on("logout", (msg) => {
+	  socket.emit("logout_confirm","")
+	  socket.emit("notification", {
+				title: "Logout successful",
+				image: "default.jpg",
+				description: "Well fuck off then, i dont care.",
+				clickEvent: {}
+			})
+  })
+  socket.on("req_subsettings", (msg) => {
+	 reqSettingsSub(socket, msg); 
+  });
+});
+
+function reqSettingsSub(socket, msg) {
+	const html = fs.readFileSync(`./html/settings/${msg.query.split("_")[1]}.html`).toString();
+	socket.emit("sub_settings", {html: html, id: msg.id});
+}
+
+function serveSettings(msg, socket) {
+	const sub = msg.page || "settings_appearance"
+	const html = fs.readFileSync(`./html/settings/${sub.split("_")[1]}.html`).toString();
+	const js = undefined;// `alert("ooo");`
+	socket.emit("add_window", {title: "Settings", "html":fs.readFileSync("./settings.html").toString(), icon: "settings.png", windowClass: "settingswindow", selected: sub, subhtml: html, js: js});
+	let reqS = msg.requested || "appearance";
+	
+}
+
+function deleteNote(user, index) {
+	if (!notes[user] || notes[user].length == 0) return;
+	let newNoteList = [];
+	for (let i = 0; i &lt; notes[user].length; i++) {
+		if (i != index) {
+			newNoteList.push(notes[user][i]);
+		}
 	}
 	
+	notes[user] = newNoteList;
 	
-}, 100);
+}
+
+function addNote(user, note) {
+	
+	notes[user] = notes[user] || [];
+	
+	
+	notes[user].push(note);
+}
+
+function grabUsername(token) {
+return users[token].username
+}
+
+function grabNotes(username) {
+	return notes[username]
+}
 
 
-Login.addLoginButton();
-Util.startmenuBottom();
-// SOCKET LISTENERS
-socket.on("logout_confirm", Login.logoutHandle);
-socket.on("wrong_pw", Login.wrongPW)
-socket.on("heartbeat", Util.resetHeartbeat);
-socket.on("init", Login.initialise);
-/**
- * Listens for push notifications
- * @listens notification Server push notifications
- * @ignore
- * @memberof Main
- */
-socket.on("notification", notification);
-/**
- * This will probably be removed again, since it doesnt really add anything
- * @memberof Main
- * @ignore
- * @listens desktop_symbols Server provides the desktop symbols and their placement
- */
-socket.on("desktop_symbols", DesktopSymbol.setupDesktopSymbols); // Why did i do this?
-/**
- * Server response when user requests a window
- * @memberof Main
- * @ignore
- * @listens add_window The window data including scripts, html, styling etc.
- */
-socket.on("add_window", WindowManagement.addWindow);
-/**
- * The specific settings categories are served separately, will probably be changed at some point.
- * @memberof Main
- * @ignore
- * @listens sub_settings The HTML, styling, scripts for a settings category
- */
-socket.on("sub_settings", (msg) => {
-	Util.getElement(`settings-main${msg.id}`).innerHTML = msg.html
-});
-// I dont think those will be added back anytime soon
-// socket.on("add_dynscript", addJS); // Dynamic scripts
-// socket.on("add_dynscript_g", addJSG); // same but global</code></pre>
+function serveSubpage({requested}) {
+	console.log(requested)
+}
+
+server.listen(3000, () => {
+  console.log('listening on *:3000');
+});</code></pre>
         </article>
     </section>
 
@@ -164,13 +330,13 @@ socket.on("sub_settings", (msg) => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analog">analog</a></li><li><a href="global.html#dayMonthYear">dayMonthYear</a></li><li><a href="global.html#dayMonthYearNoName">dayMonthYearNoName</a></li><li><a href="global.html#errorMessage">errorMessage</a></li><li><a href="global.html#hourMinutes">hourMinutes</a></li><li><a href="global.html#setLogin">setLogin</a></li><li><a href="global.html#userLogOut">userLogOut</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Auth.html">Auth</a></li><li><a href="module-Clock.html">Clock</a></li><li><a href="module-DesktopSymbol.html">DesktopSymbol</a></li><li><a href="module-Dragging.html">Dragging</a></li><li><a href="module-ErrorMessage.html">ErrorMessage</a></li><li><a href="module-Login.html">Login</a></li><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Widget.html">Widget</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-ErrorMessage-Buttons.html">Buttons</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="module-Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4range">Number․prototype․range</a></li><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4to">Number․prototype․to</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Apr 13 2023 16:38:03 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 15 2023 02:15:00 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

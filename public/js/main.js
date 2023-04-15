@@ -83,7 +83,7 @@ setInterval(() => {
 	
 }, 100);
 
-
+socket.on("connection", (msg) => {console.log("reconnect")})
 Login.addLoginButton();
 StartMenu.startmenuBottom();
 // SOCKET LISTENERS

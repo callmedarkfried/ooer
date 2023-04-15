@@ -76,6 +76,33 @@ calendar-widget {
     display: flex;
     justify-content: center;
     align-items: center;
+	transition: border-width 0.2s;
+	box-sizing: border-box;
+	cursor:pointer;
+}
+
+.calendar-date-block[data-valid="true"]:hover {
+	border-style: solid;
+	border-width: 3px;
+	border-radius: 3px;
+	border-color: rgba(255,255,255,0.3);
+	background-color: rgba(255,255,255,0.1);
+	transition: border-width 0.1s;
+}
+
+.calendar-date-block[data-appointment="true"] {
+	color:#f55;
+	font-weight: 600;
+}
+
+
+.calendar-date-block[data-appointment="true"]:hover {
+	border-style: solid;
+	border-width: 3px;
+	border-radius: 3px;
+	border-color: rgba(255,120,120,0.3);
+	background-color: rgba(255,120,120,0.1);
+	transition: border-width 0.1s;
 }
 
 

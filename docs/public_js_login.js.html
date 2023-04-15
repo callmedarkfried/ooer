@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: public/js/login.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: public/js/login.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file login.js
+ * @author Smittel
+ */
+import { getElement } from "./util.js";
+import * as Widgets from "./widgets.js";
+import * as Auth from "./auth.js";
+import { closeStartMenu } from "./util.js";
+import { closeAllWindows } from "./windows.js";
+
+/**
+ * Contains functionality relating to login and signup
+ * @todo Implement proper signup including communication with back end.
+ * @module Login
+ */
+
+
+
+/**
+ * The login/signup background, blurs and darkens everything except the form
+ * @member
+ * @memberof module:Login
+ * @type {HTMLDivElement}
+ */
+const darkener = document.createElement("div");
+
+/**
+ * The div containing the login/signup form
+ * @member
+ * @memberof module:Login
+ * @type {HTMLDivElement}
+ */
+
+const loginbox = document.createElement("div");
+
+/**
+ * A small error message. Not a dialog box, just a small error
+ * @member
+ * @memberof module:Login
+ * @type {HTMLDivElement}
+ */
+const wrongpw = document.createElement("div")
+
+wrongpw.classList.add("wrong-password")
+
+/**
+ * Sends a server request for the user settings
+ * @param {MouseEvent} event 
+ */
+function openUserSettings(event) {
+	closeStartMenu()
+	socket.emit("request_settings", {})
+}
+
+/**
+ * Sends a request to the server to open the Settings with a specific category
+ * @param {string} sub The settings category to open by default
+ * @memberof module:Login
+ */
+function openUserSettingsS(sub) {
+	closeStartMenu()
+	socket.emit("request_settings", {"page": sub})
+}
+
+/**
+ * Technically not supposed to be called other than through the specific socket message
+ * @param {Object} msg
+ * @param {string} msg.username The username
+ * @param {string} msg.handle A 4 digit number. Basically like discord does it
+ * @param {string} msg.nickname The nickname of the user
+ * @param {Object[]} msg.notes List of all notes by the user
+ * @param {Object[]} msg.friends List of friends
+ * @param {number} msg.id Unique identifier
+ * @param {string} msg.profilePicture The url of the users profile picture
+ * @param {string} msg.token not yet implemented, contains the authentification token
+ * @memberof module:Login
+ * 
+ */
+function initialise (msg) {
+	darkener.remove();
+	const usernameField = document.createElement("div");
+	usernameField.id = "username-field";
+	usernameField.classList.add("username-field");
+	
+	const  parent = getElement("startmenu");
+	
+	
+	const usernameFieldElements = [
+	{id: "username-main", classList: ["username-main"], innerHTML: msg.nickname, type: "font"},
+	{id: "username-small", classList: ["username-small"], innerHTML: msg.username + "#" + msg.handle, type: "font"},
+	{id: "user-pfp", classList: ["user-profile-picture"], innerHTML: "", type: "div"}
+	]
+	
+	let elmnts = []
+	
+	for (let u of usernameFieldElements) {
+		const c = document.createElement(u.type);
+		c.id = u.id;
+		c.classList.add(...u.classList);
+		c.innerHTML = u.innerHTML;
+		elmnts.push(c)
+	}
+	
+	
+	// Makes adding new elements easier
+	let buttons = []
+	const smTopBtns = [
+		{
+			id: "usersettings", 
+			classList: ["startmenu-top-button", "startmenu-top-button-settings"], 
+			display: '&lt;i class="fa-solid fa-gear fa-lg">&lt;/i>',
+			handler: openUserSettings
+		},
+		{
+			id: "logout", 
+			classList: ["startmenu-top-button", "startmenu-top-button-logout"], 
+			display: '&lt;i class="fa-solid fa-right-from-bracket">&lt;/i>',
+			handler: Auth.userLogOut
+		}
+	]
+	for (let c of smTopBtns) {
+		const e = document.createElement("a");
+		e.id = c.id;
+		e.classList.add(...c.classList);
+		e.innerHTML = `&lt;center>${c.display}&lt;/center>`;
+		e.addEventListener("mouseup", c.handler);
+		buttons.push(e)
+	}
+	
+	
+	
+	
+	usernameField.append(...elmnts);
+	usernameField.addEventListener("mouseup", (event) => {
+		openUserSettingsS("settings_profile")
+	})
+	
+	const startmenuLayout = [
+		{id: "startmenu-top", classList: ["startmenu-top"], child: [usernameField, ...buttons]},
+		{id: "startmenu-favorites", classList: ["startmenu-favorites"], child: []}
+	]
+	
+	for (let c of startmenuLayout) {
+		const e = getElement(c.id);
+		e.classList.add(...c.classList);
+		e.textContent = "";
+		e.append(...c.child)
+	}
+	
+	
+	const smf = getElement("startmenu-favorites");
+	
+	smf.addEventListener("wheel", (evt) => {
+		evt.preventDefault();
+		smf.scrollLeft += evt.deltaY;
+	});
+	
+	let favl = []
+	for (let i = 0; i &lt; 12; i++) {
+		const e = document.createElement("a");
+		e.classList.add("sm-favorites-element");
+		getElement("startmenu-favorites").appendChild(e);
+	}
+	
+	const addNoteButton = document.createElement("widget-button");
+	addNoteButton.id = "add-notes";
+	addNoteButton.dataset.small = getElement("widget-notes").dataset.small
+	addNoteButton.classList.add("add-button")
+	
+	
+	
+	getElement("widget-notesheader").appendChild(addNoteButton);
+	Widgets.setNotes(msg.notes);
+	Widgets.noteBodyInner();
+	Widgets.friendslist(msg.friends)
+	
+	Auth.setLogin(msg);
+}
+
+/**
+ * Creates the "login" and "sign up" buttons in the start menu, if the user is not "authentificated"
+ * @memberof module:Login
+ */
+function addLoginButton () {
+	var sm = getElement("startmenu");
+	var lb = document.createElement("div");
+	var sb = document.createElement("div");
+	
+	lb.id = "loginbutton";
+	lb.classList.add("startmenu-button-lg-su", "login-button", "unselectable")
+	lb.addEventListener("mouseup", (event) => {
+		loginScreen();
+	});
+	lb.innerHTML = "Log in";
+	
+	sb.id = "signupbutton";
+	sb.classList.add("startmenu-button-lg-su", "signup-button", "unselectable")
+	sb.addEventListener("mouseup", (event) => {
+		signupScreen();
+	});
+	sb.innerHTML = "Sign up";
+	
+	var topDiv = getElement("startmenu-top")
+	
+	topDiv.append(lb, sb);
+	sm.append(topDiv);
+}
+
+/**
+ * Creates the login form
+ * @memberof module:Login
+ */
+function loginScreen() {
+	darkener.textContent = "";
+	loginbox.textContent = ""
+	darkener.classList.add("darken");
+	
+	var pfp = document.createElement("div");
+	var loginTBUser = document.createElement("input")
+	var loginTBPass = document.createElement("input")
+	var loginbutton = document.createElement("a")
+	var abortbutton = document.createElement("a")
+	
+	pfp.classList.add("loginbox-pfp")
+	
+	
+	loginbox.classList.add("loginbox");
+	
+	
+	
+	loginTBUser.type = "text";
+	loginTBUser.style = "top: 230px;";
+	loginTBUser.placeholder = "Username"
+	loginTBUser.classList.add("login-tb");
+	loginTBUser.id = "tb-username";
+	
+	
+	loginTBPass.type = "password";
+	loginTBPass.style = "top: 294px;"
+	loginTBPass.placeholder = "Password"
+	loginTBPass.classList.add("login-tb", "login-tb-pw");
+	loginTBPass.id = "tb-password";
+	
+	loginTBPass.addEventListener("keydown", (event) => {
+		if (event.keyCode == 13) {
+			socket.emit("login", {
+				username: loginTBUser.value, 
+				password: loginTBPass.value
+			}) 
+			loginTBUser.value = "";
+			loginTBPass.value = "";
+		}
+	});
+
+	loginTBUser.addEventListener("keydown", (event) => {
+		if (event.keyCode == 13) {
+			socket.emit("login", {
+				username: loginTBUser.value, 
+				password: loginTBPass.value
+			}) 
+			loginTBUser.value = "";
+			loginTBPass.value = "";
+			
+		}
+	});
+	
+
+	
+	loginbutton.classList.add("login-button", "login-button-submit","unselectable")
+	abortbutton.classList.add("login-button", "login-button-abort", "unselectable")
+	
+	
+	// loginbutton.innerHTML = "&lt;center>&amp;nbsp;➤&lt;/center>"
+	loginbutton.innerHTML = '&lt;center>&lt;i class="fa-solid fa-arrow-right">&lt;/i>&lt;/center>'
+	abortbutton.innerHTML = "&lt;center>✖&lt;/center>"
+	
+	loginbox.append(pfp, loginTBUser, loginTBPass, abortbutton, loginbutton);
+	darkener.appendChild(loginbox);
+	
+	getElement("bodydiv").appendChild(darkener);
+	
+	loginbutton.addEventListener("mouseup", (event) => {
+		socket.emit("login", {
+			username: loginTBUser.value, 
+			password: loginTBPass.value
+		}) 
+		loginTBUser.value = "";
+		loginTBPass.value = "";
+	})
+	
+	abortbutton.addEventListener("mouseup", closeLogin)
+	
+	loginTBUser.focus();
+}
+
+/**
+ * Closes the login form when user clicks the (x) button
+ * @listens mouseup
+ * @memberof module:Login
+ * @param {MouseEvent=} event 
+ */
+function closeLogin(event) {
+	wrongpw.remove();
+	darkener.remove();
+}
+
+/**
+ * Calculates the strength of a password only based on the types of characters a password contains, not the length
+ * @returns {number} "Strength" of password
+ */
+function passwordConditions () {
+	const tb1 = getElement("tb-su-pw")
+	
+	const conditionIndicators = [
+		{name:"condition-upper",   reg: new RegExp("[A-Z]", "g")},
+		{name:"condition-lower",   reg: new RegExp("[a-z]", "g")},
+		{name:"condition-number",  reg: new RegExp("[0-9]", "g")},
+		{name:"condition-special", reg: new RegExp("[ -/:-@\[-`\{-´]","g")},
+		{name:"condition-length",  reg: new RegExp(".{8,}","g")}
+	]
+	
+	let conditions = 0;
+	
+	for (let c of conditionIndicators) {
+		const e = getElement(c.name)
+		if (tb1.value.match(c.reg)) {
+			conditions++;
+			e.classList.add("condition-met")
+		} else {
+			e.classList.remove("condition-met")
+		}
+	}
+	
+	return conditions;
+}
+
+/**
+ * Checks which conditions are met and updates UI accordingly
+ * @listens input
+ * @memberof module:Login
+ * @param {Event=} event 
+ * @returns {number}
+ */
+function passwordCheck (event) {
+	const tb1 = document.getElementById("tb-su-pw")
+	const tb2 = document.getElementById("tb-su-pwc")
+	
+	// CHECK IF THERES AN INVALID CHARACTER IN THE PASSWORD 
+	// ONLY ALPHANUMERIC AND ASCII SPECIAL CHARACTERS + ASCII ACCENTED
+	// except multiplication cross and division symbol
+	const invalid = new RegExp("[^A-Z -/:-@\[-`\{-´0-9À-ÖØ-Þßÿ]","gi")
+	if (tb1.value.match(invalid)) {
+		tb1.classList.add("login-tb-red")
+		wrongpw.innerHTML = "&lt;center>Invalid character in password&lt;/center>";
+		loginbox.appendChild(wrongpw)
+		return
+	} else {
+		tb1.classList.remove("login-tb-red")
+		wrongpw.innerHTML = "";
+		wrongpw.remove()
+	}
+	
+	const baseConditions = passwordConditions(); // Update infobox
+	
+	// OPTIONAL EXTRA STUFF: password strength estimator;
+	
+	let strength = 0;
+	const extra = new RegExp("[À-ÖØ-Þß]","gi")
+}
+
+/**
+ * Sets up sign up screen
+ * @memberof module:Login
+ */
+function signupScreen() {
+	console.log("signup")
+	darkener.textContent = "";
+	loginbox.textContent = ""; // Resetting to prevent problems
+	
+	var pfp = document.createElement("div");
+	
+	var infoButton = document.createElement("a");
+	infoButton.classList.add("info-button", "unselectable")
+	infoButton.innerHTML = '&lt;center>&lt;i class="fa-solid fa-info fa-sm">&lt;/i>&lt;/center>';
+	
+	var signupbutton = document.createElement("a")
+	var abortbutton = document.createElement("a")
+	
+	var passwordInfo = document.createElement("div");
+	passwordInfo.classList.add("password-info", "unselectable", "hidden");
+	passwordInfo.id = "pw-info";
+	passwordInfo.textContent = "Passwords must contain 3 of the following:";
+	
+	
+	const conditionIndicators = [
+		{id: "upper", display: "Uppercase Letters"},
+		{id: "lower", display: "Lowercase Letters"},
+		{id: "number", display: "Digits"},
+		{id: "special", display: "Special Characters"},
+		{id: "length", display: "more than 8 characters long"}
+	]
+	for (let o of conditionIndicators) {
+		if (o.id == "length") {
+			const t = document.createElement("span");
+			t.textContent = "And be"
+			passwordInfo.appendChild(t)
+		}
+		const s = document.createElement("div");
+		s.id = `condition-${o.id}`;
+		s.textContent = o.display;
+		s.classList.add("condition-not-met", "condition");
+		passwordInfo.appendChild(s)
+	}
+	
+	
+	var title = document.createElement("font")
+	title.style = "font-size: 36px; line-height: 48px; left: 10%; position: absolute;"
+	title.innerHTML = "Sign up"
+	darkener.classList.add("darken");
+	
+	loginbox.classList.add("loginbox");
+	
+	const textboxes = [
+	{type: "text", style: "top: 80px", placeholder: "Username", id: "tb-su-username"},
+	{type: "text", style: "top: 144px", placeholder: "E-Mail", id: "tb-su-email"},
+	{type: "password", style: "top: 220px", placeholder: "Password", id: "tb-su-pw"},
+	{type: "password", style: "top: 263px", placeholder: "Confirm Password", id: "tb-su-pwc"}
+	]
+	var form = [];
+	for (let t of textboxes) {
+		const s = document.createElement("input");
+		s.type = t.type;
+		s.style = t.style;
+		s.value = "";
+		s.classList.add("login-tb");
+		s.placeholder = t.placeholder;
+		s.id = t.id;
+		form.push(s)
+	}
+	
+	
+	signupbutton.classList.add("login-button", "login-button-submit","unselectable")
+	abortbutton.classList.add("login-button", "login-button-abort", "unselectable")
+	
+	signupbutton.style = "top: 263px";
+	signupbutton.innerHTML = '&lt;center>&lt;i class="fa-solid fa-arrow-right">&lt;/i>&lt;/center>'
+	abortbutton.innerHTML = "&lt;center>✖&lt;/center>"
+	
+	
+	
+	loginbox.append(title,pfp,abortbutton,signupbutton,passwordInfo,infoButton);
+	loginbox.append(...form);
+	
+	
+	darkener.appendChild(loginbox);
+	getElement("bodydiv").appendChild(darkener);
+	
+	signupbutton.addEventListener("mouseup", (event) => {
+		passwordCheckFinal()
+		socket.emit("signup", {username: form[0].value, password: form[2].value})
+	})
+	
+	abortbutton.addEventListener("mouseup", closeLogin);
+	
+	infoButton.addEventListener("mousedown", (event) => {
+		console.log("est")
+		getElement("pw-info").classList.toggle("hidden")
+	})
+	
+	form[2].addEventListener("input", passwordCheck);
+	
+	form[0].focus()
+}
+
+/**
+ * Adds the small error telling the user that the password was wrong.
+ * @param {Object=} msg typically empty
+ */
+function wrongPW(msg) {
+	wrongpw.remove()
+	wrongpw.innerHTML = "&lt;center>Incorrect username or password. Please try again!&lt;/center>"
+	loginbox.appendChild(wrongpw);
+}
+
+/**
+ * Does some clientside checks for password match and conditions met.
+	* Could be circumvented fairly easily, thats why the server has to check too and send a response accordingly, but maybe this can be used to reduce server CPU time slightly, the reasoning being that the average joe will use the form instead of reading the docs and sending a custom message to the server just to have an easier to crack password.
+ * @listens mouseup
+ * @memberof module:Login
+ * @param {MouseEvent} event 
+ */
+function passwordCheckFinal (event) {
+	const signupTBPass = document.getElementById("tb-su-pw")
+	const signupTBPassConfirm = document.getElementById("tb-su-pwc")
+	
+	if (signupTBPass.value != signupTBPassConfirm.value) {
+		wrongpw.innerHTML = "&lt;center>Passwords do not match!&lt;/center>";
+		signupTBPass.classList.add("login-tb-red")
+		signupTBPassConfirm.classList.add("login-tb-red")
+		loginbox.appendChild(wrongpw)
+	} else {
+		wrongpw.textContent = "";
+		wrongpw.remove;
+		signupTBPass.classList.remove("login-tb-red");
+		signupTBPassConfirm.classList.remove("login-tb-red")
+		wrongpw.remove();
+	}
+	
+	
+	let conditions = passwordConditions();
+	
+	if (conditions &lt; 3) {
+		document.getElementById("pw-info").classList.remove("hidden")
+	} else {
+		document.getElementById("pw-info").classList.add("hidden")
+	}
+	
+	
+	const condLength = document.getElementById("condition-length")
+}
+
+/**
+ * On user logout: close windows, reset widgets, reset start menu, add back login/signup buttons
+ * @memberof module:Login
+ * @param {Object=} msg 
+ */
+function logoutHandle(msg) {
+	closeAllWindows();
+	getElement("widget-body-notes").innerHTML = `
+			&lt;div class="no-friends unselectable">
+			&lt;i>&lt;center>Please log in for notes&lt;/center>&lt;/i>
+			&lt;/div>`
+	getElement("add-notes").remove();
+	getElement("widget-body-friends").innerHTML = `&lt;div class="no-friends unselectable">&lt;i>&lt;/i>&lt;center>&lt;i> Please login for friends&lt;/i>&lt;center>&lt;i>&lt;/i>&lt;/center>&lt;/center>&lt;/div>`
+	getElement("startmenu-top").textContent = ""
+	getElement("startmenu-main").textContent = ""
+	getElement("startmenu-favorites").textContent = ""
+	getElement("startmenu-favorites").className = "";
+	addLoginButton();
+}
+
+export {initialise, signupScreen, wrongPW, loginScreen, addLoginButton, logoutHandle}
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Auth.html">Auth</a></li><li><a href="module-Clock.html">Clock</a></li><li><a href="module-DesktopSymbol.html">DesktopSymbol</a></li><li><a href="module-Dragging.html">Dragging</a></li><li><a href="module-ErrorMessage.html">ErrorMessage</a></li><li><a href="module-Login.html">Login</a></li><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Widget.html">Widget</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-ErrorMessage-Buttons.html">Buttons</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="module-Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4range">Number․prototype․range</a></li><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4to">Number․prototype․to</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 15 2023 02:15:00 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

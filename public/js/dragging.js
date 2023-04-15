@@ -1,10 +1,30 @@
-import { closeStartMenu } from "./util.js";
+/**
+ * 
+ * @file dragging.js
+ *
+ * @author W3Schools, minor changes by Smittel
+ */
+/**
+ * @module Dragging
+ * 
+ * @description Disclaimer: Yes i know its not technically allowed. But its just the best thing i found that did it.
+ * I imagine theres not many ways to do it vastly differently and i had to alter it slightly to make it
+ * work for my purposes beyond just switching around some names. {@link https://www.w3schools.com/howto/howto_js_draggable.asp}
+ */
+import { closeStartMenu, getElement, clamp } from "./util.js";
+
+/**
+ * Adds the necessary event handlers to a div to allow it to be dragged around.
+ * If the container div does not have a child div with the id of the parent with "header" appended to it, it can be dragged from everywhere inside the div, if the header is present, only the header will trigger the event
+ * @memberof module:Dragging
+ * @param {DOMElement:div} elmnt The element to add the dragging function to
+ */
 function dragElement(elmnt) {
 	
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  if (document.getElementById(elmnt.id + "header")) {
+  if (getElement(elmnt.id + "header")) {
     // if present, the header is where you move the DIV from:
-    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+    getElement(elmnt.id + "header").onmousedown = dragMouseDown;
   } else {
     // otherwise, move the DIV from anywhere inside the DIV:
     elmnt.onmousedown = dragMouseDown;
@@ -37,17 +57,15 @@ function dragElement(elmnt) {
 	// let viewportHeight = window.innerHeight;
 // let viewportWidth = window.innerWidth;
 	
-	
-    elmnt.style.top = Math.min(Math.max((elmnt.offsetTop - pos2), 0), window.innerHeight - parseInt(elmnt.style.height)) + "px";
-    elmnt.style.left = Math.min(Math.max((elmnt.offsetLeft - pos1), 0), window.innerWidth - parseInt(elmnt.style.width)) + "px";
+  // Prevent from being moved off screen
+  elmnt.style.top  = clamp(0, (elmnt.offsetTop - pos2),  window.innerHeight - parseInt(elmnt.style.height)) + "px";
+  elmnt.style.left = clamp(0, (elmnt.offsetLeft - pos1), window.innerWidth  - parseInt(elmnt.style.width)) + "px";
 	
 	// Window Snapping
-	
 	if (elmnt.dataset.maximised == "true" && elmnt.id.match(/^window\d+$/g)) {
 		maximiseWindowT(elmnt);
 	}
-	// console.table(elmnt.dataset);
-	// console.table(elmnt.style);
+
 	if (parseInt(elmnt.style.top) < 1 && elmnt.dataset.maximised != "true" && elmnt.id.match(/^window\d+$/g)) {
 	  document.getElementById("snapping-prev").classList.remove("snapping-preview-full-hidden") 
 	} else  {

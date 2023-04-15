@@ -1,12 +1,35 @@
+/**
+ * @todo Make visible divs choosable
+ * @file widgets.js
+ */
+
+/**
+ * Stuff related to the widgets goes here
+ * @module Widget
+ */
 import * as Util from "./util.js";
 import { login } from "./auth.js";
 import { dayMonthYearNoName, hourMinutes } from "./clock.js";
+/**
+ * Contains the notes made by the user. They are currently synced with the server, but the server does not save them yet. 
+ * @member
+ * @memberof module:Widget
+ */
 let noteslist = [];
 
+/**
+ * Receives an array of objects from the server after login that contains the nodes that belong to a given user and saves them in the variable
+ * @param {Array<Object>} n 
+ * @memberof module:Widget
+ */
 function setNotes(n) {
 	noteslist = n;
 }
 
+/**
+ * Sets up the widget to show the users notes
+ * @memberof module:Widget
+ */
 function noteBodyInner() {
 	var parent = Util.getElement("widget-body-notes");
 	
@@ -64,6 +87,11 @@ function noteBodyInner() {
 	parent.appendChild(textarea)	
 }
 
+/**
+ * Displays a message that there are no notes if the user has no notes.
+ * Shocking.
+ * @memberof module:Widget
+ */
 function refreshZeroNotes() {
 	if (noteslist.length == 0) {
 		var noNotes = document.createElement("div")
@@ -74,15 +102,14 @@ function refreshZeroNotes() {
 	}
 }
 
-function toggleFriends(event) {
-	console.log(event.target);
-	let target = document.getElementById("friendswidget");
-	widgetToggleSave(target);
-	
-	document.getElementById("friendsbody").classList.toggle("hidden");
-	event.target.innerHTML = `<center>${target.classList.contains("smallwidget")?"▾":"▴"}</center>`;
-}
 
+
+/**
+ * If enter is pressed, the note is saved and sent to the server. If shift+enter is pressed, a new line is created.
+ * @memberof module:Widget
+ * @listens keydown
+ * @param {event} event 
+ */
 function addNoteKeyDown (event) {
 	if (event.keyCode == 13 && !event.shiftKey) {
 		let noteOBJ = {"d": Date.now(), "t": document.getElementById("addnote-textfield").value.replaceAll("<", "&lt;").replaceAll(">","&gt;").trim().replaceAll(/\n/g, "<br>")}
@@ -93,6 +120,12 @@ function addNoteKeyDown (event) {
 	}
 }
 
+/**
+ * Displays the text area to add notes.
+ * @param {event} event 
+ * @memberof module:Widget
+ * @listens nothing
+ */
 function addNote(event) {
 	let target = document.getElementById("addnote-textfield")
 	Util.getElement("startmenu").classList.add("hiddenstart")
@@ -100,6 +133,11 @@ function addNote(event) {
 	target.focus()
 }
 
+/**
+ * Sets up the friendslist. Wont do anything except add the "Add friends" text because friends are just not a thing yet and thats not happening anytime soon
+ * @memberof module:Widget
+ * @param {Array<Object>} friends 
+ */
 function friendslist (friends) {
 	
 	let friendsbody = Util.getElement("widget-body-friends");
@@ -119,7 +157,11 @@ function friendslist (friends) {
 }
 
 
-
+/**
+ * Saves the position and size of a widget when you "minimise" it
+ * @memberof module:Widget
+ * @param {DOMElement} target 
+ */
 function widgetToggleSave(target) {
 	let oldHeight = target.oldHeight;
 	target.oldHeight = target.style.height;
@@ -129,6 +171,12 @@ function widgetToggleSave(target) {
 	target.style.width = oldWidth;
 }
 
+/**
+ * Toggles the size of the widget from small (Only widget name is visible) to regular
+ * @listens click
+ * @memberof module:Widget
+ * @param {event} e 
+ */
 function toggleWidget(e) {
 	e = e.target;
 	Util.getElement("startmenu").classList.add("hiddenstart")
@@ -140,10 +188,14 @@ function toggleWidget(e) {
 	target.dataset.small = (target.dataset.small == "false");
 }
 
-
-	// This basically just saves the size information of the widget so when you expand it again
-	// it retains its size
-	// This general approach is useful for windows too
+/**
+ * Toggles visibility of the notes widget. 
+ * @memberof module:Widget
+ * @listens click
+ * @param {event} event 
+ * @deprecated Superseded by <code>toggleWidget(e)</code>
+ * @see toggleWidget
+ */
 function toggleNotes(event) {
 	let target = document.getElementById("widget-notes")
 	widgetToggleSave(target);
@@ -152,6 +204,23 @@ function toggleNotes(event) {
 	if (addNoteButton != null) {
 		addNoteButton.classList.toggle("hidden")
 	}
+	event.target.innerHTML = `<center>${target.classList.contains("smallwidget")?"▾":"▴"}</center>`;
+}
+
+/**
+ * Not entirely sure why this isnt used, it was meant to be used to close and open the friends widget.
+ * @listens click
+ * @memberof module:Widget
+ * @param {event} event 
+ * @deprecated Superseded by <code>toggleWidget(e)</code>
+ * @see toggleWidget
+ */
+function toggleFriends(event) {
+	console.log(event.target);
+	let target = document.getElementById("friendswidget");
+	widgetToggleSave(target);
+	
+	document.getElementById("friendsbody").classList.toggle("hidden");
 	event.target.innerHTML = `<center>${target.classList.contains("smallwidget")?"▾":"▴"}</center>`;
 }
 

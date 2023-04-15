@@ -1,78 +1,183 @@
 import { calculateGrid, makeSubMenuElement, getElement } from "./util.js";
+/**
+ * @file desktopSymbols.js
+ * @author Smittel
+ */
 
 /**
- * Sets up desktop symbols
- * @param {Array} list List of Desktop symbols received by the server
+ * Methods relating to the Desktop symbols
+ * Currently debating if creation of desktop symbols should be exposed and be able to be done purely clientside or if it should go through the server first
+ * @todo Place symbols in grid
+ * @todo movable symbols
+ * @todo Context menus
+ * @todo hiding symbols
+ * @todo choosing which ones are shown (to a degree)
+ * @module DesktopSymbol
  */
-function setupDesktopSymbols(list) {
-	const symbols = list.symbols;
-	
+/**
+ * Sets up desktop symbols.
+ * @listens socket.on("desktop_symbols")
+ * @memberof module:DesktopSymbol
+ * @todo Find another solution
+ * @param {Object[]} symbols List of Desktop symbols received by the server
+ * @param {string[]} symbols[].pos Position of the symbol
+ * @param {string} symbols[].image Icon URL
+ * @param {("folder"|"link"|"page")} symbols[].type Type of desktop symbol, defines the action on click
+ * @param {Object[]} [symbols[].sub] Semi-optional: when <code>symbols.type == "folder"</code> used to define the elements of the sub menu
+ * @param {string} symbols[].sub[].image URL for sub menu element icon
+ * @param {string} symbols[].sub[].name Name of the sub menu element
+ * @param {("internal" | "external")} symbols[].sub[].type
+ */
+function setupDesktopSymbols({symbols}) {
 	for (let i = 0; i < symbols.length; i++) {
-		const s = document.createElement("a");
-		s.id = `desktop-symbol${i}`;
-		s.classList.add("desktop-symbol");
-		s.style.top = symbols[i].pos[0]
-		s.style.left = symbols[i].pos[1];
-		s.addEventListener("click", desktopSymbolClicked);
-		s.symboltype = symbols[i].type;
-		s.dataset.open = false;
-		const icon = document.createElement("div");
-		icon.id = `desktop-symbol-icon${i}`
-		icon.classList.add("desktop-symbol-image");
-		icon.style = `background-image: url('${symbols[i].image}')`;
-		
-		const name = document.createElement("div");
-		name.id = `desktop-symbol-name${i}`;
-		name.classList.add("desktop-symbol-text", "unselectable");
-		name.textContent = symbols[i].name;
-		
+		const s = makeSymbol(symbols[i]);
+		const icon = makeIcon(symbols[i]);
+		const name = makeTextField(symbols[i]);
 		s.append(icon, name);
-		
-		if (symbols[i].type == "link") {
-			s.href = symbols[i].href;
-			s.target = "_blank";
-		} else if (symbols[i].type == "folder") {
-			const sub = document.createElement("div");
-			sub.classList.add("desktop-folder");
-			sub.style = `grid-template-columns: repeat(${calculateGrid(symbols[i].sub.length)[1]},92px); grid-template-rows: repeat(${calculateGrid(symbols[i].sub.length)[0]},92px); `
-			sub.id = `desktop-symbol-submenu${i}`
-			for (let j = 0; j < symbols[i].sub.length; j++) {
-				
-				sub.appendChild(makeSubMenuElement(symbols[i].sub[j]));
-			}
-			
-			s.appendChild(sub);
+		switch (symbols[i].type) {
+			case "link":
+				setupLinkSymbol(s, symbols[i]);
+				break;
+			case "folder":
+				setupFolderSymbol(s, symbols[i]);
+				break;
+			case "page":
+				setupPageSymbol(s, symbols[i]);
+				break;
+			default:
 		}
 		getElement("bodydiv").appendChild(s);
 	}
 }
 
-
-function closeDesktopFolder(event, symbol) {
-	getElement("startmenu").classList.add("hiddenstart");
-	const id = event.target.id.match(/\d+/g)[0];
-	getElement(`desktop-symbol-submenu${id}`).classList.remove("desktop-folder-open");
-	getElement(`desktop-symbol${id}`).style["z-index"] = null;
-	getElement(`desktop-symbol${id}`).dataset.open = false;
-	getElement(`darken${id}`).remove()
+/**
+ * Sets up a desktop symbol <code>s</code> such that it requests a page from the server to be displayed in a window.
+ * @param {HTMLElement} s 
+ * @param {string} {data} "<code>data</code>" attribute from the <code>symbols</code> Object 
+ * @memberof module:DesktopSymbol
+ */
+function setupPageSymbol(s, {data}) {
+	s.addEventListener("mouseup", (event) => {socket.emit("request_page", {requested: data})})
 }
 
-function desktopSymbolClicked(event) {
-	const id = event.target.id.match(/\d+/g)[0]
-	const parent = getElement(`desktop-symbol${id}`)
-	console.log(parent.dataset)
+/**
+ * Sets up a desktop symbol <code>s</code> so that it opens a new tab with an external link.
+ * @param {HTMLElement} s 
+ * @param {string} {data} "<code>data</code>" attribute from the <code>symbols</code> Object 
+ * @memberof module:DesktopSymbol
+ */
+function setupLinkSymbol(s, {data}) {
+	s.href = data;
+	s.target = "_blank";
+	s.addEventListener("mouseup", (event) => {window.open(data, '_blank').focus()})
+}
+
+/**
+ * Sets up a desktop symbol <code>s</code> as a folder.
+ * @param {HTMLElement} s 
+ * @param {Object[]} {sub} "<code>sub</code>" attribute from the <code>symbols</code> Object 
+ * @param {string} {sub}[].image URL for sub menu element icon
+ * @param {string} {sub}[].name Name of the sub menu element
+ * @param {("internal" | "external")} {sub}[].type 
+ * @memberof module:DesktopSymbol
+ */
+function setupFolderSymbol(s, {sub}) {
+	const elmnt = document.createElement("div");
+	elmnt.classList.add("desktop-folder");
+	elmnt.style = `grid-template-columns: repeat(${calculateGrid(sub.length)[1]},92px); grid-template-rows: repeat(${calculateGrid(sub.length)[0]},92px); `
+	elmnt.name = "desktop-symbol-submenu";
+	for (let j = 0; j < sub.length; j++) {
+		elmnt.appendChild(makeSubMenuElement(sub[j]));
+	}
+	s.appendChild(elmnt);
+}
+
+/**
+ * Creates the text field for a desktop symbol
+ * @param {string} {name} "<code>name</code>" attribute from the <code>symbols</code> Object 
+ * @returns {HTMLDivElement}
+ */
+function makeTextField({name}) {
+	const textfield = document.createElement("div");
+	textfield.classList.add("desktop-symbol-text", "unselectable");
+	textfield.textContent = name;
+	return textfield;
+}
+
+/**
+ * Creates the icon for a desktop symbol. The table is slightly scuffed but oh well
+ * @param {string[]} {pos "<code>pos</code>" attributes from the <code>symbols</code> Object
+ * @param {("folder" | "page" | "link")} type} "<code>type</code>" attributes from the <code>symbols</code> Object 
+ * @returns {HTMLElement}
+ */
+function makeSymbol ({pos, type}) {
+	const s = document.createElement("desktop-symbol");
+	//s.id = `desktop-symbol${i}`;
+	s.classList.add("desktop-symbol");
+	s.style.top = pos[0]
+	s.style.left = pos[1];
+	s.addEventListener("click", desktopSymbolClicked);
+	s.dataset.symboltype = type;
+	s.dataset.open = false;
+	return s;
+}
+/**
+ * 
+ * @param {string} {image} Image URL for desktop symbol icon ("<code>image</code>" attribute from the <code>symbols</code> Object)
+ * @returns {HTMLDivElement}
+ */
+function makeIcon ({image}) {
+	const icon = document.createElement("div");
+	//icon.id = `desktop-symbol-icon${i}`
+	icon.classList.add("desktop-symbol-image");
+	icon.style = `background-image: url('${image}')`;
+	return icon;
+}
+
+/**
+ * Closes the small sub menus for desktop folders.
+ * @function
+ * @listens click
+ * @memberof module:DesktopSymbol
+ * @param {MouseEvent} event 
+ * @param {HTMLElement} symbol Main "container" of a desktop symbol
+ * @param {HTMLDivElement} submenu Submenu of a desktop symbol
+ * @param {HTMLDivElement} darken Background of a desktop symbol
+ */
+function closeDesktopFolder(event, submenu, symbol, darken) {
 	getElement("startmenu").classList.add("hiddenstart");
-	
-	if (parent.symboltype == "folder" && parent.dataset.open == "false") {
+	submenu.classList.remove("desktop-folder-open");
+	symbol.style["z-index"] = null;
+	symbol.dataset.open = false;
+	darken.remove()
+}
+
+/**
+ * Listens for clicks on desktop symbols and either opens the submenu or the window.
+ * @listens click
+ * @param {event} event 
+ * @memberof module:DesktopSymbol
+ */
+function desktopSymbolClicked(event) {
+	let parent = event.target;
+	while (parent.tagName != "DESKTOP-SYMBOL") {
+		parent = parent.parentNode
+	}
+	getElement("startmenu").classList.add("hiddenstart");
+	if (parent.dataset.symboltype == "folder" && parent.dataset.open == "false") {
+		let submenu;
+		for (let x of Array.from(parent.childNodes)) {
+			if (x.name == "desktop-symbol-submenu") submenu = x;
+		}
 		parent.dataset.open = true;
 		const darken = document.createElement("div")
 		darken.classList.add("folder-bg");
 		getElement("bodydiv").appendChild(darken);
-		getElement(`desktop-symbol-submenu${id}`).classList.add("desktop-folder-open");
-		getElement(`desktop-symbol${id}`).style["z-index"] = 10;
-		darken.id = `darken${id}`
+		submenu.classList.add("desktop-folder-open");
+		parent.style["z-index"] = 10;
+		darken.id = `submenu-darken`
 		darken.addEventListener("click", (event) => {
-			closeDesktopFolder(event, getElement(`desktop-symbol${id}`));
+			closeDesktopFolder(event, submenu, parent, darken);
 		})
 	}
 }

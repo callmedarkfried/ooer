@@ -1,3 +1,10 @@
+/**
+ * @file clock.js
+ * @description Displays time, parses dates etc.
+ * @exports clockTick,hourMinutes,dayMonthYear,dayMonthYearNoName,getSuffix,renderCalendar,initCalendar
+ * @author Smittel
+ * @module Clock
+ */
 
 import { getElement } from "./util.js";
 const monthnames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -32,7 +39,8 @@ function analog(date) {
  * @function getSuffix
  * @param {int} n
  * @returns {string} - Number plus suffix
- * @memberof clock
+ * @example Clock.getSuffix(5); -> "5th"
+ * Clock.getSuffix(3); -> "3rd"
  */
 function getSuffix(n) {
 	n = n % 100;
@@ -45,7 +53,7 @@ function getSuffix(n) {
  * Returns a formatted string with a "standard" way of writing dates.
  * "Standard" in this case meaning the way i would write them, though it should be easily understandable
  * @param {Date} date 
- * @returns {String}
+ * @returns {String} Weekday, Monthname DD YYYY
  */
 function dayMonthYear(date) {
 	let year = date.getFullYear();
@@ -57,6 +65,7 @@ function dayMonthYear(date) {
 
 /**
  * Returns a formatted string in the format 'month name' 'day' 'year'
+ * @function
  * @param {Date} date 
  * @returns {String}
  */
@@ -68,6 +77,9 @@ function dayMonthYearNoName(date) {
 	
 };
 
+/**
+ * Updates the clock display
+ */
 function clockTick() {
 	let currDate = new Date(Date.now());
 	analog(currDate)
@@ -78,11 +90,24 @@ function clockTick() {
 }
 
 // CALENDAR ///////////////////////////////////////////////////////////////////////////////
-const getDays = (year, month) => {
+
+
+/**
+ * Returns the number of days in a given month
+ * @method
+ * @name getDays
+ * @param {number} year 
+ * @param {number} month 
+ * @returns {number} Number of days in month
+ */
+function getDays (year, month) {
     return new Date(year, month+1, 0).getDate();
 };
 
-
+/**
+ * @member appointments
+ * @description Temporary, will be replaced by server response
+ */
 var appointments = [
 	{"date": new Date(2023, 2, 3), "name": "placeholder"},
 	{"date": new Date(2023, 2, 1), "name": "appointments"},
@@ -124,10 +149,14 @@ minus.addEventListener("click", (event) => {
 });
 
 function initCalendar() {
-	console.log("selectedMonth, selectedYear")
 	renderCalendar(selectedMonth, selectedYear);
 }
 
+/**
+ * Renders the calendar with a given month and year
+ * @param {number} month 0 through 11
+ * @param {number} year full year (4 digits)
+ */
 function renderCalendar(month, year) {
 	var dateArray = [];
 	var firstOfMonth = new Date(year, month, 0);
@@ -168,20 +197,17 @@ function renderCalendar(month, year) {
 	}
 	for (let i = 0; i < getDays(year, month); i++) {
 		const t = document.createElement("div");
-		t.classList.add("calendar-date-block");
-		t.innerHTML = i + 1
+		t.classList.add("calendar-date-block", "unselectable");
+		t.innerHTML = i + 1;
+		const filter = (a) => {
+			return a.date.getDate() == i+1 && a.date.getMonth() == month && a.date.getFullYear() == year
+		}
+		if(appointments.filter(filter).length != 0) {
+			t.dataset.appointment = "true"
+		}
+		t.dataset.valid = "true"
 		daytable.push(t);
 	}
-
-	// var table = "";
-	
-	// 	table += "<tr>"
-	// 	for (let j = 0; j < 7; j++) {
-	// 		var check = new Date(year, month, i*7 + j - offset);
-	// 		table += `<td class="tableElementCal ${appointments.find(search => search.date.getTime() === check.getTime()) !== undefined?"appointment":""}">${dateArray[i*7 + j] || ""}</td>`
-	// 	}
-	// 	table += "</tr>"
-	// }
 	getElement("cal").textContent = "";
 	getElement("cal").append(...daytable);
 	
@@ -199,15 +225,13 @@ function datifyDay(i) {
 	return `${days[i.getDay()]}, ${months[i.getMonth()]} ${i.getDate()}${suffix} ${i.getFullYear()}`;
 }
 
+/**
+ * Returns a date string
+ * @param {Date} i Date object
+ * @returns Parsed Date in the format [Month] [Day] [Year] 
+ */
 function datifyShort(i) {
-	var suff = ["st", "nd", "rd", "th"];
-	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	
-	var suffix = suff[(Math.min(4, i.getDate()%10) - 1) % 4];
-	if (i.getDate() >= 11 && i.getDate() <= 13) {
-		suffix = "th";
-	}
-	return `${months[i.getMonth()]} ${i.getDate()}${suffix} ${i.getFullYear()}`;
+	return `${monthnames[i.getMonth()]} ${getSuffix(i.getDate())} ${i.getFullYear()}`;
 }
 
 function datifyShortTime(i) {
@@ -217,7 +241,7 @@ function datifyShortTime(i) {
 	if (i.getDate() >= 11 && i.getDate() <= 13) {
 		suffix = "th";
 	}
-	return `${monthnames[i.getMonth()]} ${i.getDate()}${suffix} ${i.getFullYear()}, ${("00" + i.getHours()).slice(-2)}:${("00" + i.getMinutes()).slice(-2)}`;
+	return `${monthnames[i.getMonth()]} ${getSuffix(i.getDate())} ${i.getFullYear()}, ${("00" + i.getHours()).slice(-2)}:${("00" + i.getMinutes()).slice(-2)}`;
 }
 // END CALENDAR ///////////////////////////////////////////////////////////////////////////////
 clockTick();

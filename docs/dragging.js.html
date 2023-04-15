@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: dragging.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: dragging.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * 
+ * @file dragging.js
+ *
+ * @author W3Schools, minor changes by Smittel
+ */
+/**
+ * @module Dragging
+ * 
+ * @description Disclaimer: Yes i know its not technically allowed. But its just the best thing i found that did it.
+ * I imagine theres not many ways to do it vastly differently and i had to alter it slightly to make it
+ * work for my purposes beyond just switching around some names. {@link https://www.w3schools.com/howto/howto_js_draggable.asp}
+ */
+import { closeStartMenu, getElement, clamp } from "./util.js";
+
+/**
+ * Adds the necessary event handlers to a div to allow it to be dragged around.
+ * If the container div does not have a child div with the id of the parent with "header" appended to it, it can be dragged from everywhere inside the div, if the header is present, only the header will trigger the event
+ * @memberof module:Dragging
+ * @param {DOMElement:div} elmnt The element to add the dragging function to
+ */
+function dragElement(elmnt) {
+	
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (getElement(elmnt.id + "header")) {
+    // if present, the header is where you move the DIV from:
+    getElement(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+	  closeStartMenu();
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+	  let target = e.target;
+	  
+	  
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+	// let viewportHeight = window.innerHeight;
+// let viewportWidth = window.innerWidth;
+	
+  // Prevent from being moved off screen
+  elmnt.style.top  = clamp(0, (elmnt.offsetTop - pos2),  window.innerHeight - parseInt(elmnt.style.height)) + "px";
+  elmnt.style.left = clamp(0, (elmnt.offsetLeft - pos1), window.innerWidth  - parseInt(elmnt.style.width)) + "px";
+	
+	// Window Snapping
+	if (elmnt.dataset.maximised == "true" &amp;&amp; elmnt.id.match(/^window\d+$/g)) {
+		maximiseWindowT(elmnt);
+	}
+
+	if (parseInt(elmnt.style.top) &lt; 1 &amp;&amp; elmnt.dataset.maximised != "true" &amp;&amp; elmnt.id.match(/^window\d+$/g)) {
+	  document.getElementById("snapping-prev").classList.remove("snapping-preview-full-hidden") 
+	} else  {
+		document.getElementById("snapping-prev").classList.add("snapping-preview-full-hidden")
+	}
+	
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+	if (parseInt(elmnt.style.top) &lt; 1 &amp;&amp; !elmnt.maximised  &amp;&amp; elmnt.id.match(/^window\d+$/g)) {
+		
+		maximiseWindowT(elmnt);
+	}
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+export {dragElement}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Auth.html">Auth</a></li><li><a href="module-Clock.html">Clock</a></li><li><a href="module-DesktopSymbol.html">DesktopSymbol</a></li><li><a href="module-Dragging.html">Dragging</a></li><li><a href="module-ErrorMessage.html">ErrorMessage</a></li><li><a href="module-Login.html">Login</a></li><li><a href="module-Startmenu.html">Startmenu</a></li><li><a href="module-Utilities.html">Utilities</a></li><li><a href="module-Widget.html">Widget</a></li><li><a href="module-Windows.html">Windows</a></li></ul><h3>Namespaces</h3><ul><li><a href="Main.html">Main</a></li><li><a href="module-ErrorMessage-Buttons.html">Buttons</a></li><li><a href="module-Utilities-Shorthands.html">Shorthands</a></li></ul><h3>Classes</h3><ul><li><a href="module-Windows.Window.html">Window</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4range">Number․prototype․range</a></li><li><a href="global.html#Number%25E2%2580%25A4prototype%25E2%2580%25A4to">Number․prototype․to</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 15 2023 02:05:34 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

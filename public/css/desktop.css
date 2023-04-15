@@ -625,57 +625,7 @@ div.windowbody {
 	margin: 0;
 }
 
-.desktop-symbol {
-	position: fixed;
-	z-index: -1;
-	width: 15vmin;
-	aspect-ratio: 3 / 2;
-	display: block;
-	border-radius: 3px;
-	border: solid 2px rgba(127,164,255,0);
-	transform: translateX(-50%) translateY(-50%);
-}
 
-.desktop-symbol[data-open="true"] {
-	visibility: hidden;
-}
-
-.desktop-symbol:hover {
-	background-color: rgba(255,255,255,0.1);
-	border: solid 2px rgba(255,255,255,0.3)
-}
-
-.desktop-symbol:active {
-	
-	background-color: rgba(127,164,255,0.1);
-	border: solid 2px rgba(127,164,255,0.3);
-}
-
-.desktop-symbol-image {
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%); 
-	aspect-ratio: 1 / 1;
-	width: 50%;
-	background-size: cover;
-	filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.6));
-}
-
-.desktop-symbol-text {
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	text-align: center;
-	bottom: 0;
-	font-size: 2vmin;
-	line-height: 3vmin;
-	filter: drop-shadow(0px 0px 3px black);
-	font-family: Roboto, sans-serif;
-	font-weight: 400;
-}
 
 
 
