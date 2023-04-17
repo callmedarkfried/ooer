@@ -1,6 +1,6 @@
 const fs = require("fs");
 module.exports = {
-    currentpath: ["C","Users","julian","Documents"],
+    currentpath: ["C","Users","Documents"],
     _syntax: function syntax(input) {
         console.log(input)
         let tokens = input.split(" ");

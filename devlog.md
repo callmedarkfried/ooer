@@ -12,7 +12,7 @@
 	- Design basically finished
 	- Terminal commands are handled serverside
 	- commands so far:
-	- nav (alias: navigate)
+	- cd (alias: chdir)
 		- nav with no argument returns the current directory
 		- nav < moves up one folder
 		- nav </</ etc moves up as many folders as theres <
@@ -25,6 +25,8 @@
 		- simply repeats what you tell it to say. 
 	- cmd
 		- opens another terminal
+	- ls
+		- lists files and directories in current directory
 	- Terminals have the wrong taskbar icon currently
 
 ### Day 22-23
