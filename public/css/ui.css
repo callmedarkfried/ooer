@@ -485,3 +485,24 @@ desktop-symbol:active {
 	font-family: Roboto, sans-serif;
 	font-weight: 400;
 }
+
+
+
+a.abort-button {
+	display: grid;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	width: 48px;
+	height: 48px;
+	font-size: 24px;
+	border-radius: 100%;
+	color: white;
+	text-align: center;
+	transform: translateX(-50%);
+	cursor: pointer;
+	background-color: rgba(0,0,0, 0.3);
+	border: solid 1px rgba(255, 255, 255, 0.377);
+	right: 36px;
+	top: 36px;
+}

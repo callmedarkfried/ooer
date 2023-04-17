@@ -8,6 +8,7 @@ import * as Login from "./login.js"
 import * as StartMenu from "./startmenu.js"
 import * as DesktopSymbol from "./desktopSymbols.js"
 import * as Widget from "./widgets.js"
+import * as Handler from "./handlermodule.js"
 
 /**
  * @file main.js
@@ -43,7 +44,8 @@ Clock.initCalendar();
 Util.getElement("taskbar-search").addEventListener("mouseup", StartMenu.searchAreaHandler);
 Util.getElement("searchbar").addEventListener("focusout", Util.closeSearchBox);
 Util.getElement("taskbar-home").addEventListener("mouseup", openStartMenu);
-
+Util.getElement("sidebar-left-opener").addEventListener("click", Handler.toggleSidebarLeft)
+Util.getElement("close-sidebar-left").addEventListener("click", Handler.toggleSidebarLeft)
 /**
  * A fairly fast interval. Prevents widgets from being moved off-screen.
  * In theory you could still get them back by zooming out but thats a usability nightmare 

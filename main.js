@@ -249,20 +249,26 @@ io.on('connection', (socket) => {
 });
 
 function terminal({cmd, fp, id}, socket) {
+	console.log("fps", fp, cmd, id)
 	let commandTokens = cmd.split(" ");
 	switch (commandTokens[0]) {
-		case "nav":
-		case "navigate":
-			return Terminal.nav(commandTokens, fp, id);
+		case "cd":
+		case "chdir":
+			return Terminal.ch(commandTokens, fp, id);
 		case "say":
 		case "echo":
 		case "print":
 			return Terminal.echo(commandTokens, fp, id);
 		case "clear":
+		case "cls":
 			return Terminal.clear(commandTokens, fp, id);
 		case "cmd":
 			serveSubpage({requested: "terminal"}, socket) ;
 			return {res: "",fp: fp, id: id}
+		case "ls":
+			return Terminal.ls(commandTokens, fp, id);
+		case "":
+			return {res:"", fp:fp, id: id}
 		default:
 			return Terminal.help(null, fp, id);
 	}

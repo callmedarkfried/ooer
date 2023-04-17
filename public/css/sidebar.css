@@ -1,0 +1,109 @@
+.sidebar-left {
+    --speed: 0.2s;
+	overflow: hidden;
+	top: 50%;
+	transform: translateY(-50%) scaleX(1);
+	left: 0;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0);
+	backdrop-filter: blur(0px);
+	display: block;
+	position: fixed;
+	width: 0%;
+	z-index: 2;
+	transition: width var(--speed) ease-in-out, background-color var(--speed) ease-in-out, backdrop-filter var(--speed) ease-in-out;
+}
+
+.sidebar-left[data-open="true"] {
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(25px);
+	transition: width var(--speed) ease-in-out, background-color var(--speed) ease-in-out, backdrop-filter var(--speed) ease-in-out;
+}
+
+.sidebar-left-opener {
+	opacity: 1 !important;
+	display: grid;
+	align-items: center;
+	height: 100%;
+	width: 1em;
+	background-color: rgba(0, 0, 0, 0.2);
+	left: 0;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	line-height: 4em;
+	text-align: center;
+	text-transform: full-width;
+	visibility: visible;
+	cursor: pointer;
+}
+
+.sidebar-left[data-open="true"]::after {
+	visibility: hidden !important;
+}
+
+.sidebar-left[data-open="true"]::before {
+	visibility: visible !important;
+}
+
+.sidebar-widget {
+    margin: 6px;
+    box-sizing: border-box;
+    padding: 12px;
+    border-radius: 12px;
+    background-color: rgba(255,255,255,0.3);
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-container {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    top: 8em;
+    box-sizing: border-box;
+    padding: 36px;
+    background-color: red / 2;
+    width: 100%;
+    height: calc(100% - 10em);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    scroll-padding-bottom: 200px;
+    position: relative;
+}
+
+.sidebar-left-title {
+    font-size: 64px;
+    font-weight: 200;
+    color: white;
+    display: block;
+    position: absolute;
+    left: 36px;
+    top: 36px;
+}
+
+@media (max-width: 480px) {
+    .sidebar-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1560px) and (min-width: 1024px) {
+    .sidebar-container {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 480px) {
+    .sidebar-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 2048px) and (min-width: 1560px) {
+    .sidebar-container {
+        grid-template-columns: repeat(4, 1fr);;
+    }
+}

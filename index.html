@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="/css/login.css">
 	<link rel="stylesheet" href="/css/widgets.css">
 	<link rel="stylesheet" href="/css/fonts.css">
+	<link rel="stylesheet" href="/css/sidebar.css">
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 	  let socket = io();
@@ -97,7 +98,22 @@
 		<div id="startmenu-main" class="startmenu-main"></div>
 		<div id="startmenu-bottom" class="startmenu-bottom"></div>
 	</div>
-	
+  <!-- WIDGET BAR LEFT -->
+	<div class="sidebar-left" id="sidebar-left" data-open="false">
+		<span class="sidebar-left-title unselectable">Welcome!</span>
+		<a class="abort-button unselectable" id="close-sidebar-left"><center>✖</center></a>
+		<div class="sidebar-container" id="sidebar-container-left">
+			<div class="sidebar-widget">Some more functionality</div>
+			<div class="sidebar-widget">such as</div>
+			<div class="sidebar-widget">Weather</div>
+			<div class="sidebar-widget">news</div>
+			<div class="sidebar-widget">sports</div>
+			<div class="sidebar-widget">and whatever</div>
+		</div>
+	</div>
+	<a class="sidebar-left-opener" id="sidebar-left-opener">></a>
+
+
 	<div id="snapping-prev" class="snapping-preview-full-hidden snapping-preview-full"></div>
 	<noscript>
 	<div class="noscript-ol">

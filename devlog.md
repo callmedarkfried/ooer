@@ -1,5 +1,12 @@
 # Devlog
 
+### Day 25
+- Added left sidebar
+- Basic syntax highlighting for the terminal
+	- even works live
+	- selecting text isnt possible for now, moving the cursor is
+- Fixed layout issue with terminal, now it has word wrapping both when typing commands and when the past commands are displayed
+
 ### Day 24
 - Terminal
 	- Design basically finished
