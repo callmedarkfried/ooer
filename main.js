@@ -249,7 +249,7 @@ io.on('connection', (socket) => {
 });
 
 function terminal({cmd, fp, id}, socket) {
-	console.log("fps", fp, cmd, id)
+	
 	let commandTokens = cmd.split(" ");
 	switch (commandTokens[0]) {
 		case "cd":
@@ -336,6 +336,6 @@ function serveTerminal(msg, socket) {
 	
 }
 
-server.listen(3000, () => {
-  console.log('listening on *:3000');
+server.listen(8080, () => {
+  console.log('listening on *:8080');
 });

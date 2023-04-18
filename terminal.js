@@ -2,7 +2,6 @@ const fs = require("fs");
 module.exports = {
     currentpath: ["C","Users","Documents"],
     _syntax: function syntax(input) {
-        console.log(input)
         let tokens = input.split(" ");
         let validCommands = ["cd", "chdir", "say", "echo", "print", "clear", "cls", "cmd", "ls"]
         let command = tokens.shift();

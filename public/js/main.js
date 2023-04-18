@@ -46,6 +46,8 @@ Util.getElement("searchbar").addEventListener("focusout", Util.closeSearchBox);
 Util.getElement("taskbar-home").addEventListener("mouseup", openStartMenu);
 Util.getElement("sidebar-left-opener").addEventListener("click", Handler.toggleSidebarLeft)
 Util.getElement("close-sidebar-left").addEventListener("click", Handler.toggleSidebarLeft)
+Util.getElement("sidebar-right-opener").addEventListener("click", Handler.toggleSidebarRight)
+Util.getElement("close-sidebar-right").addEventListener("click", Handler.toggleSidebarRight)
 /**
  * A fairly fast interval. Prevents widgets from being moved off-screen.
  * In theory you could still get them back by zooming out but thats a usability nightmare 

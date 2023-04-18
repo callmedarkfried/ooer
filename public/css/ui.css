@@ -505,4 +505,6 @@ a.abort-button {
 	border: solid 1px rgba(255, 255, 255, 0.377);
 	right: 36px;
 	top: 36px;
+	line-height: 14px;
+
 }
