@@ -67,30 +67,49 @@ class Window {
 	 * @memberof module:Windows.Window
 	 */
 	constructor (id, args) {
-		this.windowObject = document.createElement("div");
-		this.windowbody = document.createElement("div");
-		// console.log(this.windowObject);
-		const main = Util.getElement("bodydiv");
-		this.id = id;
-		this.windowObject.classList.add(args.windowClass, "window")
-		
-		this.windowObject.id = `window${id}`;
-		this.windowObject.dataset.minimised = "false";
-		this.windowObject.dataset.id = id;
-		this.windowObject.dataset.active = "true";
-		
-		// For maximising windows and restoring their old size and position;
-		this.windowObject.dataset.oldTop = "0px";
-		this.windowObject.dataset.oldLeft = "0px";
-		this.windowObject.dataset.oldWidth = "100%";
-		this.windowObject.dataset.oldHeight = "100%";
-		this.windowObject.dataset.maximised = "false";
-		
+
 		// Generate Window header, contains window title, does NOT contain the control buttons, the eventListeners interfered
 		const windowHeader = makeWindowHeader(id, args.title);
-		
+				
 		// the outer div for the minimise, maximise, close button
 		const windowControls = makeWindowControls(id);
+		windowControls.append(...windowControlButtons(windows))
+		
+		this.windowbody = Util.create("div",{
+			classList: ["windowbody"],
+			innerHTML: args.html
+		});
+
+		// this.windowObject.appendChild(windowControls);
+		// this.windowObject.appendChild(windowHeader);
+
+		this.windowObject = Util.create("div", {
+			classList: [args.windowClass, "window"],
+			id: `window${id}`,
+			dataset: {
+				minimised: "false",
+				id: id,
+				active: "true",
+				oldTop: "0px",
+				oldLeft: "0px",
+				oldWidth: "100%",
+				oldHeight: "100%",
+				maximised: "false"
+			},
+			childElements: [windowHeader, windowControls, this.windowbody],
+			eventListener: {mousedown: activeWindowChange},
+			style: {
+				width: args.width || (window.innerWidth * 0.7) + "px",
+				height: args.height || (window.innerHeight * 0.7) + "px"
+			}
+		});
+		
+		const main = Util.getElement("bodydiv");
+		this.id = id;
+		
+		
+		
+		
 		
 		
 		this.taskbarIcon = makeTaskBarIcon(id, args.icon);
@@ -109,12 +128,10 @@ class Window {
 		});
 		
 		
-		windowControls.append(...windowControlButtons(windows))
-		this.windowObject.appendChild(windowControls);
-		this.windowObject.appendChild(windowHeader);
 		
-		this.windowbody.classList.add("windowbody");
-		this.windowbody.innerHTML = args.html;
+		
+		
+		
 		
 		if (args.type == "website") {
 			let iframe = document.createElement("iframe");
@@ -123,11 +140,9 @@ class Window {
 			this.windowbody.appendChild(iframe);
 		}
 		
-		this.windowObject.appendChild(this.windowbody);
+		
 		main.appendChild(this.windowObject);
-		this.windowObject.addEventListener("mousedown", activeWindowChange);
-		this.windowObject.style.width = args.width || (window.innerWidth * 0.7) + "px";
-		this.windowObject.style.height =  args.height || (window.innerHeight * 0.7) + "px";
+		
 		activewindow = this.windowObject;
 		dragElement(this.windowObject);
 		refreshWindows(this.windowObject);
@@ -194,10 +209,13 @@ function windowControlButtons(windows) {
 	const actions = ["minimise", "maximise", "close"];
 	const handlers = [minimiseWindow, maximiseWindow, closeWindow]
 	for (let i = 0; i < 3; i++) {
-		b[i] = document.createElement("window-button");
-		b[i].dataset.action = actions[i];
-		b[i].dataset.id = windows.length;
-		b[i].addEventListener("click", handlers[i]);
+		b[i] = Util.create("window-button", {
+			dataset: {
+				action: actions[i],
+				id: windows.length
+			},
+			eventListener: {click: handlers[i]}
+		});
 	}
 	return b;
 }
@@ -223,9 +241,10 @@ function addScript(js) {
  * @returns {DOMElement:div}
  */
 function makeWindowControls(id) {
-	const windowControls = document.createElement("div");
-	windowControls.id = `window${id}controls`;
-	windowControls.classList.add("windowControls");
+	const windowControls = Util.create("div", {
+		id: `window${id}controls`,
+		classList: ["windowControls"]
+	});
 	return windowControls;
 }
 
@@ -237,10 +256,11 @@ function makeWindowControls(id) {
  * @returns {DOMElement:div}
  */
 function makeWindowHeader(id, title) {
-	const windowHeader = document.createElement("div");
-	windowHeader.id = `window${id}header`;
-	windowHeader.classList.add("window-header", "unselectable");
-	windowHeader.innerHTML = `<font class="window-header">${title}</font>`;
+	const windowHeader = Util.create("div", {
+		id: `window${id}header`,
+		classList: ["window-header", "unselectable"],
+		innerHTML: `<font class="window-header">${title}</font>`
+	});
 	return windowHeader;
 }
 
@@ -275,12 +295,13 @@ function taskbarIconClicked(event) {
  * @returns {DOMElement:div}
  */
 function makeTaskBarIcon(id, icon) {
-	const taskbarIcon = document.createElement("div");
-	taskbarIcon.classList.add("taskbar-button", "button-other");
-	taskbarIcon.style = `background-image: url('/images/${icon}');`;
-	taskbarIcon.id = `taskbar-icon${id}`;
-	taskbarIcon.dataset.id = id;
-	taskbarIcon.addEventListener("click", taskbarIconClicked);
+	const taskbarIcon = Util.create("div", {
+		classList: ["taskbar-button", "button-other"],
+		style: `background-image: url('${icon}');`,
+		id: `taskbar-icon${id}`,
+		dataset: {id: id},
+		eventListener: {click: taskbarIconClicked}
+	});
 	return taskbarIcon;
 }
 

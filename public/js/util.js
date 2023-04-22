@@ -90,10 +90,11 @@ function closeSearchBox(event) {
  * @memberof module:Utilities
  */
 function makeButton(text, filled) {
-	const benjamin = document.createElement("button");
-	benjamin.dataset.filled = filled;
-	benjamin.textContent = text;
-	benjamin.style = "margin-inline: 3px";
+	const benjamin = create("button", {
+		dataset: {filled: filled},
+		textContent: text,
+		style: "margin-inline: 3px;",
+	});
 	return benjamin;
 }
 
@@ -139,24 +140,30 @@ function makeSubMenuElement ({type, image, text, data}) {
  * @memberof module:Utilities
  */
 function makeContextMenuTaskbar(data, id) {
-	const menu = document.createElement("div");
-	menu.dataset.hidden = true;
-	menu.dataset.id = id;
-	menu.id = `ctx-menu-tb${id}`
-	menu.classList.add("contextmenu");
-	menu.addEventListener("mouseup", (e) => e.stopPropagation());
-	menu.addEventListener("click", (e) => e.stopPropagation());
+	const menu = create("div", {
+		dataset: {
+			hidden: "true",
+			id: id
+		},
+		id: `ctx-menu-tb${id}`,
+		classList: ["contextmenu"],
+		eventListener: {
+			mouseup: (e) => e.stopPropagation(),
+			click: (e) => e.stopPropagation()
+		}
+	});
 	for (let d of data) {
 		if (d.type == "divider") {
-			const e = document.createElement("hr");
+			const e = create("hr");
 			menu.appendChild(e)
 			continue;
 		}
-		const e = document.createElement("div");
-		e.textContent = d.text;
-		e.classList.add("ctx-element")
-		e.dataset.id = id;
-		e.addEventListener("mouseup", d.handler);
+		const e = create("div", {
+			textContent: d.text,
+			classList: ["ctx-element"],
+			dataset: {id: id},
+			eventListener: {mouseup: d.handler}
+		});
 		menu.appendChild(e);
 	}
 	return menu;
@@ -220,6 +227,51 @@ function getElement(id) {
 }
 
 /**
+ * Shorthand for creating HTML Elements, can be passed extra arguments in form of a JSON map
+ * @memberof module:Utilities~Shorthands
+ * @function create
+ * @param {string} str 
+ * @returns {HTMLElement}
+ */
+function create(str, args) {
+	let e = document.createElement(str);
+	if(args) {
+		for (let a in args) {
+			switch (a) {
+				case "dataset":
+					for (let d in args[a]) {
+						e.dataset[d] = args[a][d];
+					}
+					break
+				case "classList":
+					e.classList.add(...args[a]);
+					break;
+				case "eventListener":
+					for (let d in args[a]) {
+						e.addEventListener(d, args[a][d])
+					}
+					break;
+				case "childElements":
+					e.append(...args[a]);
+					break;
+				case "style":
+					if (typeof(args[a]) == "object") {
+						for (let s in args[a]) {
+							e.style[s] = args[a][s];
+						}
+					} else {
+						e[a] = args[a];
+					}
+					break;
+				default:
+					e[a] = args[a];
+			}
+		}
+	}
+	return e;
+}
+
+/**
  * Gets reset regularly by server heartbeat signals.
  * @member
  * @memberof module:Utilities
@@ -278,4 +330,4 @@ function closeStartMenu (event) {
 }
 
 export { connLostReset, tick, resetHeartbeat, getElement, cleanup, calculateGrid,
-clamp, makeContextMenuTaskbar, makeSubMenuElement, makeButton, closeStartMenu, closeSearchBox }
+clamp, makeContextMenuTaskbar, makeSubMenuElement, makeButton, closeStartMenu, closeSearchBox, create }

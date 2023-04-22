@@ -49,12 +49,12 @@ function startmenuBottom() {
 	const bottomButtons = [
 		{
 			id: "sm-btm-gh",
-			image: "github-full.png",
+			image: "/content/images?i=github-full.png",
 			link: "https://github.com/callmedarkfried",
 			event: null
 		},{
 			id: "sm-btm-yt",
-			image: "youtube_full.png",
+			image: "/content/images?i=youtube_full.png",
 			link: "https://youtube.com/smittel",
 			event: null
 		},

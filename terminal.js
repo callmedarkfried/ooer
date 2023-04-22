@@ -24,7 +24,7 @@ module.exports = {
             id: id
         }
     },
-    ch: function (cmd, fp, id) {
+    cd: function (cmd, fp, id) {
         if(cmd.length==1) {
             return {
                 res: fp,
@@ -78,10 +78,14 @@ module.exports = {
         }
     },
     ls: function(cmd, fp, id) {
-        console.log(this.currentpath)
         let path = [...this.currentpath];
+        
+        console.log(path)
         let drive = path.shift();
+        console.log(path)
         path = `${drive}:/${path.join("/")}`
+        
+        console.log(path)
         let files = fs.readdirSync(path);
         let fr = [];
         let res = "";

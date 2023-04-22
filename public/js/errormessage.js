@@ -2,7 +2,7 @@
  * @file errormessage.js
  * @author Smittel
  */
-import { makeButton, connLostReset } from "./util.js";
+import { makeButton, connLostReset, create } from "./util.js";
 /**
  * Errormessages
  * @module ErrorMessage
@@ -145,22 +145,27 @@ function errorMessage(parent, layout, title, text, functions) {
 	const scope = (layout >> 6);
 	
 	// window-button[data-action="close"]
-	const dbb = document.createElement("dialog-box");    // Main dialog box
 	
-	const dbh = document.createElement("dialog-header"); // Header
-	dbh.innerHTML = `<font class="indent">${title}</font>`;
 	
-	const dbx = document.createElement("window-button"); // Close button
-	dbx.style = "width: 45px !important";
-	dbx.dataset.action = "close";
-	dbx.addEventListener("mouseup", errorBoxCloseButton);
+	const dbh = create("dialog-header", {
+		innerHTML: `<font class="indent">${title}</font>`
+	}); // Header
 	
-	const dbwc = document.createElement("div");			 // Close button container
-	dbwc.classList.add("windowControls");
-	dbwc.style = "width: 50px !important";
-	dbwc.appendChild(dbx);
+	const dbx = create("window-button", {
+		style: "width: 45px !important",
+		dataset: {action: "close"},
+		eventListener: {mouseup: errorBoxCloseButton}
+	}); // Close button
 	
-	dbb.append(dbh, dbwc);
+	const dbwc = create("div", {
+		classList: ["windowControls"],
+		style: "width: 50px !important",
+		childElements: [dbx]
+	});	// Close button container
+
+	const dbb = create("dialog-box", {
+		childElements: [dbh, dbwc]
+	});    // Main dialog box
 	
 	const symbols = [
 	{s: `<i class="fa-regular fa-circle-xmark fa-4x"></i>`, c: "error-critical"},
@@ -169,24 +174,29 @@ function errorMessage(parent, layout, title, text, functions) {
 	{s: `<i class="fa-solid fa-circle-exclamation fa-4x"></i>`, c: "error-information"}
 	]
 	
-	const dbc = document.createElement("div");	// Dialog box body
-	dbc.classList.add("err-body");
+	const dbc = create("div", {
+		classList: ["err-body"]
+	});	// Dialog box body
 	
-	const errortext = document.createElement("div");
-	errortext.classList.add("err-body-text");
-	errortext.textContent = text;
+	const errortext = create("div", {
+		classList: ["err-body-text"],
+		textContent: text
+	});
 	
-	const errsym = document.createElement("div");
-	errsym.classList.add("err-body-symbol");
-	errsym.innerHTML = `<font style="color: var(--${symbols[symbol].c});">${symbols[symbol].s}</font>`
+	const errsym = create("div", {
+		classList: ["err-body-symbol"],
+		innerHTML: `<font style="color: var(--${symbols[symbol].c});">${symbols[symbol].s}</font>`
+	});
 	
-	const buttoncontainer = document.createElement("div");
-	buttoncontainer.classList.add("err-btn-container");
+	const buttoncontainer = create("div", {
+		classList: ["err-btn-container"]
+	});
 	
-	const darken = document.createElement("div");
-	darken.id = `errorDarkener${Math.round(Math.random()* 100000000)}`
-	darken.classList.add("error-darken");
-	darken.appendChild(dbb);
+	const darken = create("div", {
+		id: `errorDarkener${Math.round(Math.random()* 100000000)}`,
+		classList: ["error-darken"],
+		childElements: [dbb]
+	});
 	
 	
 	const buttonlist = errorBoxFunctions[buttons]();

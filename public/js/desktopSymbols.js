@@ -1,4 +1,4 @@
-import { calculateGrid, makeSubMenuElement, getElement } from "./util.js";
+import { calculateGrid, makeSubMenuElement, getElement, create, closeStartMenu } from "./util.js";
 /**
  * @file desktopSymbols.js
  * @author Smittel
@@ -82,13 +82,17 @@ function setupLinkSymbol(s, {data}) {
  * @memberof module:DesktopSymbol
  */
 function setupFolderSymbol(s, {sub}) {
-	const elmnt = document.createElement("div");
-	elmnt.classList.add("desktop-folder");
-	elmnt.style = `grid-template-columns: repeat(${calculateGrid(sub.length)[1]},92px); grid-template-rows: repeat(${calculateGrid(sub.length)[0]},92px); `
-	elmnt.name = "desktop-symbol-submenu";
+	let submenu = [];
 	for (let j = 0; j < sub.length; j++) {
-		elmnt.appendChild(makeSubMenuElement(sub[j]));
+		submenu.push(makeSubMenuElement(sub[j]));
 	}
+	console.log(submenu)
+	const elmnt = create("div", {
+		classList: ["desktop-folder"],
+		style: `grid-template-columns: repeat(${calculateGrid(sub.length)[1]},92px); grid-template-rows: repeat(${calculateGrid(sub.length)[0]},92px); `,
+		name: "desktop-symbol-submenu",
+		childElements: submenu
+	});
 	s.appendChild(elmnt);
 }
 
@@ -98,9 +102,10 @@ function setupFolderSymbol(s, {sub}) {
  * @returns {HTMLDivElement}
  */
 function makeTextField({name}) {
-	const textfield = document.createElement("div");
-	textfield.classList.add("desktop-symbol-text", "unselectable");
-	textfield.textContent = name;
+	const textfield = create("div", {
+		classList: ["desktop-symbol-text", "unselectable"],
+		textContent: name
+	});
 	return textfield;
 }
 
@@ -111,14 +116,18 @@ function makeTextField({name}) {
  * @returns {HTMLElement}
  */
 function makeSymbol ({pos, type}) {
-	const s = document.createElement("desktop-symbol");
-	//s.id = `desktop-symbol${i}`;
-	s.classList.add("desktop-symbol");
-	s.style.top = pos[0]
-	s.style.left = pos[1];
-	s.addEventListener("click", desktopSymbolClicked);
-	s.dataset.symboltype = type;
-	s.dataset.open = false;
+	const s = create("desktop-symbol",{
+		classList: "desktop-symbol",
+		style: {
+			top: pos[0],
+			left: pos[1]
+		},
+		eventListener: {click: desktopSymbolClicked},
+		dataset: {
+			symboltype: type,
+			open: false
+		}
+	});
 	return s;
 }
 /**
@@ -127,10 +136,10 @@ function makeSymbol ({pos, type}) {
  * @returns {HTMLDivElement}
  */
 function makeIcon ({image}) {
-	const icon = document.createElement("div");
-	//icon.id = `desktop-symbol-icon${i}`
-	icon.classList.add("desktop-symbol-image");
-	icon.style = `background-image: url('${image}')`;
+	const icon = create("div", {
+		classList: ["desktop-symbol-image"],
+		style: `background-image: url('${image}')`
+	});
 	return icon;
 }
 
@@ -145,7 +154,7 @@ function makeIcon ({image}) {
  * @param {HTMLDivElement} darken Background of a desktop symbol
  */
 function closeDesktopFolder(event, submenu, symbol, darken) {
-	getElement("startmenu").classList.add("hiddenstart");
+	closeStartMenu();
 	submenu.classList.remove("desktop-folder-open");
 	symbol.style["z-index"] = null;
 	symbol.dataset.open = false;
@@ -163,22 +172,21 @@ function desktopSymbolClicked(event) {
 	while (parent.tagName != "DESKTOP-SYMBOL") {
 		parent = parent.parentNode
 	}
-	getElement("startmenu").classList.add("hiddenstart");
+	closeStartMenu();
 	if (parent.dataset.symboltype == "folder" && parent.dataset.open == "false") {
 		let submenu;
 		for (let x of Array.from(parent.childNodes)) {
 			if (x.name == "desktop-symbol-submenu") submenu = x;
 		}
 		parent.dataset.open = true;
-		const darken = document.createElement("div")
-		darken.classList.add("folder-bg");
+		const darken = create("div", {
+			classList: ["folder-bg"],
+			id: "submenu-darken",
+			eventListener: {click: (e)=>{closeDesktopFolder(e, submenu, parent, darken)}}
+		})
 		getElement("bodydiv").appendChild(darken);
 		submenu.classList.add("desktop-folder-open");
 		parent.style["z-index"] = 10;
-		darken.id = `submenu-darken`
-		darken.addEventListener("click", (event) => {
-			closeDesktopFolder(event, submenu, parent, darken);
-		})
 	}
 }
 

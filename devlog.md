@@ -1,5 +1,20 @@
 # Devlog
 
+### Day 29
+- Started reducing the amount of code
+- Added a script that removes all comments from js to further reduce size
+	- Doesnt automatically update the scripts that are deployed
+	- you have to manually copy the files to the according location, just follow the instructions from the "prepare for deploy.js"
+	- not really necessary while working with it locally, but it does drastically reduce filesize when used as a website
+	- Maybe ill implement a better solution 
+- removed unused fonts, but kept the CSS entries for now
+- further reduced initial load and more importantly future initial load. The client now requests image files manually as needed instead of loading all of them. 
+- All these changes have cut down the size of the public folder from around 8MB to just over 1MB
+### Day 26
+- Reworking and restructuring of code
+- Added new utility function: create()
+	- shorthand for creating HTML Elements fast, takes the type as a string and an object containing the properties of the object
+
 ### Day 25
 - Added left sidebar
 - Basic syntax highlighting for the terminal

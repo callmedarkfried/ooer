@@ -9,7 +9,7 @@ import * as StartMenu from "./startmenu.js"
 import * as DesktopSymbol from "./desktopSymbols.js"
 import * as Widget from "./widgets.js"
 import * as Handler from "./handlermodule.js"
-
+import * as Setup from "./setup.js"
 /**
  * @file main.js
  * @author Smittel
@@ -18,7 +18,7 @@ import * as Handler from "./handlermodule.js"
  */
 
 
-
+Setup.setupSidebarLeft()
 
 const clientTick = setInterval(Util.tick, 1000); // Timing might not be entirely accurate in my tests, doesnt have to be tho.
 // Make the DIV element draggable:
@@ -44,8 +44,9 @@ Clock.initCalendar();
 Util.getElement("taskbar-search").addEventListener("mouseup", StartMenu.searchAreaHandler);
 Util.getElement("searchbar").addEventListener("focusout", Util.closeSearchBox);
 Util.getElement("taskbar-home").addEventListener("mouseup", openStartMenu);
-Util.getElement("sidebar-left-opener").addEventListener("click", Handler.toggleSidebarLeft)
-Util.getElement("close-sidebar-left").addEventListener("click", Handler.toggleSidebarLeft)
+
+// Util.getElement("sidebar-left-opener").addEventListener("click", Handler.toggleSidebarLeft)
+// Util.getElement("close-sidebar-left").addEventListener("click", Handler.toggleSidebarLeft)
 Util.getElement("sidebar-right-opener").addEventListener("click", Handler.toggleSidebarRight)
 Util.getElement("close-sidebar-right").addEventListener("click", Handler.toggleSidebarRight)
 /**
