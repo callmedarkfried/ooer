@@ -24,7 +24,7 @@ div.loginbox-pfp {
 	position: absolute;
 	height: 180px;
 	width: 180px;
-	background-image: url("/default.jpg");
+	background-image: url("/content/images?i=default.jpg");
 	border-radius: 100%;
 	background-size: cover;
 	background-position: center center;
@@ -84,7 +84,7 @@ div.loginbox-pfp {
 	line-height: 24px;
 	text-align: center;
 	font-size: 24px;
-	font-weight: bold;
+	font-weight: 500;
 }
 
 .password-info {

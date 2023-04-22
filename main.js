@@ -30,7 +30,7 @@ const desktopSymbols = {
 		symbols: [
 		{
 			pos: ["calc(50% - 10vmin)","calc(50% - 10vmin"],
-			image: "folder-blender.png",
+			image: "/content/images?i=folder-blender.png",
 			type: "folder",
 			name: "Blender",
 			data: null, // null for folders
@@ -64,7 +64,7 @@ const desktopSymbols = {
 			]
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 60vmin"],
-			image: "github-logo.png",
+			image: "/content/images?i=github-logo.png",
 			type: "folder",
 			name: "Test",
 			data: null,
@@ -113,13 +113,13 @@ const desktopSymbols = {
 			]
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
-			image: "/images/logo.png",
+			image: "/content/images?i=logo.png",
 			type: "page",
 			name: "Terminal",
 			data: "terminal", //identifier of application or page to request from server
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 20vmin"],
-			image: "youtube.png",
+			image: "/content/images?i=youtube.png",
 			type: "link",
 			name: "Blender",
 			data: "url", //url for links (external)
@@ -162,6 +162,10 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get("/content/images", (req, res) => {
+	res.sendFile(__dirname + "/content/images/" + req.query.i)
+}) 
+
 io.on('connection', (socket) => {
 	setTimeout(() => {
 		socket.emit("desktop_symbols", desktopSymbols);
@@ -201,13 +205,13 @@ io.on('connection', (socket) => {
 			  notes: grabNotes(t[0].id),
 			  friends: friends[t[0].id],
 			  id: t[0].id,
-			  profilePicture: "default.jpg"
+			  profilePicture: "/content/images?i=default.jpg"
 		  })
 		  setTimeout(function () {
 			  
 			socket.emit("notification", {
 				title: "Login successful",
-				image: "default.jpg",
+				image: "/content/images?i=default.jpg",
 				description: "You successfully logged in. Congratulations on being capable of doing basic tasks, proud of ya, bozo",
 				clickEvent: {}
 			})
@@ -238,7 +242,7 @@ io.on('connection', (socket) => {
 	  socket.emit("logout_confirm","")
 	  socket.emit("notification", {
 				title: "Logout successful",
-				image: "default.jpg",
+				image: "/content/images?i=default.jpg",
 				description: "Well fuck off then, i dont care.",
 				clickEvent: {}
 			})
@@ -254,7 +258,7 @@ function terminal({cmd, fp, id}, socket) {
 	switch (commandTokens[0]) {
 		case "cd":
 		case "chdir":
-			return Terminal.ch(commandTokens, fp, id);
+			return Terminal.cd(commandTokens, fp, id);
 		case "say":
 		case "echo":
 		case "print":
@@ -272,11 +276,6 @@ function terminal({cmd, fp, id}, socket) {
 		default:
 			return Terminal.help(null, fp, id);
 	}
-	return {
-		res: "",
-		fp: "C>folder/subfolder",
-		id: id
-	}
 }
 
 function reqSettingsSub(socket, msg) {
@@ -288,7 +287,7 @@ function serveSettings(msg, socket) {
 	const sub = msg.page || "settings_appearance"
 	const html = fs.readFileSync(`./html/settings/${sub.split("_")[1]}.html`).toString();
 	const js = undefined;// `alert("ooo");`
-	socket.emit("add_window", {title: "Settings", "html":fs.readFileSync("./settings.html").toString(), icon: "settings.png", windowClass: "settingswindow", selected: sub, subhtml: html, js: js});
+	socket.emit("add_window", {title: "Settings", "html":fs.readFileSync("./settings.html").toString(), icon: "/content/images?i=settings.png", windowClass: "settingswindow", selected: sub, subhtml: html, js: js});
 	let reqS = msg.requested || "appearance";
 	
 }
@@ -327,7 +326,7 @@ function serveSubpage({requested}, socket) {
 	switch(requested) {
 		case "terminal":
 			let js = fs.readFileSync("./terminal/terminal.js").toString()
-			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal/terminal.html").toString(), icon: "settings.png", js: js, width: "800px", height: "480px"});
+			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal/terminal.html").toString(), icon: "/content/images?i=settings.png", js: js, width: "800px", height: "480px"});
 			break;
 	}
 }
