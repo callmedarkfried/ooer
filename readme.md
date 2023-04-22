@@ -1,6 +1,6 @@
 welcome to hell.
 
-Theres practically no documentation (yet)
+GOT DOCS NOW! lets see how useful they are
 
 im working on it...
 
