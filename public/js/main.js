@@ -33,9 +33,12 @@ dragElement(Util.getElement("calendar-widget"));
 // document.addEventListener('contextmenu', event => event.preventDefault());
 
 let cookie = document.cookie.split(";").map(a => a.split("="))
-if (cookie[1][1] != undefined && cookie[1][1] != "undefined") { 
-	socket.emit("auth", {cookie: document.cookie})
+if (cookie[1]) {
+	if (cookie[1][1] != undefined && cookie[1][1] != "undefined") { 
+		socket.emit("auth", {cookie: document.cookie})
+	}
 }
+
 cookie = null;
 Util.getElement("toggle-notes").addEventListener("click", Widget.toggleWidget);
 Util.getElement("toggle-friends").addEventListener("click", Widget.toggleWidget);

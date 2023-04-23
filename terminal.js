@@ -1,20 +1,62 @@
 const fs = require("fs");
+const validCommand = '#aeae34';
+const invalidCommand = '#ae3434';
+const argumentname = '#989898';
+const value = '#13a300';
+const path = '#5aeee0';
+
 module.exports = {
     currentpath: ["C","Users","Documents"],
-    _syntax: function syntax(input) {
+    _syntax: function (input) {
         let tokens = input.split(" ");
+        console.log(tokens)
         let validCommands = ["cd", "chdir", "say", "echo", "print", "clear", "cls", "cmd", "ls"]
         let command = tokens.shift();
         if (validCommands.includes(command)) {
-            command = `<span class="valid-command">${command}</span>`
+            command = `<span style="color: ${validCommand} !important;">${command}</span>`
         } else {
-            command = `<span class="invalid-command">${command}</span>`
+            command = `<span style="color: ${invalidCommand} !important;">${command}</span>`
         }
+
         if (tokens.length > 0) {
-            return `${command} ${tokens.join(" ")||""}` 
+            let full = tokens.join(" ");
+            let argnames = full.match(/-{1,2}\w+/g);
+            let argvals = full.match(/(?<==)"[\s\S]+?"/g) 
+            let argvals2 = full.match(/(?<==)[^"]+?(?=\b)/g)
+            
+            console.log("an", argnames)
+            console.log("av", argvals)
+            console.log("av2", argvals2)
+            if (argnames) {
+                for (let a of argnames) {
+                    full = full.replaceAll(a, "\0\3\1" + a + "\2")
+                }
+            }
+            
+            
+            if (argvals) {
+                if (argvals2) {
+                    argvals = argvals.concat(argvals2)
+                }
+            } else {
+                argvals = argvals2;
+            }
+            if (argvals) {
+                for (a of argvals) {
+                    full = full.replaceAll(a, "\0\4\1" + a + "\2")
+                }
+            }
+            
+            full = full
+                .replaceAll("\0", '<span style="color: ')
+                .replaceAll("\1", ' !important;">')
+                .replaceAll("\2", '</span>')
+                .replaceAll("\3", argumentname)
+                .replaceAll("\4", value)
+
+            return `${command} ${full}` 
         }
-        
-        return `${command}` 
+        return command
         
     },
     help: function(cmd, fp, id) {
