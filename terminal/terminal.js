@@ -46,9 +46,6 @@ function terminalMain() {
             let argvals = full.match(/(?<==)"[\s\S]+?"/g) 
             let argvals2 = full.match(/(?<==)[^"]+?(?=\b)/g)
             
-            console.log("an", argnames)
-            console.log("av", argvals)
-            console.log("av2", argvals2)
             if (argnames) {
                 for (let a of argnames) {
                     full = full.replaceAll(a, "\0\3\1" + a + "\2")
