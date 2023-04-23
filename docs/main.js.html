@@ -54,17 +54,26 @@ let friends = {
 	
 }
 const letters = (() => {
-  const caps = [...Array(26)].map((val, i) => String.fromCharCode(i + 65));
-  return caps.concat(caps.map(letter => letter.toLowerCase())).concat([0,1,2,3,4,5,6,7,8,9]);
+	const caps = [...Array(26)].map((val, i) => String.fromCharCode(i + 65));
+	return caps.concat(caps.map(letter => letter.toLowerCase())).concat([0,1,2,3,4,5,6,7,8,9]);
 })();
 
 let tokens = [];
 
 function tokenGenerator(username) {
 	let currTime = Date.now();
-	let expiretime = currTime + (30 * 60 * 1000); // Cookies expire after 30 minutes.
+	let expiretime = currTime - (30 * 60 * 1000); // Cookies expire after 30 minutes.
+	// console.log(new Date(expiretime).toUTCString())
 	const characters = letters;
-	console.log(characters)
+	let token = "";
+	for (let  i = 0; i &lt; 128; i++) { // 128 is maybe a bit excessive
+		token += characters[Math.floor(Math.random() * characters.length)]
+	}
+	
+	return {
+		token: token,
+		expires: expiretime
+	}
 }
 
 const desktopSymbols = {
@@ -200,7 +209,7 @@ let users = [
 
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+	res.sendFile(__dirname + '/index.html');
 });
 
 app.get("/content/images", (req, res) => {
@@ -212,85 +221,119 @@ io.on('connection', (socket) => {
 		socket.emit("desktop_symbols", desktopSymbols);
 	}, 100);
 	
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-  });
+	
   
   // Setinterval 1s heartbeat, serves as driver for client clock
   // used to detect lost connection clientside
   
   
-  function heartbeat () {
-	  socket.emit("heartbeat", "");
-  }
-  let hb = setInterval(heartbeat, 1000);
-  socket.on("disconnect", ()=>{clearInterval(hb)});
-  
-  
-  
-  // socket.emit("add_dynscript", {js: "alert('test')"})
-  socket.on('login', (msg) => {
-	
-	  let t = users.filter((u) => u.username == msg.username)
-	  tokenGenerator(msg.username) 
-	  if (t.length == 0) {
-		  socket.emit("wrong_pw", "");
-		  return;
-	  }
-	 if (msg.password == t[0].password) {
-		 
-		  socket.emit("init", {
-			  username: t[0].username,
-			  handle: t[0].handle,
-			  nickname: t[0].nickname,
-			  notes: grabNotes(t[0].id),
-			  friends: friends[t[0].id],
-			  id: t[0].id,
-			  profilePicture: "/content/images?i=default.jpg"
-		  })
-		  setTimeout(function () {
-			  
+	function heartbeat () {
+		socket.emit("heartbeat", "");
+	}
+	let hb = setInterval(heartbeat, 1000);
+	socket.on("disconnect", ()=>{clearInterval(hb)});
+
+	socket.on("auth", (msg) => {
+	let cookie = msg.cookie.split("; ").map((a)=>a.split("="));
+	let cookieOBJ = {}
+	for (let c of cookie) {
+		cookieOBJ[c[0]] = c[1]
+	}
+
+	if (tokens.filter((a)=>a.token == cookieOBJ.token).length >= 1) {
+		tokens = tokens.filter((a)=>a.username != cookieOBJ.username); // Prevent duplicate cookies
+		let t = users.filter((u) => u.username == cookieOBJ.username); // Get user info
+		const generated = tokenGenerator(cookieOBJ.username)
+		socket.emit("init", {
+			username: t[0].username,
+			handle: t[0].handle,
+			nickname: t[0].nickname,
+			notes: grabNotes(t[0].id),
+			friends: friends[t[0].id],
+			id: t[0].id,
+			profilePicture: "/content/images?i=default.jpg",
+			token: generated.token,
+			expires: generated.expires
+		})
+		tokens.push({username: t[0].username, token: generated.token, expires: generated.expires})
+		
+	}
+
+
+	})
+
+	// socket.emit("add_dynscript", {js: "alert('test')"})
+	socket.on('login', (msg) => {
+		let t = users.filter((u) => u.username == msg.username)
+		
+		if (t.length == 0) {
+			socket.emit("wrong_pw", "");
+			return;
+		}
+		if (msg.password == t[0].password) {
+		let generated = tokenGenerator(msg.username);
+		tokens.push({username: msg.username, token: generated.token, expires: generated.expires})
+		
+		socket.emit("init", {
+			username: t[0].username,
+			handle: t[0].handle,
+			nickname: t[0].nickname,
+			notes: grabNotes(t[0].id),
+			friends: friends[t[0].id],
+			id: t[0].id,
+			profilePicture: "/content/images?i=default.jpg",
+			token: generated.token,
+			expires: generated.expires
+		})
+			setTimeout(function () {
+				
 			socket.emit("notification", {
 				title: "Login successful",
 				image: "/content/images?i=default.jpg",
 				description: "You successfully logged in. Congratulations on being capable of doing basic tasks, proud of ya, bozo",
 				clickEvent: {}
 			})
-		  }, 200);
-	  } else {
-		  socket.emit("wrong_pw", "");
-	  }
-  });
-  
-  socket.on('delete_note', (msg) => {
-	  deleteNote(msg.user, msg.index); //user is token
-  })
-  socket.on("add_note", (msg) => {
-	  // ALL USER RELATED STUFF NEEDS TO USE THE ACCORDING SESSION TOKEN!!!
-	  addNote(msg.user, msg.note);
-  })
-  socket.on("request_page", (msg) => {
+			}, 200);
+		} else {
+			socket.emit("wrong_pw", "");
+		}
+	});
+
+	socket.on('delete_note', (msg) => {
+		deleteNote(msg.user, msg.index); //user is token
+	})
+	socket.on("add_note", (msg) => {
+		// ALL USER RELATED STUFF NEEDS TO USE THE ACCORDING SESSION TOKEN!!!
+		addNote(msg.user, msg.note);
+	})
+	socket.on("request_page", (msg) => {
 	serveSubpage(msg, socket);
-  });
-  socket.on("request_settings", (msg) => {
+	});
+	socket.on("request_settings", (msg) => {
 	serveSettings(msg, socket);
-  });
-  socket.on("terminal_req", (msg) => {
+	});
+	socket.on("terminal_req", (msg) => {
 	let response = terminal(msg, socket);
 	socket.emit("terminal_res", response)
-  });
-  socket.on("logout", (msg) => {
-	  socket.emit("logout_confirm","")
-	  socket.emit("notification", {
+	});
+	socket.on("logout", (msg) => {
+	let cookie = msg.cookie.split("; ").map((a)=>a.split("="));
+	let cookieOBJ = {}
+	for (let c of cookie) {
+		cookieOBJ[c[0]] = c[1]
+	}
+	tokens = tokens.filter((a) => a.token != cookieOBJ.token)
+		socket.emit("logout_confirm","")
+		socket.emit("notification", {
 				title: "Logout successful",
 				image: "/content/images?i=default.jpg",
 				description: "Well fuck off then, i dont care.",
 				clickEvent: {}
 			})
-  })
-  socket.on("req_subsettings", (msg) => {
-	 reqSettingsSub(socket, msg); 
-  });
+	})
+	socket.on("req_subsettings", (msg) => {
+		reqSettingsSub(socket, msg); 
+	});
 });
 
 function terminal({cmd, fp, id}, socket) {
@@ -394,7 +437,7 @@ server.listen(8080, () => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 23 2023 15:39:28 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 23 2023 17:04:28 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

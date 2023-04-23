@@ -48,15 +48,14 @@ Util.getElement("taskbar-search").addEventListener("mouseup", StartMenu.searchAr
 Util.getElement("searchbar").addEventListener("focusout", Util.closeSearchBox);
 Util.getElement("taskbar-home").addEventListener("mouseup", openStartMenu);
 
-// Util.getElement("sidebar-left-opener").addEventListener("click", Handler.toggleSidebarLeft)
-// Util.getElement("close-sidebar-left").addEventListener("click", Handler.toggleSidebarLeft)
 Util.getElement("sidebar-right-opener").addEventListener("click", Handler.toggleSidebarRight)
 Util.getElement("close-sidebar-right").addEventListener("click", Handler.toggleSidebarRight)
 /**
  * A fairly fast interval. Prevents widgets from being moved off-screen.
  * In theory you could still get them back by zooming out but thats a usability nightmare 
+ * Also doesnt work when widgets are dragged off the left or top side of the screen
  * So I just prevent that from happening. You can remove it if you want.<br>
- * (anonymous)
+ * 
  * @name Widget_Interval
  * @memberof Main
  */
@@ -132,8 +131,10 @@ socket.on("sub_settings", (msg) => {
 // I dont think those will be added back anytime soon
 // socket.on("add_dynscript", addJS); // Dynamic scripts
 // socket.on("add_dynscript_g", addJSG); // same but global
+
 /**
  * Triggered by keydown event in terminal textbox
+ * (i added this a few days ago but im not quite sure why or what it was supposed to do)
  * @param {HTMLDivElement} elmnt 
  */
 function terminalKeyDownEvent(elmnt) {

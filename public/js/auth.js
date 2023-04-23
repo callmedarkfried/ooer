@@ -1,13 +1,13 @@
 import { closeAllWindows } from "./windows.js";
 /**
- * Everything here is temporary!
+ * No longer temporary, though there might be some changes in the future.
  * @todo Implement proper authentification
  * @module Auth
  */
 // TEMPORARY MEASURE
 let login = {};
 /**
- * Just a temporary measure and nothing to worry about for testing and playing around. think of it as a session token that isnt stored on reload
+ * Saves barebones cookies that last for 30 minutes
  * @param {object} l 
  */
 function setLogin(l) {
@@ -17,7 +17,7 @@ function setLogin(l) {
 }
 
 /**
- * Will be changed once theres actual authentification and sessions
+ * Deletes cookies, closes windows, resets the login object
  * @param {event} event 
  */
 function userLogOut(event) {
