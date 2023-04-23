@@ -1,5 +1,13 @@
 # Devlog
 
+### Day 30
+- Cookies (!!!)
+- I dont really trust it tho. Good thing the server doesnt save the tokens permanently so if something happens, you can just restart i guess.
+- Cookies are valid for 30 minutes after the last refresh. If you refresh within that time, the cookie gets renewed. 
+- They only include the username and a unique and way too long token. 
+- This presents a challenge for potential third party "applications", as of now they can easily just read the cookies, but that only becomes relevant once you have third party functionality tbh.
+- While they are session cookies and thus get deleted 30 minutes after last refresh, i do not know how the legal situation is. They are not strictly necessary for the site to function but they do improve user experience somewhat.
+
 ### Day 29
 - Started reducing the amount of code
 - Added a script that removes all comments from js to further reduce size
@@ -10,6 +18,7 @@
 - removed unused fonts, but kept the CSS entries for now
 - further reduced initial load and more importantly future initial load. The client now requests image files manually as needed instead of loading all of them. 
 - All these changes have cut down the size of the public folder from around 8MB to just over 1MB
+
 ### Day 26
 - Reworking and restructuring of code
 - Added new utility function: create()

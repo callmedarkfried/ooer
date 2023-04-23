@@ -86,7 +86,7 @@ function setupFolderSymbol(s, {sub}) {
 	for (let j = 0; j < sub.length; j++) {
 		submenu.push(makeSubMenuElement(sub[j]));
 	}
-	console.log(submenu)
+	
 	const elmnt = create("div", {
 		classList: ["desktop-folder"],
 		style: `grid-template-columns: repeat(${calculateGrid(sub.length)[1]},92px); grid-template-rows: repeat(${calculateGrid(sub.length)[0]},92px); `,

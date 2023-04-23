@@ -30,7 +30,7 @@
  * @file login.js
  * @author Smittel
  */
-import { getElement } from "./util.js";
+import { getElement, create } from "./util.js";
 import * as Widgets from "./widgets.js";
 import * as Auth from "./auth.js";
 import { closeStartMenu } from "./util.js";
@@ -59,7 +59,10 @@ const darkener = document.createElement("div");
  * @type {HTMLDivElement}
  */
 
-const loginbox = document.createElement("div");
+const loginbox = create("div", {
+	textContent: "",
+	classList: ["loginbox"]
+})
 
 /**
  * A small error message. Not a dialog box, just a small error
@@ -67,9 +70,9 @@ const loginbox = document.createElement("div");
  * @memberof module:Login
  * @type {HTMLDivElement}
  */
-const wrongpw = document.createElement("div")
-
-wrongpw.classList.add("wrong-password")
+const wrongpw = create("div", {
+	classList: ["wrong-password"]
+});
 
 /**
  * Sends a server request for the user settings
@@ -106,10 +109,12 @@ function openUserSettingsS(sub) {
  */
 function initialise (msg) {
 	darkener.remove();
-	const usernameField = document.createElement("div");
-	usernameField.id = "username-field";
-	usernameField.classList.add("username-field");
-	
+
+	const usernameField = create("div", {
+		id: "username-field",
+		classList: ["username-field"],
+		eventListener: {"mouseup": (e)=>{openUserSettingsS("settings_profile")}}
+	})
 	const  parent = getElement("startmenu");
 	
 	
@@ -122,10 +127,11 @@ function initialise (msg) {
 	let elmnts = []
 	
 	for (let u of usernameFieldElements) {
-		const c = document.createElement(u.type);
-		c.id = u.id;
-		c.classList.add(...u.classList);
-		c.innerHTML = u.innerHTML;
+		const c = create(u.type, {
+			id: u.id,
+			classList: u.classList,
+			innerHTML: u.innerHTML
+		})
 		elmnts.push(c)
 	}
 	
@@ -147,11 +153,12 @@ function initialise (msg) {
 		}
 	]
 	for (let c of smTopBtns) {
-		const e = document.createElement("a");
-		e.id = c.id;
-		e.classList.add(...c.classList);
-		e.innerHTML = `&lt;center>${c.display}&lt;/center>`;
-		e.addEventListener("mouseup", c.handler);
+		const e = create("a", {
+			id: c.id,
+			classList: c.classList,
+			innerHTML: `&lt;center>${c.display}&lt;/center>`,
+			eventListener: {"mouseup": c.handler}
+		})
 		buttons.push(e)
 	}
 	
@@ -159,9 +166,7 @@ function initialise (msg) {
 	
 	
 	usernameField.append(...elmnts);
-	usernameField.addEventListener("mouseup", (event) => {
-		openUserSettingsS("settings_profile")
-	})
+	
 	
 	const startmenuLayout = [
 		{id: "startmenu-top", classList: ["startmenu-top"], child: [usernameField, ...buttons]},
@@ -210,25 +215,24 @@ function initialise (msg) {
  * @memberof module:Login
  */
 function addLoginButton () {
-	var sm = getElement("startmenu");
-	var lb = document.createElement("div");
-	var sb = document.createElement("div");
+	const sm = getElement("startmenu");
+
+	const lb = create("div", {
+		id: "loginbutton",
+		classList: ["startmenu-button-lg-su", "login-button", "unselectable"],
+		eventListener: {"mouseup": loginScreen},
+		innerHTML: "Log in"
+	})
+
+	const sb = create("div", {
+		id: "signupbutton",
+		classList: ["startmenu-button-lg-su", "signup-button", "unselectable"],
+		eventListener: {"mouseup": signupScreen},
+		innerHTML: "Sign up"
+	})
 	
-	lb.id = "loginbutton";
-	lb.classList.add("startmenu-button-lg-su", "login-button", "unselectable")
-	lb.addEventListener("mouseup", (event) => {
-		loginScreen();
-	});
-	lb.innerHTML = "Log in";
 	
-	sb.id = "signupbutton";
-	sb.classList.add("startmenu-button-lg-su", "signup-button", "unselectable")
-	sb.addEventListener("mouseup", (event) => {
-		signupScreen();
-	});
-	sb.innerHTML = "Sign up";
-	
-	var topDiv = getElement("startmenu-top")
+	const topDiv = getElement("startmenu-top")
 	
 	topDiv.append(lb, sb);
 	sm.append(topDiv);
@@ -240,37 +244,11 @@ function addLoginButton () {
  */
 function loginScreen() {
 	darkener.textContent = "";
-	loginbox.textContent = ""
+	loginbox.textContent = "";
 	darkener.classList.add("darken");
 	
-	var pfp = document.createElement("div");
-	var loginTBUser = document.createElement("input")
-	var loginTBPass = document.createElement("input")
-	var loginbutton = document.createElement("a")
-	var abortbutton = document.createElement("a")
-	
-	pfp.classList.add("loginbox-pfp")
-	
-	
-	loginbox.classList.add("loginbox");
-	
-	
-	
-	loginTBUser.type = "text";
-	loginTBUser.style = "top: 230px;";
-	loginTBUser.placeholder = "Username"
-	loginTBUser.classList.add("login-tb");
-	loginTBUser.id = "tb-username";
-	
-	
-	loginTBPass.type = "password";
-	loginTBPass.style = "top: 294px;"
-	loginTBPass.placeholder = "Password"
-	loginTBPass.classList.add("login-tb", "login-tb-pw");
-	loginTBPass.id = "tb-password";
-	
-	loginTBPass.addEventListener("keydown", (event) => {
-		if (event.keyCode == 13) {
+	function submitLogin(event) {
+		if (event.key == "Enter" || event.type == "mouseup") {
 			socket.emit("login", {
 				username: loginTBUser.value, 
 				password: loginTBPass.value
@@ -278,43 +256,50 @@ function loginScreen() {
 			loginTBUser.value = "";
 			loginTBPass.value = "";
 		}
-	});
-
-	loginTBUser.addEventListener("keydown", (event) => {
-		if (event.keyCode == 13) {
-			socket.emit("login", {
-				username: loginTBUser.value, 
-				password: loginTBPass.value
-			}) 
-			loginTBUser.value = "";
-			loginTBPass.value = "";
-			
-		}
-	});
-	
+	}
 
 	
-	loginbutton.classList.add("login-button", "login-button-submit","unselectable")
-	abortbutton.classList.add("login-button", "login-button-abort", "unselectable")
+	const pfp = create("div", {
+		classList: ["loginbox-pfp"]
+	})
+
+	const loginTBUser = create("input", {
+		type: "text",
+		style: "top: 230px;",
+		placeholder: "Username",
+		classList: ["login-tb"],
+		id: "tb-username",
+		eventListener: {"keydown": submitLogin}
+	})
 	
+	const loginTBPass = create("input", {
+		type: "password",
+		style: "top: 294px;",
+		placeholder: "Password",
+		classList: ["login-tb", "login-tb-pw"],
+		id: "tb-password",
+		eventListener: {"keydown": submitLogin}
+	})
+
+	const loginbutton = create("a", {
+		classList: ["login-button", "login-button-submit","unselectable"],
+		innerHTML: '&lt;center>&lt;i class="fa-solid fa-arrow-right">&lt;/i>&lt;/center>',
+		eventListener: {"mouseup": submitLogin}
+	})
 	
-	// loginbutton.innerHTML = "&lt;center>&amp;nbsp;➤&lt;/center>"
-	loginbutton.innerHTML = '&lt;center>&lt;i class="fa-solid fa-arrow-right">&lt;/i>&lt;/center>'
-	abortbutton.innerHTML = "&lt;center>✖&lt;/center>"
+	const abortbutton = create("a", {
+		classList: ["login-button", "login-button-abort", "unselectable"],
+		innerHTML: "&lt;center>✖&lt;/center>",
+	})
+
+	
 	
 	loginbox.append(pfp, loginTBUser, loginTBPass, abortbutton, loginbutton);
 	darkener.appendChild(loginbox);
 	
 	getElement("bodydiv").appendChild(darkener);
 	
-	loginbutton.addEventListener("mouseup", (event) => {
-		socket.emit("login", {
-			username: loginTBUser.value, 
-			password: loginTBPass.value
-		}) 
-		loginTBUser.value = "";
-		loginTBPass.value = "";
-	})
+	
 	
 	abortbutton.addEventListener("mouseup", closeLogin)
 	
@@ -401,25 +386,35 @@ function passwordCheck (event) {
  * @memberof module:Login
  */
 function signupScreen() {
-	console.log("signup")
 	darkener.textContent = "";
 	loginbox.textContent = ""; // Resetting to prevent problems
 	
 	var pfp = document.createElement("div");
 	
-	var infoButton = document.createElement("a");
-	infoButton.classList.add("info-button", "unselectable")
-	infoButton.innerHTML = '&lt;center>&lt;i class="fa-solid fa-info fa-sm">&lt;/i>&lt;/center>';
+	function signupEvent(){
+		passwordCheckFinal()
+		socket.emit("signup", {username: form[0].value, password: form[2].value})
+	}
+
+	const infoButton = create("a", {
+		classList: ["info-button", "unselectable"],
+		innerHTML: '&lt;center>&lt;i class="fa-solid fa-info fa-sm">&lt;/i>&lt;/center>',
+		eventListener: {mousedown: ()=>{getElement("pw-info").classList.toggle("hidden")}}
+	})
+
+	const signupbutton = create("a", {
+		classList: ["login-button", "login-button-submit","unselectable"],
+		style: "top: 263px;",
+		innerHTML: '&lt;center>&lt;i class="fa-solid fa-arrow-right">&lt;/i>&lt;/center>',
+		eventListener: {mouseup: signupEvent}
+	})
 	
-	var signupbutton = document.createElement("a")
-	var abortbutton = document.createElement("a")
-	
-	var passwordInfo = document.createElement("div");
-	passwordInfo.classList.add("password-info", "unselectable", "hidden");
-	passwordInfo.id = "pw-info";
-	passwordInfo.textContent = "Passwords must contain 3 of the following:";
-	
-	
+	const abortbutton = create("a", {
+		classList: ["login-button", "login-button-abort", "unselectable"],
+		innerHTML: "&lt;center>✖&lt;/center>",
+		eventListener: {mouseup: closeLogin}
+	})
+
 	const conditionIndicators = [
 		{id: "upper", display: "Uppercase Letters"},
 		{id: "lower", display: "Lowercase Letters"},
@@ -427,54 +422,56 @@ function signupScreen() {
 		{id: "special", display: "Special Characters"},
 		{id: "length", display: "more than 8 characters long"}
 	]
+	let pwinfoelmnts = [];
 	for (let o of conditionIndicators) {
 		if (o.id == "length") {
-			const t = document.createElement("span");
-			t.textContent = "And be"
-			passwordInfo.appendChild(t)
+			const t = create("span", {
+				textContent: "And be"
+			});
+			pwinfoelmnts.push(t)
 		}
-		const s = document.createElement("div");
-		s.id = `condition-${o.id}`;
-		s.textContent = o.display;
-		s.classList.add("condition-not-met", "condition");
-		passwordInfo.appendChild(s)
+		const s = create("div", {
+			id: `condition-${o.id}`,
+			textContent: o.display,
+			classList: ["condition-not-met", "condition"]
+		});
+		pwinfoelmnts.push(s)
 	}
-	
-	
-	var title = document.createElement("font")
-	title.style = "font-size: 36px; line-height: 48px; left: 10%; position: absolute;"
-	title.innerHTML = "Sign up"
+
+	const passwordInfo = create("div", {
+		classList: ["password-info", "unselectable", "hidden"],
+		id: "pw-info",
+		textContent: "Passwords must contain 3 of the following:",
+		childElements: pwinfoelmnts
+	})
+
+	const title = create("span", {
+		style: "font-size: 36px; line-height: 48px; left: 10%; position: absolute;",
+		innerHTML: "Sign up"
+	})
+
 	darkener.classList.add("darken");
-	
 	loginbox.classList.add("loginbox");
 	
+
 	const textboxes = [
-	{type: "text", style: "top: 80px", placeholder: "Username", id: "tb-su-username"},
-	{type: "text", style: "top: 144px", placeholder: "E-Mail", id: "tb-su-email"},
-	{type: "password", style: "top: 220px", placeholder: "Password", id: "tb-su-pw"},
-	{type: "password", style: "top: 263px", placeholder: "Confirm Password", id: "tb-su-pwc"}
+		{type: "text", style: "top: 80px", placeholder: "Username", id: "tb-su-username"},
+		{type: "text", style: "top: 144px", placeholder: "E-Mail", id: "tb-su-email"},
+		{type: "password", style: "top: 220px", placeholder: "Password", id: "tb-su-pw"},
+		{type: "password", style: "top: 263px", placeholder: "Confirm Password", id: "tb-su-pwc"}
 	]
 	var form = [];
 	for (let t of textboxes) {
-		const s = document.createElement("input");
-		s.type = t.type;
-		s.style = t.style;
-		s.value = "";
-		s.classList.add("login-tb");
-		s.placeholder = t.placeholder;
-		s.id = t.id;
+		const s = create("input", {
+			type: t.type,
+			style: t.style,
+			value: "",
+			classList: ["login-tb"],
+			placeholder: t.placeholder,
+			id: t.id
+		});
 		form.push(s)
 	}
-	
-	
-	signupbutton.classList.add("login-button", "login-button-submit","unselectable")
-	abortbutton.classList.add("login-button", "login-button-abort", "unselectable")
-	
-	signupbutton.style = "top: 263px";
-	signupbutton.innerHTML = '&lt;center>&lt;i class="fa-solid fa-arrow-right">&lt;/i>&lt;/center>'
-	abortbutton.innerHTML = "&lt;center>✖&lt;/center>"
-	
-	
 	
 	loginbox.append(title,pfp,abortbutton,signupbutton,passwordInfo,infoButton);
 	loginbox.append(...form);
@@ -482,18 +479,6 @@ function signupScreen() {
 	
 	darkener.appendChild(loginbox);
 	getElement("bodydiv").appendChild(darkener);
-	
-	signupbutton.addEventListener("mouseup", (event) => {
-		passwordCheckFinal()
-		socket.emit("signup", {username: form[0].value, password: form[2].value})
-	})
-	
-	abortbutton.addEventListener("mouseup", closeLogin);
-	
-	infoButton.addEventListener("mousedown", (event) => {
-		console.log("est")
-		getElement("pw-info").classList.toggle("hidden")
-	})
 	
 	form[2].addEventListener("input", passwordCheck);
 	
@@ -586,7 +571,7 @@ export {initialise, signupScreen, wrongPW, loginScreen, addLoginButton, logoutHa
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 15 2023 20:34:20 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 23 2023 15:39:28 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

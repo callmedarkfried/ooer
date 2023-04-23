@@ -18,6 +18,7 @@ import * as Setup from "./setup.js"
  */
 
 
+
 Setup.setupSidebarLeft()
 
 const clientTick = setInterval(Util.tick, 1000); // Timing might not be entirely accurate in my tests, doesnt have to be tho.
@@ -31,7 +32,9 @@ dragElement(Util.getElement("calendar-widget"));
 // Will be uncommented once the custom context menus are a thing
 // document.addEventListener('contextmenu', event => event.preventDefault());
 
-
+if (document.cookie.length > 17) { // 17 because of the SameSite=Strict thing that tended to stick around during testing..
+	socket.emit("auth", {cookie: document.cookie})
+}
 Util.getElement("toggle-notes").addEventListener("click", Widget.toggleWidget);
 Util.getElement("toggle-friends").addEventListener("click", Widget.toggleWidget);
 

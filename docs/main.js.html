@@ -39,9 +39,9 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const fs = require("fs")
+const fs = require("fs");
+const Terminal = require("./terminal.js")
 app.use(express.static('public'));
-
 let notes = {
 	"test": [{"d": 0, "t": "testoman"},{"d": 10000, "t":"another"}]
 }
@@ -53,12 +53,25 @@ let notes = {
 let friends = {
 	
 }
+const letters = (() => {
+  const caps = [...Array(26)].map((val, i) => String.fromCharCode(i + 65));
+  return caps.concat(caps.map(letter => letter.toLowerCase())).concat([0,1,2,3,4,5,6,7,8,9]);
+})();
+
+let tokens = [];
+
+function tokenGenerator(username) {
+	let currTime = Date.now();
+	let expiretime = currTime + (30 * 60 * 1000); // Cookies expire after 30 minutes.
+	const characters = letters;
+	console.log(characters)
+}
 
 const desktopSymbols = {
 		symbols: [
 		{
 			pos: ["calc(50% - 10vmin)","calc(50% - 10vmin"],
-			image: "folder-blender.png",
+			image: "/content/images?i=folder-blender.png",
 			type: "folder",
 			name: "Blender",
 			data: null, // null for folders
@@ -92,7 +105,7 @@ const desktopSymbols = {
 			]
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 60vmin"],
-			image: "github-logo.png",
+			image: "/content/images?i=github-logo.png",
 			type: "folder",
 			name: "Test",
 			data: null,
@@ -141,13 +154,13 @@ const desktopSymbols = {
 			]
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
-			image: "/images/logo.png",
+			image: "/content/images?i=logo.png",
 			type: "page",
-			name: "Test",
+			name: "Terminal",
 			data: "terminal", //identifier of application or page to request from server
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 20vmin"],
-			image: "youtube.png",
+			image: "/content/images?i=youtube.png",
 			type: "link",
 			name: "Blender",
 			data: "url", //url for links (external)
@@ -190,6 +203,10 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get("/content/images", (req, res) => {
+	res.sendFile(__dirname + "/content/images/" + req.query.i)
+}) 
+
 io.on('connection', (socket) => {
 	setTimeout(() => {
 		socket.emit("desktop_symbols", desktopSymbols);
@@ -215,7 +232,7 @@ io.on('connection', (socket) => {
   socket.on('login', (msg) => {
 	
 	  let t = users.filter((u) => u.username == msg.username)
-		  
+	  tokenGenerator(msg.username) 
 	  if (t.length == 0) {
 		  socket.emit("wrong_pw", "");
 		  return;
@@ -229,13 +246,13 @@ io.on('connection', (socket) => {
 			  notes: grabNotes(t[0].id),
 			  friends: friends[t[0].id],
 			  id: t[0].id,
-			  profilePicture: "default.jpg"
+			  profilePicture: "/content/images?i=default.jpg"
 		  })
 		  setTimeout(function () {
 			  
 			socket.emit("notification", {
 				title: "Login successful",
-				image: "default.jpg",
+				image: "/content/images?i=default.jpg",
 				description: "You successfully logged in. Congratulations on being capable of doing basic tasks, proud of ya, bozo",
 				clickEvent: {}
 			})
@@ -259,14 +276,14 @@ io.on('connection', (socket) => {
 	serveSettings(msg, socket);
   });
   socket.on("terminal_req", (msg) => {
-	let response = terminal(msg);
+	let response = terminal(msg, socket);
 	socket.emit("terminal_res", response)
   });
   socket.on("logout", (msg) => {
 	  socket.emit("logout_confirm","")
 	  socket.emit("notification", {
 				title: "Logout successful",
-				image: "default.jpg",
+				image: "/content/images?i=default.jpg",
 				description: "Well fuck off then, i dont care.",
 				clickEvent: {}
 			})
@@ -276,11 +293,29 @@ io.on('connection', (socket) => {
   });
 });
 
-function terminal({cmd, fp, id}) {
-	return {
-		res: "command executed",
-		fp: "~home\\folder",
-		id: id
+function terminal({cmd, fp, id}, socket) {
+	
+	let commandTokens = cmd.split(" ");
+	switch (commandTokens[0]) {
+		case "cd":
+		case "chdir":
+			return Terminal.cd(commandTokens, fp, id);
+		case "say":
+		case "echo":
+		case "print":
+			return Terminal.echo(commandTokens, fp, id);
+		case "clear":
+		case "cls":
+			return Terminal.clear(commandTokens, fp, id);
+		case "cmd":
+			serveSubpage({requested: "terminal"}, socket) ;
+			return {res: "",fp: fp, id: id}
+		case "ls":
+			return Terminal.ls(commandTokens, fp, id);
+		case "":
+			return {res:"", fp:fp, id: id}
+		default:
+			return Terminal.help(null, fp, id);
 	}
 }
 
@@ -293,7 +328,7 @@ function serveSettings(msg, socket) {
 	const sub = msg.page || "settings_appearance"
 	const html = fs.readFileSync(`./html/settings/${sub.split("_")[1]}.html`).toString();
 	const js = undefined;// `alert("ooo");`
-	socket.emit("add_window", {title: "Settings", "html":fs.readFileSync("./settings.html").toString(), icon: "settings.png", windowClass: "settingswindow", selected: sub, subhtml: html, js: js});
+	socket.emit("add_window", {title: "Settings", "html":fs.readFileSync("./settings.html").toString(), icon: "/content/images?i=settings.png", windowClass: "settingswindow", selected: sub, subhtml: html, js: js});
 	let reqS = msg.requested || "appearance";
 	
 }
@@ -329,51 +364,10 @@ function grabNotes(username) {
 
 
 function serveSubpage({requested}, socket) {
-	console.log(requested)
 	switch(requested) {
 		case "terminal":
-			let js = `
-			function terminalMain() {
-				let terminalinput = document.getElementById("terminal-input");
-				let terminallabel = document.getElementById("terminal-label");
-				let terminalcontent = document.getElementById("terminal-past");
-				terminallabel.dataset.path = "~home"; //This is the filepath
-				terminalinput.dataset.rand = Math.round(Math.random() * 100000000);
-				console.log(terminalinput.dataset.rand)
-				terminalinput.id = terminalinput.id + terminalinput.dataset.rand;
-				terminallabel.id = terminallabel.id + terminalinput.dataset.rand;
-				terminallabel.textContent = terminallabel.dataset.path + ">"
-				terminalcontent.id = terminalcontent.id + terminalinput.dataset.rand;
-				socket.on("terminal_res", ({res, fp, id}) => {
-					console.log(id, terminalinput.dataset.rand)
-					if (id != terminalinput.dataset.rand) return;
-					terminallabel.dataset.path = fp;
-					let entry = document.createElement("p");
-					entry.style = "line-height: 14px; margin: 0;";
-					entry.textContent = res;
-					terminalcontent.appendChild(entry);
-					terminallabel.textContent = terminallabel.dataset.path + ">";
-				})
-				let terminalWindowBody = terminalinput.parentNode.parentNode;
-				terminalWindowBody.addEventListener("click", (event) => {
-					terminalinput.focus();
-				}) 
-				terminalinput.addEventListener("keydown", (event) => {
-					if (event.key == "Enter") {
-						event.preventDefault();
-						socket.emit("terminal_req", {cmd: terminalinput.textContent, fp: terminallabel.dataset.path, id: terminalinput.dataset.rand})
-						let entry = document.createElement("p");
-						entry.style = "line-height: 14px; margin: 0;"
-						entry.textContent = terminallabel.textContent + " " + terminalinput.textContent;
-						terminalinput.textContent = "";
-						terminalcontent.appendChild(entry)
-					}
-				})
-			}
-			terminalMain();
-
-			`
-			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal.html").toString(), icon: "settings.png", js: js, width: "800px", height: "480px"});
+			let js = fs.readFileSync("./terminal/terminal.js").toString()
+			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal/terminal.html").toString(), icon: "/content/images?i=settings.png", js: js, width: "800px", height: "480px"});
 			break;
 	}
 }
@@ -382,8 +376,8 @@ function serveTerminal(msg, socket) {
 	
 }
 
-server.listen(3000, () => {
-  console.log('listening on *:3000');
+server.listen(8080, () => {
+  console.log('listening on *:8080');
 });</code></pre>
         </article>
     </section>
@@ -400,7 +394,7 @@ server.listen(3000, () => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Apr 15 2023 20:34:20 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 23 2023 15:39:28 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
