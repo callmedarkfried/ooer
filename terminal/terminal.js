@@ -31,7 +31,6 @@ function terminalMain() {
         const argumentname = '#989898';
         const value = '#13a300';
         let tokens = input.split(" ");
-        console.log(tokens)
         let validCommands = ["cd", "chdir", "say", "echo", "print", "clear", "cls", "cmd", "ls"]
         let command = tokens.shift();
         if (validCommands.includes(command)) {
