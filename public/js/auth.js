@@ -11,8 +11,8 @@ let login = {};
  * @param {object} l 
  */
 function setLogin(l) {
-	document.cookie = `username=${l.username}; expires:${l.expires}; secure`
-	document.cookie = `token=${l.token}; expires:${l.expires}; secure` 
+	document.cookie = `username=${l.username}; expires:${l.expires}; SameSite=Strict; secure`
+	document.cookie = `token=${l.token}; expires:${l.expires}; SameSite=Strict; secure` 
 	login = l;
 }
 

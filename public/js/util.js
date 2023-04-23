@@ -12,6 +12,8 @@ import { clockTick } from "./clock.js";
  * @module Utilities
  */
 
+
+let textareafocus = false;
 /**
  * Similar shorthand as in python, different syntax. Why i chose to do this, i dont know. But i kinda like it 
  * @name Number․prototype․range
