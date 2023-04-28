@@ -145,3 +145,4 @@ socket.on("sub_settings", (msg) => {
 function terminalKeyDownEvent(elmnt) {
 	console.log()
 }
+
