@@ -14,13 +14,15 @@
 	position: fixed;
 	transform: scale(1);
 	opacity: 1;
-	transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+	filter: blur(0px);
+	transition: transform 0.3s ease-in, opacity 0.3s ease-in, filter 0.3s ease-out;
 }
 
 .welcome-screen-transition {
 	transform: scale(1.5) !important;
 	opacity: 0 !important;
-	transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+	filter: blur(30px);
+	transition: transform 0.3s ease-out, opacity 0.3s ease-out, filter 0.3s ease-out;
 }
 
 .welcome-text {
