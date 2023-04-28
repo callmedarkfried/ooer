@@ -1,5 +1,10 @@
 # Devlog
 
+### Day 33
+- Added a sort of lockscreen
+	- no real purpose, maybe it will prompt login, i dont know yet
+	- Is shown on page load
+	- reappears after 2 minutes without activity (aka mouse movement)
 ### Day 30
 - Cookies (!!!)
 - I dont really trust it tho. Good thing the server doesnt save the tokens permanently so if something happens, you can just restart i guess.

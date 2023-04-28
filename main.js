@@ -87,8 +87,21 @@ const desktopSymbols = {
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 60vmin"],
 			image: "/content/images?i=github-logo.png",
-			type: "folder",
+			type: "link",
 			name: "Test",
+			data: "url", //url for links (external)
+			
+		},{
+			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
+			image: "/content/images?i=utilities-terminal-icon.png",
+			type: "page",
+			name: "Terminal",
+			data: "terminal", //identifier of application or page to request from server
+		},{
+			pos: ["calc(50% - 15vmin)","calc(50% - 20vmin"],
+			image: "/content/images?i=folder-base.png",
+			type: "folder",
+			name: "Testing",
 			data: null,
 			sub: [
 				{
@@ -133,18 +146,6 @@ const desktopSymbols = {
 					data: "link"
 				}
 			]
-		},{
-			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
-			image: "/content/images?i=logo.png",
-			type: "page",
-			name: "Terminal",
-			data: "terminal", //identifier of application or page to request from server
-		},{
-			pos: ["calc(50% - 15vmin)","calc(50% - 20vmin"],
-			image: "/content/images?i=youtube.png",
-			type: "link",
-			name: "Blender",
-			data: "url", //url for links (external)
 		}
 	]
 	}
@@ -382,7 +383,7 @@ function serveSubpage({requested}, socket) {
 	switch(requested) {
 		case "terminal":
 			let js = fs.readFileSync("./terminal/terminal.js").toString()
-			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal/terminal.html").toString(), icon: "/content/images?i=settings.png", js: js, width: "800px", height: "480px"});
+			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal/terminal.html").toString(), icon: "/content/images?i=utilities-terminal-icon.png", js: js, width: "800px", height: "480px"});
 			break;
 	}
 }

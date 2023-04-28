@@ -6,10 +6,12 @@
  * @module Clock
  */
 
-import { getElement } from "./util.js";
+import { getElement, create } from "./util.js";
 const monthnames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const weekdays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 const daysShort = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "So"]
+let lockscreenTimer = 0;
+let lockscreenTriggerTime = 120;
 /**
 * Returns the time of day in local format with leading zeroes
 * @function hourMinutes
@@ -85,9 +87,29 @@ function clockTick() {
 	analog(currDate)
 	let clockTime = getElement("desktop-clock-time");
 	let clockDate = getElement("desktop-clock-date");
+	let lockClock = getElement("lockscreen-clock");
+	let lockDate = getElement("lockscreen-date");
 	clockTime.innerHTML = `<center>${hourMinutes(currDate)}</center>`;
 	clockDate.innerHTML = `<center>${dayMonthYear(currDate)}</center>`;
+	if (lockClock) lockClock.innerHTML = `<center>${hourMinutes(currDate)}</center>`;
+	if (lockDate) lockDate.innerHTML = `<center>${dayMonthYear(currDate)}</center>`;
+	lockscreenTimer++;
+	if (lockscreenTimer == lockscreenTriggerTime) showLockscreen();
 }
+
+document.addEventListener("mousemove", (event) => {lockscreenTimer = 0})
+getElement("welcome-screen").addEventListener("click", removeLockscreen)
+
+function showLockscreen() {
+	getElement("welcome-screen").classList.remove("hidden")
+	getElement("welcome-screen").classList.remove("welcome-screen-transition")
+}
+function removeLockscreen(event) {
+	getElement("welcome-screen").classList.add("welcome-screen-transition");
+	lockscreenTimer = 0;
+	setTimeout(()=>{Util.getElement("welcome-screen").classList.add("hidden")}, 300)
+}
+
 
 // CALENDAR ///////////////////////////////////////////////////////////////////////////////
 
@@ -184,19 +206,23 @@ function renderCalendar(month, year) {
 	
 	let daytable = []
 	for (let i = 0; i < 7; i++) {
-		const t = document.createElement("div");
-		t.innerHTML = `<b>${daysShort[i]}</b>`;
-		t.classList.add("calendar-date-block");
+		const t = create("div", {
+			innerHTML: `<b>${daysShort[i]}</b>`,
+			classList: ["calender-date-block", "unselectable"]
+		});
 		daytable.push(t);
 	}
 	for (let i = 0; i < offset; i++) {
-		const t = document.createElement("div");
-		t.classList.add("calendar-date-block");
-		t.innerHTML = "&nbsp;";
+		const t = create("div", {
+			innerHTML: `&nbsp;`,
+			classList: ["calender-date-block", "unselectable"]
+		});
 		daytable.push(t);
 	}
 	for (let i = 0; i < getDays(year, month); i++) {
-		const t = document.createElement("div");
+		const t = create("div", {
+
+		});
 		t.classList.add("calendar-date-block", "unselectable");
 		t.innerHTML = i + 1;
 		const filter = (a) => {
