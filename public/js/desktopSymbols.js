@@ -122,7 +122,7 @@ function makeSymbol ({pos, type}) {
 			top: pos[0],
 			left: pos[1]
 		},
-		eventListener: {click: desktopSymbolClicked},
+		eventListener: {mouseup: desktopSymbolClicked},
 		dataset: {
 			symboltype: type,
 			open: false

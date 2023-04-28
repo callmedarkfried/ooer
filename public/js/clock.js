@@ -107,7 +107,7 @@ function showLockscreen() {
 function removeLockscreen(event) {
 	getElement("welcome-screen").classList.add("welcome-screen-transition");
 	lockscreenTimer = 0;
-	setTimeout(()=>{Util.getElement("welcome-screen").classList.add("hidden")}, 300)
+	setTimeout(()=>{getElement("welcome-screen").classList.add("hidden")}, 300)
 }
 
 

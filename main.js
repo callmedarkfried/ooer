@@ -88,8 +88,8 @@ const desktopSymbols = {
 			pos: ["calc(50% - 15vmin)","calc(50% - 60vmin"],
 			image: "/content/images?i=github-logo.png",
 			type: "link",
-			name: "Test",
-			data: "url", //url for links (external)
+			name: "Github",
+			data: "https://github.com/callmedarkfried/ooer", //url for links (external)
 			
 		},{
 			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
