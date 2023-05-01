@@ -39,7 +39,6 @@ const taskbarContextMenuElements = [
  * @param {string=} args.subhtml when using subscreens, this is where the html goes. More information: see "Window"
  */
 function addWindow(args) {
-	console.log(args)
 	const w = new Window(windows.length, args);
 	windows.push(w);
 }

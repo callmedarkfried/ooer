@@ -222,6 +222,7 @@ div.taskbar {
 }
 
 .button-other {
+	width: inherit;
 }
 
 div.taskbar-button {

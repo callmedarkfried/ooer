@@ -1,11 +1,11 @@
 
-
 function terminalMain() {
-    let terminalinput = document.getElementById("terminal-input");
-    let terminallabel = document.getElementById("terminal-label");
-    let terminalcontent = document.getElementById("terminal-past");
-    let terminalshow = document.getElementById("terminal-show")
-    let pathelement = document.getElementById("path");
+    function get(str) {return document.getElementById(str)};
+    let terminalinput   = get("terminal-input");
+    let terminallabel   = get("terminal-label");
+    let terminalcontent = get("terminal-past");
+    let terminalshow    = get("terminal-show")
+    let pathelement     = get("path");
     let recentTerminalCommands = [];
     let recentIndex = -1;
     terminallabel.dataset.path = "C>Users/Documents"; //This is the filepath
@@ -17,7 +17,7 @@ function terminalMain() {
     pathelement.textContent = terminallabel.dataset.path
     terminalcontent.id = terminalcontent.id + terminalinput.dataset.rand;
 
-    const terminalCursorStyle = document.getElementById("terminal-cursor");
+    const terminalCursorStyle = get("terminal-cursor");
     terminalCursorStyle.id = terminalCursorStyle.id + terminalinput.dataset.rand;
 
     /**
@@ -41,18 +41,20 @@ function terminalMain() {
 
         if (tokens.length > 0) {
             let full = tokens.join(" ");
-            let argnames = full.match(/-{1,2}\w+/g);
+            let argnames = full.match(/-{1,2}\S+?(?=\b)/g);
             let argvals = full.match(/(?<==)"[\s\S]+?"/g) 
             let argvals2 = full.match(/(?<==)[^"]+?(?=\b)/g)
             
             if (argnames) {
+                argnames = argnames.sort((a,b)=> a.length<b.length);
+                console.log(argnames)
                 for (let a of argnames) {
                     full = full.replaceAll(a, "\0\3\1" + a + "\2")
                 }
             }
             
             
-            if (argvals) {
+            if (argvals && argvals2) {
                 if (argvals2) {
                     argvals = argvals.concat(argvals2)
                 }
@@ -60,6 +62,7 @@ function terminalMain() {
                 argvals = argvals2;
             }
             if (argvals) {
+                argvals = argvals.sort((a,b)=> a.length<b.length);
                 for (a of argvals) {
                     full = full.replaceAll(a, "\0\4\1" + a + "\2")
                 }
