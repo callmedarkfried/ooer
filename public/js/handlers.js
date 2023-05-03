@@ -24,30 +24,7 @@ function openStartMenu(event) {
 }
 
 
-function deleteNoteHandler(event) {
-	let target = event.target;
-	while (!target.id.match(/^notes\d$/g)) {
-		target = target.parentNode;
-	}
-	let t_parent = target.parentNode;
-	let delIndex = Array.from(t_parent.childNodes).filter(el => el.id === "notes1").indexOf(target);
-	
-	let newNoteList = [];
-	for (let i = 0; i < noteslist.length; i++) {
-		if (i != delIndex) {
-			newNoteList.push(noteslist[i])
-		}
-	}
-	noteslist = newNoteList;
-	socket.emit("delete_note", {user: login.id, index: delIndex});
-	target.remove();
-	refreshZeroNotes();
-	// maybe a dialog box should be added before its deleted
-}
 
-function editNoteHandler(event) {
-	alert("temporary")
-}
 
 
 function minimiseWindow(event) {

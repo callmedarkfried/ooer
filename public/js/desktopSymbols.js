@@ -88,7 +88,7 @@ function setupFolderSymbol(s, {sub}) {
 	}
 	
 	const elmnt = create("div", {
-		classList: ["desktop-folder"],
+		classList: ["desktop-folder", "absolute", "centered"],
 		style: `grid-template-columns: repeat(${calculateGrid(sub.length)[1]},92px); grid-template-rows: repeat(${calculateGrid(sub.length)[0]},92px); `,
 		name: "desktop-symbol-submenu",
 		childElements: submenu
@@ -180,7 +180,7 @@ function desktopSymbolClicked(event) {
 		}
 		parent.dataset.open = true;
 		const darken = create("div", {
-			classList: ["folder-bg"],
+			classList: ["folder-bg", "fixed", "block"],
 			id: "submenu-darken",
 			eventListener: {click: (e)=>{closeDesktopFolder(e, submenu, parent, darken)}}
 		})

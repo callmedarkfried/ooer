@@ -22,13 +22,14 @@ let textareafocus = false;
 function searchAreaHandler(event) {
 	if (!textareafocus) {
 		if (searchbar.classList.contains("hiddensearch")) {
+			console.log("has hidden")
 			searchbar.classList.remove("hiddensearch")
 			searchbar.focus();
 			textareafocus = true;
-		} else {
-			searchbar.classList.add("hiddensearch")
-			textareafocus = false;
-		}
+		} 
+	} else {
+		searchbar.classList.add("hiddensearch")
+		textareafocus = false;
 	}
 }
 

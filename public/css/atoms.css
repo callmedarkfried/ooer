@@ -1,0 +1,57 @@
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.relative {
+    position: relative;
+}
+
+.block {
+    display: block;
+}
+
+.centered {
+    top: 50%;
+    left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.no-border {
+    border: none;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.hidden {
+	display: none !important;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+font.indent {
+	margin-left: 12px;
+}
+
+.font-18 {
+    font-size: 18px;
+}
+
+.font-24 {
+    font-size: 24px;
+}
+
+.line-36 {
+    line-height: 36px;
+}
+
+.line-48 {
+    line-height: 48px;
+}

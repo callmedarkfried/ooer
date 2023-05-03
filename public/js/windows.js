@@ -73,10 +73,10 @@ class Window {
 				
 		// the outer div for the minimise, maximise, close button
 		const windowControls = makeWindowControls(id);
-		windowControls.append(...windowControlButtons(windows))
+		windowControls.childNodes[0].append(...windowControlButtons(windows))
 		
 		this.windowbody = Util.create("div",{
-			classList: ["windowbody"],
+			classList: ["absolute", "windowbody"],
 			innerHTML: args.html
 		});
 
@@ -84,7 +84,7 @@ class Window {
 		// this.windowObject.appendChild(windowHeader);
 
 		this.windowObject = Util.create("div", {
-			classList: [args.windowClass, "window"],
+			classList: ["fixed", args.windowClass, "window"],
 			id: `window${id}`,
 			dataset: {
 				minimised: "false",
@@ -135,7 +135,7 @@ class Window {
 		
 		if (args.type == "website") {
 			let iframe = document.createElement("iframe");
-			iframe.classList.add("iframe");
+			iframe.classList.add("absolute", "iframe");
 			iframe.src = args.url;
 			this.windowbody.appendChild(iframe);
 		}
@@ -206,8 +206,8 @@ class Window {
  */
 function windowControlButtons(windows) {
 	let b = [];
-	const actions = ["minimise", "maximise", "close"];
-	const handlers = [minimiseWindow, maximiseWindow, closeWindow]
+	const actions = ["close", "minimise", "maximise"];
+	const handlers = [closeWindow, minimiseWindow,  maximiseWindow]
 	for (let i = 0; i < 3; i++) {
 		b[i] = Util.create("window-button", {
 			dataset: {
@@ -241,11 +241,16 @@ function addScript(js) {
  * @returns {DOMElement:div}
  */
 function makeWindowControls(id) {
+	
 	const windowControls = Util.create("div", {
 		id: `window${id}controls`,
-		classList: ["windowControls"]
+		classList: ["absolute", "windowControls"]
 	});
-	return windowControls;
+	const windowControlsOuter = Util.create("div", {
+		classList: ["absolute", "windowControlsOuter"],
+		childElements: [windowControls]
+	})
+	return windowControlsOuter;
 }
 
 /**
@@ -258,8 +263,8 @@ function makeWindowControls(id) {
 function makeWindowHeader(id, title) {
 	const windowHeader = Util.create("div", {
 		id: `window${id}header`,
-		classList: ["window-header", "unselectable"],
-		innerHTML: `<font class="window-header">${title}</font>`
+		classList: ["absolute", "window-header", "unselectable", "font-18"],
+		innerHTML: `<font class="absolute window-header">${title}</font>`
 	});
 	return windowHeader;
 }
@@ -296,7 +301,7 @@ function taskbarIconClicked(event) {
  */
 function makeTaskBarIcon(id, icon) {
 	const taskbarIcon = Util.create("div", {
-		classList: ["taskbar-button", "button-other"],
+		classList: ["relative", "inline-block", "taskbar-button", "button-other"],
 		style: `background-image: url('${icon}');`,
 		id: `taskbar-icon${id}`,
 		dataset: {id: id},

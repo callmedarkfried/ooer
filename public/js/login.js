@@ -84,16 +84,16 @@ function initialise (msg) {
 
 	const usernameField = create("div", {
 		id: "username-field",
-		classList: ["username-field"],
+		classList: ["absolute", "pointer","username-field", "block", "font-18"],
 		eventListener: {"mouseup": (e)=>{openUserSettingsS("settings_profile")}}
 	})
 	const  parent = getElement("startmenu");
 	
 	
 	const usernameFieldElements = [
-	{id: "username-main", classList: ["username-main"], innerHTML: msg.nickname, type: "font"},
-	{id: "username-small", classList: ["username-small"], innerHTML: msg.username + "#" + msg.handle, type: "font"},
-	{id: "user-pfp", classList: ["user-profile-picture"], innerHTML: "", type: "div"}
+	{id: "username-main", classList: ["username-main", "absolute", "block", "font-24"], innerHTML: msg.nickname, type: "font"},
+	{id: "username-small", classList: ["absolute", "block", "username-small"], innerHTML: msg.username + "#" + msg.handle, type: "font"},
+	{id: "user-pfp", classList: ["absolute", "user-profile-picture"], innerHTML: "", type: "div"}
 	]
 	
 	let elmnts = []
@@ -405,7 +405,7 @@ function signupScreen() {
 		const s = create("div", {
 			id: `condition-${o.id}`,
 			textContent: o.display,
-			classList: ["condition-not-met", "condition"]
+			classList: ["relativ", "block", "condition-not-met", "condition", "font-18"]
 		});
 		pwinfoelmnts.push(s)
 	}

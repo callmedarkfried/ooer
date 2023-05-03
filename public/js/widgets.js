@@ -38,7 +38,7 @@ function noteBodyInner() {
 	parent.innerHTML = ""; //reset note body to prevent unwanted behavior
 	var addNoteBody = document.createElement("div"); 	// create background div for click handler
 	addNoteBody.id = "add-note-body"					// so you can click on empty space to add note
-	addNoteBody.classList.add("notes-add", "no-scrollbar");
+	addNoteBody.classList.add("absolute", "pointer", "notes-add", "no-scrollbar");
 	parent.appendChild(addNoteBody);
 	
 	let textarea = document.createElement("textarea");	// the textarea to add notes
@@ -61,21 +61,22 @@ function noteBodyInner() {
 		for (let n of noteslist) {
 			// The note itself
 			let note = document.createElement("div");
-			note.classList.add("notes-element");
+			note.classList.add("notes-element", "relative");
 			note.id = "notes1"
-			note.innerHTML = `<font class="notedate">${dayMonthYearNoName(new Date(n.d))} ${hourMinutes(new Date(n.d))}</font><br>${(n.t)}`
+			note.innerHTML = `<font class="relative notedate">${dayMonthYearNoName(new Date(n.d))} ${hourMinutes(new Date(n.d))}</font><br>${(n.t)}`
 			
 			
 			const buttons = [
-			{classList: ["note-controls", "delete-note"], display: "✖", handle: deleteNoteHandler},
-			{classList: ["note-controls", "edit-note"], display: "✎", handle: editNoteHandler}
+			{classList: ["delete-note"], display: "✖", handle: deleteNoteHandler},
+			{classList: ["edit-note"], display: "✎", handle: editNoteHandler}
 			]
 			
 			for (let b of buttons) {
-				var e = document.createElement("a");
-				e.classList.add(...b.classList, "unselectable");
-				e.innerHTML = `<center>${b.display}<center>`;
-				e.addEventListener("mouseup", b.handle);
+				var e = Util.create("a", {
+					classList: ["absolute", ...b.classList,"note-controls", "unselectable", "pointer"],
+					innerHTML: `<center>${b.display}<center>`,
+					eventListener: {mouseup: b.handle},
+				});
 				note.appendChild(e)
 			}
 			
@@ -86,7 +87,30 @@ function noteBodyInner() {
 	addNoteBody.addEventListener("click", addNote)
 	parent.appendChild(textarea)	
 }
+function deleteNoteHandler(event) {
+	let target = event.target;
+	while (!target.id.match(/^notes\d$/g)) {
+		target = target.parentNode;
+	}
+	let t_parent = target.parentNode;
+	let delIndex = Array.from(t_parent.childNodes).filter(el => el.id === "notes1").indexOf(target);
+	
+	let newNoteList = [];
+	for (let i = 0; i < noteslist.length; i++) {
+		if (i != delIndex) {
+			newNoteList.push(noteslist[i])
+		}
+	}
+	noteslist = newNoteList;
+	socket.emit("delete_note", {user: login.id, index: delIndex});
+	target.remove();
+	refreshZeroNotes();
+	// maybe a dialog box should be added before its deleted
+}
 
+function editNoteHandler(event) {
+	alert("temporary")
+}
 /**
  * Displays a message that there are no notes if the user has no notes.
  * Shocking.
@@ -96,7 +120,7 @@ function refreshZeroNotes() {
 	if (noteslist.length == 0) {
 		var noNotes = document.createElement("div")
 		var noNotesMessage = document.createElement("div");
-		noNotesMessage.classList.add("no-friends", "unselectable");
+		noNotesMessage.classList.add("absolute", "no-friends", "unselectable");
 		noNotesMessage.innerHTML = "<i><center> Click here to add notes <center></i>"
 		Util.getElement("add-note-body").appendChild(noNotesMessage)
 	}
@@ -149,7 +173,7 @@ function friendslist (friends) {
 		friendsbody.classList.add("friendsbody", "no-scrollbar");
 		
 		let noFriends = document.createElement("div");
-		noFriends.classList.add("no-friends", "unselectable");
+		noFriends.classList.add("absolute", "no-friends", "unselectable");
 		noFriends.innerHTML = "<i><center> Click here to add friends <center></i>"
 		
 		friendsbody.appendChild(noFriends);

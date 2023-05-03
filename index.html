@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="/css/widgets.css">
 	<link rel="stylesheet" href="/css/fonts.css">
 	<link rel="stylesheet" href="/css/sidebar.css">
+	<link rel="stylesheet" href="/css/atoms.css">
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 	  let socket = io();
@@ -25,11 +26,12 @@
 	<script type="module" src="/js/main.js" defer></script>
 	<!-- <script src="/js/windows.js" defer></script> -->
   </head>
-  <body><div id="bodydiv" class="container">
+  <body><div id="bodydiv" class="container block">
+
   <!-- CLOCK -->
-	<div class="desktop-clock unselectable" id="desktop-clock-container">
-		<div class="desktop-clock-time unselectable" id="desktop-clock-time">9:50</div>
-		<div class="desktop-clock-date unselectable" id="desktop-clock-date">Monday, January 1st 1900</div>
+	<div class="fixed block desktop-clock unselectable" id="desktop-clock-container">
+		<div class="desktop-clock-time unselectable relative" id="desktop-clock-time">9:50</div>
+		<div class="desktop-clock-date unselectable relative" id="desktop-clock-date">Monday, January 1st 1900</div>
 	</div>
 
   <!-- ANALOG CLOCK -->
@@ -43,17 +45,17 @@
 		
 
   <!-- TASKBAR -->
-	<div id="taskbar" class="taskbar"><div id="taskbar-home" class="taskbar-button button-home"></div><div id="taskbar-search" class="taskbar-button button-search"></div></div>
+	<div id="taskbar" class="block fixed taskbar"><div id="taskbar-home" class="relative inline-block pointer taskbar-button button-home"></div><div id="taskbar-search" class="relative inline-block pointer taskbar-button button-search relative"></div></div>
 	
 
   <!-- NOTE WIDGET -->
 	<desktop-widget id="widget-notes" class="no-scrollbar" style="width: 240px; height: 360px;" data-small="false">
 		<div id="widget-notesheader" class="notes-header unselectable">
-			<font class="indent">Notes</font>
+			<span class="indent">Notes</span>
 		</div>
 		<widget-button id="toggle-notes" data-small="false" class="toggle-button"></widget-button>
-		<div class="notes-body no-scrollbar" id="widget-body-notes" data-small="false">
-			<div class="no-friends unselectable">
+		<div class="absolute notes-body no-scrollbar" id="widget-body-notes" data-small="false">
+			<div class="absolute no-friends pointer unselectable">
 			<i><center>Please log in for notes</center></i>
 			</div>
 		</div>
@@ -63,11 +65,11 @@
   <!-- FRIENDS WIDGET -->
 	<desktop-widget id="widget-friends" class="no-scrollbar" style="width: 240px; height: 360px; left: 20px; top: calc(100% - 420px); display: none" data-small="false">
 		<div id="widget-friendsheader" class="friends-header unselectable">
-			<font class="indent">Friends</font>
+			<span class="indent">Friends</span>
 		</div>
 		<widget-button id="toggle-friends" data-small="false" class="toggle-button" ></widget-button>
-		<div class="notes-body no-scrollbar" id="widget-body-friends" data-small="false">
-			<div class="no-friends unselectable">
+		<div class="notes-body no-scrollbar absolute" id="widget-body-friends" data-small="false">
+			<div class="absoute no-friends unselectable">
 			<i><center>Please log in for friends</center></i>
 			</div>
 		</div>
@@ -77,13 +79,13 @@
 	<!-- CALENDAR WIDGET -->
 	<calendar-widget id="calendar-widget" style="top: 20px; right: 20px;">
 		<div class="calendar-top unselectable" id="calendar-widgetheader">
-			<a class="month-back" id="month-minus"></a>
-			<div class="calendar-month" id="calendar-month">
+			<a class="absolute inline-block pointer month-back" id="month-minus"></a>
+			<div class="absolute inline-block calendar-month" id="calendar-month">
 			
 			</div>
-			<a class="month-forward" id="month-plus"></a>
+			<a class="absolute inline-block pointer month-forward" id="month-plus"></a>
 		</div>
-		<div class="calendar" id="cal">
+		<div class="absolute calendar" id="cal">
 		</div>
 		<div class="appointmentlist" id="appointmentlist">
 			
@@ -91,7 +93,7 @@
 	</calendar-widget>
 	
   <!-- SEARCHBOX -->
-	<input type="text" id="searchbar" class="searchbar hiddensearch" rows="1" cols="255"></input>
+	<input type="text" id="searchbar" class="fixed searchbar hiddensearch no-border font-24 line-36" rows="1" cols="255"></input>
 	
   <!-- STARTMENU -->
 	<div id="startmenu" class="startmenu hiddenstart">
@@ -104,7 +106,7 @@
   <!-- WIDGET BAR RIGHT -->
 	<div class="sidebar right" id="sidebar-right" data-open="false">
 		<span class="sidebar-title unselectable">Friends</span>
-		<a class="abort-button unselectable" id="close-sidebar-right"><center>✖</center></a>
+		<a class="abort-button pointer unselectable" id="close-sidebar-right"><center>✖</center></a>
 		<div class="sidebar-container" id="sidebar-container-right">
 			<div class="sidebar-notification-container" id="sidebar-notifications">Notifications</div>
 			<div class="sidebar-widget-container">
@@ -115,17 +117,17 @@
 	<a class="sidebar-opener right" id="sidebar-right-opener">&lt;</a>
 
   <!-- Welcome screen -->
-  <div class="welcome-screen" id="welcome-screen">
-		<span class="welcome-text">Welcome.</span>
-		<div class="lockscreen-clock-container">
-			<p class="lockscreen-clock" id="lockscreen-clock">test</p>
-			<p class="lockscreen-date" id="lockscreen-date">test</p>
+  <div class="welcome-screen fixed" id="welcome-screen">
+		<span class="welcome-text fixed">Welcome.</span>
+		<div class="lockscreen-clock-container fixed">
+			<p class="lockscreen-clock relative" id="lockscreen-clock">test</p>
+			<p class="lockscreen-date relative font-24" id="lockscreen-date">test</p>
 		</div>
   </div>
-	<div id="snapping-prev" class="snapping-preview-full-hidden snapping-preview-full"></div>
+	<div id="snapping-prev" class="fixed block snapping-preview-full-hidden snapping-preview-full"></div>
 	<noscript>
-	<div class="noscript-ol">
-	<div class="noscript-error">
+	<div class="fixed block noscript-ol">
+	<div class="fixed block font-18 noscript-error centered">
 		<b>This Website requires Javascript to run. </b><br><br>
 		This is mostly for UI functionality and server requests.<br>
 		Please enable Javascript to access this site.

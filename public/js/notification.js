@@ -11,19 +11,19 @@ function notification (msg) {
 		"clickEvent": {}
 	}
 	
-	card.classList.add("notification-popup","notification-popup-hidden","unselectable");
+	card.classList.add("notification-popup","notification-popup-hidden","unselectable", "no-border", "block", "fixed");
 	card.id = "notification";
 	
-	cardTitle.classList.add("notification-popup-title");
+	cardTitle.classList.add("notification-popup-title", "relative", "block", "font-24");
 	cardTitle.innerHTML = msg.title;
 	
-	cardPicture.classList.add("notification-image");
+	cardPicture.classList.add("notification-image", "absolute");
 	cardPicture.style= "background-image: url('" + msg.image + "');";
 	
-	cardDesc.classList.add("notification-desc");
+	cardDesc.classList.add("notification-desc", "relative");
 	cardDesc.innerHTML = msg.description;
 	
-	cardText.classList.add("notification-text");
+	cardText.classList.add("notification-text", "relative", "inline-block");
 	
 	
 	cardText.append(cardTitle, cardDesc)

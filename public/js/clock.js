@@ -223,7 +223,7 @@ function renderCalendar(month, year) {
 		const t = create("div", {
 
 		});
-		t.classList.add("calendar-date-block", "unselectable");
+		t.classList.add("relative", "calendar-date-block", "unselectable", "pointer");
 		t.innerHTML = i + 1;
 		const filter = (a) => {
 			return a.date.getDate() == i+1 && a.date.getMonth() == month && a.date.getFullYear() == year

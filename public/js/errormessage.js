@@ -175,7 +175,7 @@ function errorMessage(parent, layout, title, text, functions) {
 	]
 	
 	const dbc = create("div", {
-		classList: ["err-body"]
+		classList: ["relative","err-body"]
 	});	// Dialog box body
 	
 	const errortext = create("div", {

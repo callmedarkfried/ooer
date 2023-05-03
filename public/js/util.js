@@ -113,7 +113,7 @@ function makeButton(text, filled) {
  */
 function makeSubMenuElement ({type, image, text, data}) {
 	const subE = document.createElement("a");
-	subE.classList.add("desktop-folder-element");
+	subE.classList.add("desktop-folder-element", "pointer", "block");
 	subE.innerHTML = "<center>T</center>"; // Actual implementation wont have any innerHTML, 
 										   // instead creating a picture div and a text div
 										   // like the actual desktop icons (maybe just pic)
@@ -148,7 +148,7 @@ function makeContextMenuTaskbar(data, id) {
 			id: id
 		},
 		id: `ctx-menu-tb${id}`,
-		classList: ["contextmenu"],
+		classList: ["contextmenu", "absolute"],
 		eventListener: {
 			mouseup: (e) => e.stopPropagation(),
 			click: (e) => e.stopPropagation()
@@ -162,7 +162,7 @@ function makeContextMenuTaskbar(data, id) {
 		}
 		const e = create("div", {
 			textContent: d.text,
-			classList: ["ctx-element"],
+			classList: ["relative", "block", "ctx-element", "font-24", "line-48"],
 			dataset: {id: id},
 			eventListener: {mouseup: d.handler}
 		});

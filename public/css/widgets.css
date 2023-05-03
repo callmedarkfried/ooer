@@ -1,3 +1,102 @@
+.notes-body {
+	height: calc(100% - 36px);
+	top: 36px;
+	width: 100%;
+	overflow-y: scroll;
+}
+
+.notes-body[data-small="true"] {
+	visibility: hidden;
+}
+
+.notes-element {
+	
+	background-color: var(--white-01);
+	margin-block: 3px;
+	width: calc(100% - 24px);
+	left: 0;
+	min-height: 52px;
+	border-radius: 12px;
+	z-index: 3;
+	padding: 6px;
+	filter: drop-shadow(0px 0px 1px rgba(255,255,255,0.4));
+}
+
+.notes-add {
+	z-index: 2;
+	height: 100%;
+	display: block;
+	position: absolute;
+	width: 100%;
+}
+
+.addnote-textfield {
+	padding: 3px;
+	width: calc(100% - 24px);
+	border-radius: 3px;
+	height: 52px;
+	background-color: rgba(0,0,0,0.2);
+	color: white;
+	z-index: 3;
+	resize: none;
+	left: 3px;
+	position: relative;
+	outline: none;
+	border: none;
+}
+
+a.note-controls {
+	opacity: 10%;
+	font-size: 12px;
+	height: 12px;
+	width: 12px;
+	position: absolute;
+	border-radius: 100%;
+	border: solid 2px;
+	border: solid 2px;
+	line-height: 12px;
+}
+
+a.delete-note {
+	right: 3px;
+	top: 3px;
+}
+a.edit-note {
+	right: 21px;
+	top: 3px;
+}
+
+a.delete-note:hover {
+	opacity: 100%;
+}
+
+a.edit-note:hover {
+	opacity: 100%;
+}
+
+.toggle-notes {
+	right: 6px;
+}
+
+
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.notedate {
+	font-size: 12px;
+	color: #ccc;
+	font-family: Roboto, sans-serif;
+	font-weight: 300;
+	top: -6px;
+}
+
 calendar-widget {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -20,7 +119,6 @@ calendar-widget {
 }
 
 .calendar {
-    
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(7, 30px);
@@ -29,33 +127,33 @@ calendar-widget {
 	height: 36px;
 }
 .month-back {
-	display: inline-block;
 	height: 24px;
 	font-size: 24px;
 	line-height: 24px;
 	width: 24px;
 	background-image: url('/content/images?i=monthminus.png');
 	background-size: cover;
-	position: absolute;
 	left: 12px;
+	border-radius: 100%;
 }
 
 .month-forward {
-	display: inline-block;
 	height: 24px;
 	font-size: 24px;
 	line-height: 24px;
 	width: 24px;
 	background-image: url('/content/images?i=monthplus.png');
 	background-size: cover;
-	position: absolute;
 	right: 12px;
+	border-radius: 100%;
+}
+.month-back:hover,
+.month-forward:hover {
+	background-color: var(--white-01);
 }
 
 .calendar-month {
 	width: 50%;
-	display: inline-block;
-	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
 	font-size: 18px;
@@ -63,13 +161,11 @@ calendar-widget {
 }
 
 .calendar {
-	position: absolute;
 	top: 36px;
 	width: 100%;
 }
 
 .calendar-date-block {
-    position: relative;
     width: 28px;
     height: 28px;
     /**background-color: #f55;*/
@@ -78,7 +174,6 @@ calendar-widget {
     align-items: center;
 	transition: border-width 0.2s;
 	box-sizing: border-box;
-	cursor:pointer;
 }
 
 .calendar-date-block[data-valid="true"]:hover {
@@ -136,8 +231,7 @@ calendar-widget {
 	height: 48px;
 	width: 100%;
 	display: block;
-	margin-top: 6px;
-	margin-bottom: 6px;
+	margin-block: 6px;
 }
 
 div.smallwidget {
@@ -151,44 +245,7 @@ div.smallwidget {
 	transition: height 0.2s, width 0.2s;
 }
 
-
-div.notes {
-	position: fixed;
-	left: 10px;
-	top: 10px;
-	border-radius: 12px;
-	display: block;
-	resize: both;
-	overflow: auto;
-	min-width: 240px;
-	min-height: 360px;
-	max-width: 50%;
-	max-height: 90%;
-	background-color: rgba(255,255,255,0.1);
-	filter: drop-shadow(0px 0px 3px black);
-	backdrop-filter: blur(15px);
-	transition: height 0.2s, width 0.2s;
-}
-div.friendswidget {
-	z-index: 0;
-	position: fixed;
-	left: calc(100% - 250px);
-	top: 10px;
-	border-radius: 12px;
-	display: block;
-	resize: both;
-	overflow: auto;
-	min-width: 240px;
-	min-height: 360px;
-	max-width: 50%;
-	max-height: 90%;
-	background-color: rgba(255,255,255,0.1);
-	filter: drop-shadow(0px 0px 3px black);
-	backdrop-filter: blur(15px);
-}
-
 div.friends-header {
-	
 	font-size: 24px;
 	margin-left: 6px;
 	/* background-color: rgba(127,127,255,0.1);
@@ -210,13 +267,15 @@ div.friendsbody {
 }
 
 div.no-friends {
-	position: absolute;
 	top: 50%;
 	left: 50%;
 	width: 100%;
 	transform: translateX(-50%) translateY(-50%);
 	color: #fff;
 	filter: drop-shadow(0px 0px 1px black);
-	cursor: pointer;
 	font-weight: 300;
+}
+div.notes-header {
+	font-size: 24px;
+	margin-left: 6px;
 }

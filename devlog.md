@@ -1,5 +1,8 @@
 # Devlog
 
+### Day 36
+- Minor changes
+
 ### Day 33
 - Added a sort of lockscreen
 	- no real purpose, maybe it will prompt login, i dont know yet
