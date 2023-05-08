@@ -1,0 +1,26 @@
+{
+    "appearance": {
+        "colors": {
+            "dark-mode": {"type": "toggle", "display": "Darkmode", "value": true},
+            "bottom-clock": {"type": "color", "display": "Window clock", "value": [69, 18, 67, 0.1]}
+        }
+    },
+    "language": {
+        "language": {"type": "dropdown", "display": "Language", "options": ["en-US", "de-DE", "fr-FR"], "value": "en-US"}
+    },
+    "notifications": {
+        "login-notification": {"type": "toggle", "display": "Login Notification", "value": true},
+        "friend-request": {"type": "toggle", "display": "Friend Request", "value": true},
+        "messages": {"type": "toggle", "display": "Messages", "value": true},
+        "events": {"type": "toggle", "display": "Events", "value": true},
+        "calendar": {"type": "toggle", "display": "Calendar", "value": true},
+        "server": {"type": "toggle", "display": "Server Notificatons", "value": true}
+    },
+    "profile": {
+        "banner": {"type": "file", "display": "Banner", "value": "default"},
+        "username": {"type": "text", "display": "Username", "value": "\ngrabusername\n"},
+        "handle": {"type": "text", "display": "Handle", "value": "\ngrabhandle\n", "restrict": "[0-9]{4}"},
+        "password": {"type": "button", "display": "Password", "value": null, "open": "chpwdialog"},
+        "email": {"type": "text", "display": "E-Mail", "value": "\ngrabemail\n", "restrict": ".{2,64}@\\w{2,256}\\.[a-zA-Z]+"}
+    }
+}

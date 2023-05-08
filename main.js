@@ -151,6 +151,8 @@ const desktopSymbols = {
 	}
 
 
+let settingsOBJ = JSON.parse(fs.readFileSync("./data/available_settings.json").toString())
+
 let users = [
 	{
 		id: "id",
@@ -395,6 +397,15 @@ function serveSubpage({requested}, socket) {
 			let js = fs.readFileSync("./terminal/terminal.js").toString()
 			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal/terminal.html").toString(), icon: "/content/images?i=utilities-terminal-icon.png", js: js, width: "800px", height: "480px"});
 			break;
+	}
+}
+
+function grabsettings(data) {
+	if (data.type == "category") {
+		return settingsOBJ[data.req]
+	} else if (data.type == "search") {
+		// Filter the object to find the settings.
+		// still needs a search field in the settings menu...
 	}
 }
 
