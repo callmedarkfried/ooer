@@ -109,9 +109,6 @@ class Window {
 		
 		
 		
-		
-		
-		
 		this.taskbarIcon = makeTaskBarIcon(id, args.icon);
 		
 		Util.getElement("taskbar").appendChild(this.taskbarIcon);
@@ -284,6 +281,11 @@ function taskbarIconClicked(event) {
 	const id = event.target.dataset.id;
 	const window = Util.getElement(`window${id}`)
 	if (activewindow == window) {
+		if (window.dataset.maximised == "true") {
+			window.dataset.maximised = "strue";
+		} else if (window.dataset.maximised == "strue") {
+			window.dataset.maximised = "true";
+		}
 		window.dataset.minimised = (window.dataset.minimised == "false")
 	} else {
 		activewindow = window;

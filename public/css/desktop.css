@@ -254,6 +254,64 @@ div.window[data-minimised="true"] {
 	transition: transform 0.2s;
 }
 
+div.clockbottom[data-hasmax="true"] {
+	visibility: visible !important;
+	opacity: .3;
+	transition: opacity 0.2s ease-in-out;
+}
+
+div.clockbottom[data-hasmax="true"]:hover {
+	visibility: visible !important;
+	opacity: 1;
+	transition: opacity 0.2s ease-in-out;
+}
+
+div.clockbottom[data-hasmax="true"] > p {
+	font-size: 15px;
+}
+
+div.clockbottom {
+	opacity: 0;
+	transition: opacity 0.2s ease-in-out;
+	cursor: pointer;
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	width: 90px;
+	height: 36px;
+	display: grid;
+	font-size: 15px;
+	background-color: rgb(43, 0, 44);
+	border-radius: 6px;
+	visibility: hidden;
+	align-items: center;
+	justify-content: center;
+	padding-inline: 24px;
+	padding-block: 6px;
+	z-index: 10000;
+}
+
+div.clockbottom[data-hasmax="true"]::before {
+	padding: 6px;
+	background-color: #451243;
+	border-radius: 6px;
+	font-size: 15px;
+	content: attr(data-date);
+	position: absolute;
+	bottom: 120%;
+	left: 50%;
+	transform: translateX(-50%);
+	width: fit-content;
+	white-space: nowrap;
+	opacity: 0;
+	transition: opacity 0.2s ease-in-out;
+}
+
+div.clockbottom[data-hasmax="true"]:hover::before  {
+	opacity: 1;
+	transition: opacity 0.2s ease-in-out;
+	transition-delay: 200ms;
+}
 
 div.window[data-active="true"] {
 	z-index: 5 !important;

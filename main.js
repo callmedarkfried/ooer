@@ -307,6 +307,16 @@ io.on('connection', (socket) => {
 	socket.on("req_subsettings", (msg) => {
 		reqSettingsSub(socket, msg); 
 	});
+	socket.on("update_settings", (msg) => {
+		/*
+		{
+			token: token,
+			settings: {
+				changesSettingName: newvalue
+			}
+		}
+		*/
+	})
 });
 
 function terminal({cmd, fp, id}, socket) {

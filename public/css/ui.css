@@ -241,7 +241,6 @@ drop-down {
 	background-color: rgba(0,0,0,0.3);
 	display: block;
 	position: relative;
-	left: 16px;
 }
 
 drop-down[data-open="true"] {

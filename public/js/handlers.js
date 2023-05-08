@@ -33,6 +33,11 @@ function minimiseWindow(event) {
 		target = target.parentNode;
 	}
 	target.dataset.minimised = "true"
+	if (target.dataset.maximised == "true") {
+		target.dataset.maximised = "strue";
+	} else if (target.dataset.maximised == "strue") {
+		target.dataset.maximised = "true";
+	}
 }
 
 function maximiseWindow(event) {

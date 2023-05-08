@@ -79,22 +79,39 @@ function dayMonthYearNoName(date) {
 	
 };
 
+function dayMonthYearshort(date) {
+	let year = date.getFullYear();
+	let month = ("0" + (date.getMonth()+1)).slice(-2);
+	let dayOfMonth = ("0" + date.getDate()).slice(-2);
+	return `${dayOfMonth}.${month}.${year}`
+	
+};
+
 /**
  * Updates the clock display
  */
 function clockTick() {
 	let currDate = new Date(Date.now());
 	analog(currDate)
+	let hourminute = `<center>${hourMinutes(currDate)}</center>`
+	let dateString = `<center>${dayMonthYear(currDate)}</center>`
+	let shortdatestring = `<center>${dayMonthYearshort(currDate)}</center>`
+
+	const overlay = getElement("clockoverlay")
 	let clockTime = getElement("desktop-clock-time");
 	let clockDate = getElement("desktop-clock-date");
 	let lockClock = getElement("lockscreen-clock");
 	let lockDate = getElement("lockscreen-date");
-	clockTime.innerHTML = `<center>${hourMinutes(currDate)}</center>`;
-	clockDate.innerHTML = `<center>${dayMonthYear(currDate)}</center>`;
-	if (lockClock) lockClock.innerHTML = `<center>${hourMinutes(currDate)}</center>`;
-	if (lockDate) lockDate.innerHTML = `<center>${dayMonthYear(currDate)}</center>`;
+	clockTime.innerHTML = hourminute;
+	clockDate.innerHTML = dateString;
+	if (lockClock) lockClock.innerHTML = hourminute;
+	if (lockDate) lockDate.innerHTML = dateString;
 	lockscreenTimer++;
 	if (lockscreenTimer == lockscreenTriggerTime) showLockscreen();
+	
+	overlay.childNodes[0].innerHTML = hourminute;
+	overlay.childNodes[1].innerHTML = shortdatestring;
+	overlay.dataset["date"] = dayMonthYear(currDate);
 }
 
 document.addEventListener("mousemove", (event) => {lockscreenTimer = 0})

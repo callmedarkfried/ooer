@@ -17,7 +17,20 @@ import * as Setup from "./setup.js"
  * @namespace Main
  */
 
+// const cb_t = Util.create("p", {
+// 	innerHTML: "HH:MM"
+// })
+// const cb_d = Util.create("p", {
+// 	innerHTML: "dd/mm/yyyy"
+// })
 
+// const bottomclock = Util.create("div", {
+// 	classList: ["clockbottom"],
+// 	childElements: [cb_t, cb_d],
+// 	id: "clockoverlay"
+// })
+
+// Util.getElement("bodydiv").append(bottomclock)
 
 Setup.setupSidebarLeft()
 
@@ -91,7 +104,8 @@ setInterval(() => {
 		w.style.height = Util.clamp(minheight, height, wh * 0.9) + "px";
 		w.style.width  = Util.clamp(240, width, ww * 0.5) + "px";
 	}
-	
+	const w = Util.getElement("clockoverlay");
+	w.dataset["hasmax"] = (document.querySelectorAll('[data-minimised="false"]').length != 0)
 	
 }, 100);
 
