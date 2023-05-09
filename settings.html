@@ -184,7 +184,7 @@
 	height: 90%;
 	box-sizing: border-box;
 	padding: 18px;
-	overflow-x: hidden;
+	overflow-x: visible;
 	overflow-y: scroll;
 	display: flex;
 	flex:12px;
@@ -195,7 +195,7 @@
 	margin: 6px;
 	height: 48px;
 	display: grid;
-	grid-template-columns: 200px 1fr;
+	grid-template-columns: 240px 1fr;
 	grid-column-gap: 12px;
 	font-size: 24px;
 }
@@ -210,7 +210,7 @@
 	display: grid;
 	align-items: center;
 	justify-content: left;
-	justify-items: center;
+	justify-items: left;
 	padding-inline: 12px;
 	box-sizing: border-box;
 }
@@ -219,9 +219,21 @@
 	display: grid;
 	align-items: center;
 	justify-content: left;
-	justify-items: center;
+	justify-items: left;
 	padding-inline: 12px;
 	box-sizing: border-box;
+}
+
+.settings-textbox {
+	resize: none;
+	outline: none;
+	border: none;
+	border-radius: 3px;
+	background-color: rgba(0,0,0,0.4);
+	color: white;
+}
+.settings-textbox:active {
+	background-color: rgba(0,0,0,0.6);
 }
 
 </style>
@@ -242,18 +254,12 @@
 </div>
 <div class="settings-sidebar-bottom">
 
-<div id="settings_appearance" data-request="settings_appearance" data-selected="false" class="settings-sidebar-element" onclick="settingsButton(this)">
-	<div class="sidebar-element-icon">
-		<i class="fa-solid fa-paintbrush"></i>
-	</div>
-	<div class="sidebar-element-text">Appearance</div>
-</div>
-
-<div id="settings_language" data-request="settings_language" class="settings-sidebar-element" data-selected="false" onclick="settingsButton(this)"><div class="sidebar-element-icon"><i class="fa-solid fa-globe"></i></div><div class="sidebar-element-text">Language</div></div>
-<div id="settings_notifications" data-request="settings_notifications" class="settings-sidebar-element" data-selected="false" onclick="settingsButton(this)"><div class="sidebar-element-icon"><i class="fa-regular fa-bell"></i></div><div class="sidebar-element-text">Notifications</div></div>
-<div id="settings_profile" data-request="settings_profile" class="settings-sidebar-element" data-selected="false" onclick="settingsButton(this)"><div class="sidebar-element-icon"><i class="fa-solid fa-user"></i></div><div class="sidebar-element-text">Profile</div></div>
-<div id="settings_friends" data-request="settings_friends" class="settings-sidebar-element" data-selected="false" onclick="settingsButton(this)"><div class="sidebar-element-icon"><i class="fa-solid fa-users"></i></div><div class="sidebar-element-text">Friends</div></div>
-<div id="settings_privacy" data-request="settings_privacy" class="settings-sidebar-element" data-selected="false" onclick="settingsButton(this)"><div class="sidebar-element-icon"><i class="fa-solid fa-user-lock"></i></div><div class="sidebar-element-text">Privacy</div></div>
+<div id="settings_appearance" data-request="settings_appearance" data-selected="false" class="settings-sidebar-element" onclick="requestSettings('appearance', 'category', this)"><div class="sidebar-element-icon"><i class="fa-solid fa-paintbrush"></i></div><div class="sidebar-element-text">Appearance</div></div>
+<div id="settings_language" data-request="settings_language" class="settings-sidebar-element" data-selected="false" onclick="requestSettings('language', 'category', this)"><div class="sidebar-element-icon"><i class="fa-solid fa-globe"></i></div><div class="sidebar-element-text">Language</div></div>
+<div id="settings_notifications" data-request="settings_notifications" class="settings-sidebar-element" data-selected="false" onclick="requestSettings('notifications', 'category', this)"><div class="sidebar-element-icon"><i class="fa-regular fa-bell"></i></div><div class="sidebar-element-text">Notifications</div></div>
+<div id="settings_profile" data-request="settings_profile" class="settings-sidebar-element" data-selected="false" onclick="requestSettings('profile', 'category', this)"><div class="sidebar-element-icon"><i class="fa-solid fa-user"></i></div><div class="sidebar-element-text">Profile</div></div>
+<div id="settings_friends" data-request="settings_friends" class="settings-sidebar-element" data-selected="false" onclick="requestSettings('friends', 'category', this)"><div class="sidebar-element-icon"><i class="fa-solid fa-users"></i></div><div class="sidebar-element-text">Friends</div></div>
+<div id="settings_privacy" data-request="settings_privacy" class="settings-sidebar-element" data-selected="false" onclick="requestSettings('privacy', 'category', this)"><div class="sidebar-element-icon"><i class="fa-solid fa-user-lock"></i></div><div class="sidebar-element-text">Privacy</div></div>
 </div>
 </div>
 <div class="settings-main" id="settings-main">

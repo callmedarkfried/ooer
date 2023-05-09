@@ -309,6 +309,9 @@ io.on('connection', (socket) => {
 	socket.on("req_subsettings", (msg) => {
 		reqSettingsSub(socket, msg); 
 	});
+	socket.on("request_subsettings", (msg) => {
+		socket.emit("return_subsettings", {data: grabsettings(msg), id: msg.id})
+	});
 	socket.on("update_settings", (msg) => {
 		/*
 		{

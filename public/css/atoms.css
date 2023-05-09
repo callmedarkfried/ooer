@@ -55,3 +55,132 @@ font.indent {
 .line-48 {
     line-height: 48px;
 }
+
+.cwvaluecontainer {
+    height: 50px;
+    width: 250px;
+    box-sizing: border-box;
+    padding: 6px;
+    font-size: 18px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-items: center;
+    bottom: 0;
+    position: absolute;
+}
+
+.cw-bw {
+    width: 15px;
+    height: 255px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(255,255,255,1) 10px, rgba(0,0,0,1) 240px);
+    position: absolute;
+    left: 12px;
+    top: 6px;
+}
+
+.selector {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    background: white;
+    border: solid 2px black;
+    border-radius: 12px;
+}
+.bw-selector {
+    left: 0.5px;
+    transform: translateY(-50%);
+    top: 6px;
+}
+
+
+.cwcomponent-tb {
+    width: 5ch;
+    font-size: 18px;
+    resize: none;
+    height: 24px;
+    padding: 3px;
+    border-radius: 3px;
+    color: white;
+    background-color: rgba(0,0,0,0.3);
+    outline: none;
+    border: none;
+}
+
+.color-picker {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    visibility: visible;
+    left: 0;
+}
+
+.color-picker[data-active="false"] > div.cwc {
+    visibility: hidden;
+}
+
+.color-picker[data-active="true"] > div.cwc {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    top: 150%;
+    left: 110%;
+    transform: translateY(-50%);
+    border-radius: 6px;
+    display: block;
+    background-color: rgba(0,0,0,0.3);
+    backdrop-filter: blur(20px);
+    padding: 6px;
+    z-index: 1;
+}
+
+.cw-lightness {
+    height: 255px;
+    border-radius: 100%;
+    width: 255px;
+    display: block;
+    position: absolute;
+    right: 12px;
+    border: solid 2px black;
+    box-sizing: border-box;
+}
+
+.cw-selector {
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.cw {
+    height: 255px;
+    border-radius: 100%;
+    width: 255px;
+    display: block;
+    position: absolute;
+    right: 12px;
+    background: conic-gradient(
+    hsl(90, 100%, 50%),
+    hsl(135, 100%, 50%),
+    hsl(180, 100%, 50%),
+    hsl(225, 100%, 50%),
+    hsl(270, 100%, 50%),
+    hsl(315, 100%, 50%),
+    hsl(0, 100%, 50%),
+    hsl(45, 100%, 50%),
+    hsl(90, 100%, 50%)
+);
+}
+
+.cwm {
+    height: 255px;
+    border-radius: 100%;
+    width: 255px;
+    display: block;
+    position: absolute;
+    right: 12px;
+    background: rgb(255,255,255);
+    background: radial-gradient(circle, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 85%);
+}
+

@@ -117,6 +117,67 @@ socket.on("logout_confirm", Login.logoutHandle);
 socket.on("wrong_pw", Login.wrongPW)
 socket.on("heartbeat", Util.resetHeartbeat);
 socket.on("init", Login.initialise);
+
+socket.on("return_subsettings", (msg) => {
+	const window = document.getElementById(`window${msg.id}`);
+	const body = window.querySelectorAll(".settings-container")[0];
+	body.textContent = "";
+	for (let o in msg.data) {
+		if (msg.data[o].type == undefined) {
+			// Subcategory marker
+			body.appendChild(Util.create("span", {
+				innerHTML: msg.data[o].display
+			}));
+			for (let e in msg.data[o].elements) {
+				makeSettingsElement(body, msg.data[o].elements[e], e)
+			}
+		} else {
+			// Regular element
+			makeSettingsElement(body, msg.data[o], o)
+		}
+	}
+})
+
+function makeSettingsElement(body, data, name) {
+	let rightsideElement;
+	switch (data.type) {
+		case "toggle":
+			rightsideElement = Util.create("toggle-switch", {
+				
+				dataset: {
+					enabled: data.value,
+					settingname: name
+				}
+			})
+			rightsideElement.onclick = toggleSwitchT;
+			break
+		case "text":
+			right
+			break
+		case "button":
+			break
+		case "file": 
+			break
+		case "dropdown": 
+			break
+		case "color":
+			rightsideElement = Util.makeColorWheel([255,100,0])
+			break
+		default:
+	}
+	const left = Util.create("div", {
+		innerHTML: data.display
+	})
+	const right = Util.create("div", {
+		childElements: [rightsideElement]
+	})
+	let element = Util.create("div", {
+		childElements: [left, right],
+		classList: ["settings-element"]
+	})
+	body.appendChild(element);
+}
+
 /**
  * Listens for push notifications
  * @listens notification Server push notifications

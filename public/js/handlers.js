@@ -135,6 +135,16 @@ function editPfp (event) {
 	alert("Imagine this being a file explorer")
 }
 
+function requestSettings(q, type, e) {
+	while (!e.id.match(/^window\d+$/g)) {
+		e = e.parentNode;
+	}
+	const id = e.dataset.id;
+	socket.emit("request_subsettings", {"type": type, "req": q, "id": id})
+}
+
+
+
 function settingsButton(e) {
 	let child = Array.from(e.parentNode.childNodes).filter(el => el.nodeName != "#text")
 	
@@ -155,6 +165,10 @@ function settingsButton(e) {
 
 function toggleSwitch(e) {
 	e.dataset.enabled = (e.dataset.enabled == "false");
+}
+
+function toggleSwitchT(event) {
+	toggleSwitch(event.target)
 }
 
 function toggleDropdown(e) {

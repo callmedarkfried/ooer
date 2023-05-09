@@ -1,5 +1,8 @@
 # Devlog
 
+### Day 37
+- Color wheel. Thats it.
+
 ### Day 36
 - Minor changes
 

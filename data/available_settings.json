@@ -1,8 +1,11 @@
 {
     "appearance": {
         "colors": {
-            "dark-mode": {"type": "toggle", "display": "Darkmode", "value": true},
-            "bottom-clock": {"type": "color", "display": "Window clock", "value": [69, 18, 67, 0.1]}
+            "display": "Colors",
+            "elements": {
+                "dark-mode": {"type": "toggle", "display": "Darkmode", "value": true},
+                "bottom-clock": {"type": "color", "display": "Window clock", "value": [69, 18, 67, 0.1]}
+            }
         }
     },
     "language": {

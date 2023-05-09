@@ -1,6 +1,7 @@
 
 import { errorMessage } from "./errormessage.js";
 import { clockTick } from "./clock.js";
+import { dragElement } from "./dragging.js";
 /**
  * @file util.js
  * @author Smittel (https://github.com/callmedarkfried)
@@ -15,7 +16,7 @@ import { clockTick } from "./clock.js";
 
 let textareafocus = false;
 /**
- * Similar shorthand as in python, different syntax. Why i chose to do this, i dont know. But i kinda like it 
+ * Similar shorthand as in python, different syntax. Why i chose to do this, i dont know. But i kinda like it
  * @name Number․prototype․range
  * @function
  * @global
@@ -43,7 +44,7 @@ Number.prototype.range = function (x) {
  * @function
  * @global
  * @name Number․prototype․to
- * @param {number} x 
+ * @param {number} x
  * @returns {number[]} - Array containing the numbers from a to b
  * @example (5).to(10) -> [5, 6, 7, 8, 9, 10]
  */
@@ -53,7 +54,7 @@ Number.prototype.to = function (x) {
 	if (this > x) {
 		for (let i = this; i >= x; i--) {
 			p.push(i)
-		} 
+		}
 	} else {
 		for (let i = this; i<=x; i++) {
 			p.push(i)
@@ -73,7 +74,7 @@ if (dateFormat) {
 /**
  * Not to be called manually. Closes the search bar when it loses focus.
  * Timeout prevents weird behaviour when closing the search bar by clicking the search button.
- * @param {FocusEvent} event 
+ * @param {FocusEvent} event
  * @memberof module:Utilities
  */
 function closeSearchBox(event) {
@@ -114,10 +115,10 @@ function makeButton(text, filled) {
 function makeSubMenuElement ({type, image, text, data}) {
 	const subE = document.createElement("a");
 	subE.classList.add("desktop-folder-element", "pointer", "block");
-	subE.innerHTML = "<center>T</center>"; // Actual implementation wont have any innerHTML, 
+	subE.innerHTML = "<center>T</center>"; // Actual implementation wont have any innerHTML,
 										   // instead creating a picture div and a text div
 										   // like the actual desktop icons (maybe just pic)
-	
+
 	if (type == "internal") {
 		subE.addEventListener("click", (event) => {
 			event.stopPropagation();
@@ -133,11 +134,11 @@ function makeSubMenuElement ({type, image, text, data}) {
 /**
  * Creates a context menu for the task bar icons. Will probably be replaced by a more general function soon
  * @function
- * @param {Object[]} data 
+ * @param {Object[]} data
  * @param {string} data[].text
- * @param {("divider"|"button")} data[].type 
+ * @param {("divider"|"button")} data[].type
  * @param {function} data[].handler
- * @param {number} id 
+ * @param {number} id
  * @returns {HTMLDivElement} The finished context menu
  * @memberof module:Utilities
  */
@@ -232,13 +233,15 @@ function getElement(id) {
  * Shorthand for creating HTML Elements, can be passed extra arguments in form of a JSON map
  * @memberof module:Utilities~Shorthands
  * @function create
- * @param {string} str 
+ * @param {string} str
  * @returns {HTMLElement}
  */
 function create(str, args) {
 	let e = document.createElement(str);
+
 	if(args) {
 		for (let a in args) {
+
 			switch (a) {
 				case "dataset":
 					for (let d in args[a]) {
@@ -324,12 +327,269 @@ function tick() {
  * Closes the start menu when different elements are clicked. Needs to be added to most things unless theres an event that fires when somehting other than a div is clicked. "focusout" does not do the trick sadly.
  * @memberof module:Utilities
  * @listens click
- * @param {MouseEvent} event 
+ * @param {MouseEvent} event
  */
 function closeStartMenu (event) {
 	document.querySelectorAll('*[id^="ctx-menu-tb"]').forEach((e)=>e.dataset.hidden = "true")
 	document.getElementById("startmenu").classList.add("hiddenstart")
 }
 
+
+function makeColorWheel(color) {
+	const redLabel = create("span", {innerHTML: "R"})
+	const redComp = create("input", {
+		type: "number",
+		name: "r",
+		min: "0",
+		max: "255",
+		step: "1",
+		classList: ["cwcomponent-tb"],
+		value: color[0],
+		eventListener: {change: changeColorTB}
+	})
+	const greenLabel = create("span", {innerHTML: "G"})
+	const greenComp = create("input", {
+		type: "number",
+		name: "g",
+		min: "0",
+		max: "255",
+		step: "1",
+		classList: ["cwcomponent-tb"],
+		value: color[1],
+		eventListener: {change: changeColorTB}
+	})
+	const blueLabel = create("span", {innerHTML: "B"})
+	const blueComp = create("input", {
+		type: "number",
+		name: "b",
+		min: "0",
+		max: "255",
+		step: "1",
+		classList: ["cwcomponent-tb"],
+		value: color[2],
+		eventListener: {change: changeColorTB}
+	})
+	const componentContainer = create("div", {
+		classList: ["cwvaluecontainer"],
+		childElements: [redLabel, redComp, greenLabel, greenComp, blueLabel, blueComp]
+	})
+
+	const hsv = rgbToHsl(...color);
+
+	const bwselector = create("div", {
+		classList: ["selector", "bw-selector"],
+		style: `top: ${(1-hsv[2]) * 255}px;`,
+		dataset: {
+			v: hsv[2]
+		}
+	})
+
+	const bwbar = create("div", {
+		classList: ["cw-bw"],
+		childElements: [bwselector],
+		eventListener: {mousedown: changeBrightness}
+	})
+
+	const cartesian = polarToCartesian(hsv[0], hsv[1]);
+
+	const cwselector = create("div", {
+		classList: ["selector", "cw-selector"],
+		style: `top: ${Math.round(cartesian[0])}px; left: ${Math.round(cartesian[1])}px;`,
+		dataset: {
+			x: cartesian[0],
+			y: cartesian[1]
+		}
+	})
+
+	const cwSatMask = create("div", {
+		classList: ["cwm"],
+	})
+	const cwHueMask = create("div", {
+		classList: ["cw"]
+	})
+	const cwBrightMask = create("div", {
+		classList: ["cw-lightness"],
+		style: `background-color: rgba(0,0,0,${1-hsv[2]})`,
+		childElements: [cwselector],
+		eventListener: {mousedown: changeColor}
+	})
+	const cwContainer = create("div", {
+		classList: ["cwc"],
+		childElements: [cwHueMask, cwSatMask, cwBrightMask, bwbar, componentContainer],
+	})
+
+	const picker = create("div", {
+		dataset: {
+			active: "false",
+			"colh": rgbToHsl(...color)[0],
+			"cols": rgbToHsl(...color)[1],
+			"colv": rgbToHsl(...color)[2]
+		},
+		childElements: [cwContainer],
+		classList: ["color-picker"],
+		eventListener: {click: openColorPicker}
+	})
+
+	picker.style = `background-color: rgb(${color[0]}, ${color[1]}, ${color[2]})`
+	updateColorwheel(picker)
+	return picker
+}
+
+function openColorPicker(event) {
+	event.target.dataset.active = (event.target.dataset.active == "false")
+}
+
+function changeColor(event) {
+	let target = event.target;
+	while(!target.classList.contains("cw-lightness")) {
+		target = target.parentNode;
+	}
+	target.addEventListener("mousemove", changeColor)
+	target.addEventListener("mouseup", (e) => {
+		target.removeEventListener("mousemove", changeColor)
+	})
+
+
+	const bounds = target.getBoundingClientRect();
+	let left = event.clientX - bounds.left;
+	let top = event.clientY - bounds.top;
+
+	
+	let polar = cartesianToPolar(left - 127, top - 127);
+	polar[1] = Math.min(1, polar[1])
+	let newCoords = polarToCartesian(...polar)
+	top  = Math.round(newCoords[0] + 127);
+	left = Math.round(newCoords[1] + 127);
+	
+	// Position the selector 
+	target.childNodes[0].style = `top: ${top}px; left: ${left}px;`;
+
+
+	const value = target.parentNode.querySelectorAll(".bw-selector")[0].dataset.v;
+
+	
+	const rgb = hslToRgb(polar[0], polar[1], parseFloat(value))
+
+	const p = target.parentNode.parentNode;
+	p.dataset.colh = polar[0];
+	p.dataset.cols = polar[1];
+	p.dataset.colv = parseFloat(value);
+
+	
+
+	updateColorwheel(p)
+}
+
+function changeColorTB(event) {
+	const siblings = event.target.parentNode.querySelectorAll("input");
+	const hsv = rgbToHsl(parseInt(siblings[0].value), parseInt(siblings[1].value), parseInt(siblings[2].value));
+	const p = event.target.parentNode.parentNode.parentNode;
+	p.dataset.colh = hsv[0]
+	p.dataset.cols = hsv[1]
+	p.dataset.colv = hsv[2]
+
+	updateColorwheel(p)
+}
+
+function changeBrightness(event) {
+	let target = event.target;
+	while(!target.classList.contains("cw-bw")) {
+		target = target.parentNode;
+	}
+	target.addEventListener("mousemove", changeBrightness)
+	target.addEventListener("mouseup", (e) => {
+		target.removeEventListener("mousemove", changeBrightness)
+	})
+	const bounds = target.getBoundingClientRect();
+	let top = clamp(6, 255 - (event.clientY - bounds.top), 249);
+	target.dataset.v = (top - 6) * (255/243);
+	target.childNodes[0].style=`top: ${255-top}px;`
+	const brightMask = event.target.parentNode.parentNode.querySelectorAll(".cw-lightness")[0];
+	brightMask.style = `background-color: rgba(0,0,0,${(255-target.dataset.v)/255})`;
+
+	target.parentNode.parentNode.dataset.colv = target.dataset.v / 255;
+
+	updateColorwheel(target.parentNode.parentNode);
+}
+
+function updateColorwheel(parent) {
+	const siblings = parent.querySelectorAll("input");
+	const colorSelector = parent.querySelectorAll(".cw-selector")[0];
+	const valueSelector = parent.querySelectorAll(".bw-selector")[0];
+	const brightMask = parent.querySelectorAll(".cw-lightness")[0];
+	const hsv = [parent.dataset.colh, parent.dataset.cols, parent.dataset.colv]
+	const rgb = hslToRgb(...hsv)
+	siblings[0].value = Math.round(rgb[0]);
+	siblings[1].value = Math.round(rgb[1]);
+	siblings[2].value = Math.round(rgb[2]);
+	const newCoords = polarToCartesian(hsv[0], hsv[1])
+	colorSelector.style = `top: ${newCoords[0]+127}px; left: ${newCoords[1]+127}px;`
+	valueSelector.style = `top: ${(1 - hsv[2]) * 243 + 6}px !important`
+	brightMask.style = `background-color: rgba(0,0,0,${1-hsv[2]})`;
+	valueSelector.dataset.v = hsv[2];
+	parent.style = `background-color: rgb(${rgb[0]},${rgb[1]},${rgb[2]})`
+}
+
+function polarToCartesian(a, r) {
+	a *= (2 * Math.PI);
+	a -= ( Math.PI)
+	let x = r * 127 * Math.sin(a);
+	let y = r * 127 * Math.cos(a);
+	return [x, y]
+}
+
+function cartesianToPolar(x, y) {
+	let r = Math.sqrt(x*x+y*y) / 127
+	let a = (Math.atan2(y,x) + Math.PI) / (2 * Math.PI)
+	return [a,r]
+}
+
+function rgbToHsl(r, g, b){
+	r = r/255, g = g/255, b = b/255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, v = max;
+
+    var d = max - min;
+    s = max == 0 ? 0 : d / max;
+
+    if(max == min){
+        h = 0; // achromatic
+    }else{
+        switch(max){
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    return [h, s, v];
+}
+
+function hslToRgb(h, s, v){
+    var r, g, b;
+
+    var i = Math.floor(h * 6);
+    var f = h * 6 - i;
+    var p = v * (1 - s);
+    var q = v * (1 - f * s);
+    var t = v * (1 - (1 - f) * s);
+
+    switch(i % 6){
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+    }
+
+    return [r * 255, g * 255, b * 255];
+}
+
+
+function radToDeg(rad) {
+    return rad * (180.0 / Math.PI);
+}
 export { connLostReset, tick, resetHeartbeat, getElement, cleanup, calculateGrid,
-clamp, makeContextMenuTaskbar, makeSubMenuElement, makeButton, closeStartMenu, closeSearchBox, create }
+clamp, makeContextMenuTaskbar, makeSubMenuElement, makeButton, closeStartMenu, closeSearchBox, create, makeColorWheel }
