@@ -334,7 +334,12 @@ function closeStartMenu (event) {
 	document.getElementById("startmenu").classList.add("hiddenstart")
 }
 
-
+/**
+ * Creates all necessary DOMElements for a color wheel.
+ * Needs some special considerations in the future such as dynamic positioning (As of now it can be cut off, it needs on another "layer" in front of the UI, not bound by it)
+ * @param {Array} color Array of 3 numbers with the 0..255 RGB value of a color
+ * @returns 
+ */
 function makeColorWheel(color) {
 	const redLabel = create("span", {innerHTML: "R"})
 	const redComp = create("input", {
@@ -374,7 +379,7 @@ function makeColorWheel(color) {
 		childElements: [redLabel, redComp, greenLabel, greenComp, blueLabel, blueComp]
 	})
 
-	const hsv = rgbToHsl(...color);
+	const hsv = rgbToHsv(...color);
 
 	const bwselector = create("div", {
 		classList: ["selector", "bw-selector"],
@@ -421,9 +426,9 @@ function makeColorWheel(color) {
 	const picker = create("div", {
 		dataset: {
 			active: "false",
-			"colh": rgbToHsl(...color)[0],
-			"cols": rgbToHsl(...color)[1],
-			"colv": rgbToHsl(...color)[2]
+			"colh": rgbToHsv(...color)[0],
+			"cols": rgbToHsv(...color)[1],
+			"colv": rgbToHsv(...color)[2]
 		},
 		childElements: [cwContainer],
 		classList: ["color-picker"],
@@ -435,6 +440,10 @@ function makeColorWheel(color) {
 	return picker
 }
 
+/**
+ * Opens the color wheel
+ * @param {event} event 
+ */
 function openColorPicker(event) {
 	event.target.dataset.active = (event.target.dataset.active == "false")
 }
@@ -482,7 +491,7 @@ function changeColor(event) {
 
 function changeColorTB(event) {
 	const siblings = event.target.parentNode.querySelectorAll("input");
-	const hsv = rgbToHsl(parseInt(siblings[0].value), parseInt(siblings[1].value), parseInt(siblings[2].value));
+	const hsv = rgbToHsv(parseInt(siblings[0].value), parseInt(siblings[1].value), parseInt(siblings[2].value));
 	const p = event.target.parentNode.parentNode.parentNode;
 	p.dataset.colh = hsv[0]
 	p.dataset.cols = hsv[1]
@@ -544,7 +553,8 @@ function cartesianToPolar(x, y) {
 	return [a,r]
 }
 
-function rgbToHsl(r, g, b){
+
+function rgbToHsv(r, g, b){
 	r = r/255, g = g/255, b = b/255;
     var max = Math.max(r, g, b), min = Math.min(r, g, b);
     var h, s, v = max;

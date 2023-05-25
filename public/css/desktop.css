@@ -15,6 +15,7 @@
 	transform: scale(1);
 	opacity: 1;
 	filter: blur(0px);
+	visibility: hidden;
 	transition: transform 0.3s ease-in, opacity 0.3s ease-in, filter 0.3s ease-out;
 }
 
@@ -78,7 +79,7 @@ a:visited {
 	color: white;
 }
 body {
-	background-image: url("/content/images?i=background.jpg"); 
+	background-image: url("/content/images?i=mountain.jpg"); 
 	background-repeat: no-repeat; /* Do not repeat the image */
 	background-size: cover;background-attachment: fixed; 
 	font-family: sans-serif;
@@ -98,9 +99,9 @@ user-select: none; /* Standard */
 /* Clock START */
 
 div.desktop-clock {
-	left: 50%;
+	left: 20%;
 	transform: translateX(-50%);
-	top: 10%;
+	bottom: 10%;
 	height: 25%;
 }
 
@@ -359,9 +360,11 @@ div.window-header {
 	height: 24px;
 	width: 100%;
 	padding-block: 2px;
-	background-color: rgba(255,255,255,0.1);
+	background-color: rgba(255,255,255,0.0);
 	line-height: 24px;
 	border-radius: 12px 12px 0 0;
+	-webkit-box-shadow: 0px 0px 25px 5px rgba(0,0,0,0.1); 
+	box-shadow: 0px 0px 25px 5px rgba(0,0,0,0.1);
 }
 
 font.window-header {
@@ -380,6 +383,8 @@ div.windowControls {
 	display: flex;
 	border-radius: 200px;
 	justify-content: space-between;
+	right: 4px;
+	position: absolute;
 }
 
 /* div.windowControls:hover > window-button:nth-of-type(2){
@@ -408,14 +413,14 @@ div.windowControlsOuter {
 	right: 4px;
 	height: 20px;
 	overflow: hidden;
-	width: 72px;
+	width: 92px;
 	transition: width 0.1s ease-in-out;
 	top: 4px;
 	border-radius: 10px;
 }
 
 div.windowControlsOuter:hover {
-	width: 72px;
+	width: 92px;
 	transition: width 0.1s ease-in-out;
 }
 

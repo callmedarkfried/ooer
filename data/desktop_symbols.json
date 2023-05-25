@@ -1,0 +1,101 @@
+{
+    "symbols": [
+    {
+        "pos": ["calc(50% - 10vmin)","calc(50% - 10vmin"],
+        "image": "/content/images?i=folder-blender.png",
+        "type": "folder",
+        "name": "Blender",
+        "data": null,
+        "sub": [
+            {
+                "image": "",
+                "name": "text",
+                "type": "internal",
+                "data": "request"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            }
+        ]
+    },{
+        "pos": ["calc(50% - 15vmin)","calc(50% - 60vmin"],
+        "image": "/content/images?i=github-logo.png",
+        "type": "link",
+        "name": "Github",
+        "data": "https://github.com/callmedarkfried/ooer"
+        
+    },{
+        "pos": ["calc(50% - 15vmin)","calc(50% - 40vmin"],
+        "image": "/content/images?i=utilities-terminal-icon.png",
+        "type": "page",
+        "name": "Terminal",
+        "data": "terminal"
+    },{
+        "pos": ["calc(50% - 15vmin)","calc(50% - 20vmin"],
+        "image": "/content/images?i=folder-base.png",
+        "type": "folder",
+        "name": "Testing",
+        "data": null,
+        "sub": [
+            {
+                "image": "",
+                "name": "text",
+                "type": "internal",
+                "data": "request"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            },{
+                "image": "",
+                "name": "text",
+                "type": "external",
+                "data": "link"
+            }
+        ]
+    }
+]
+}

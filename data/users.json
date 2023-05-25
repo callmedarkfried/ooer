@@ -1,0 +1,28 @@
+{"users": [
+	{
+		"id": "id",
+		"password": "password",
+		"username": "username",
+		"handle": "0000",
+		"nickname": "nickname",
+		"settings": {
+			"some": "settings"
+		},
+		"email": "email@example.com",
+		"verified": true,
+		"registered_since": 0
+	},
+	{
+		"id": "test",
+		"password": "test",
+		"username": "test_user",
+		"handle": "0909",
+		"nickname": "for testing",
+		"settings": {
+			
+		},
+		"email": "test@example.com",
+		"verified": true,
+		"registered_since": 0
+	}
+]}

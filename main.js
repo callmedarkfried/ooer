@@ -14,13 +14,20 @@ const io = new Server(server);
 const fs = require("fs");
 const Terminal = require("./terminal.js")
 app.use(express.static('public'));
-let notes = {
-	"test": [{"d": 0, "t": "testoman"},{"d": 10000, "t":"another"}]
-}
+let notes = JSON.parse(fs.readFileSync("./data/notes.json").toString())
 
 //PASSWORDS ARE TEMPORARY AND TO BE REPLACED WITH AN ENCRYPTED VERSION
 // WHOLE THING NEEDS REWORKING
 // A DATABASE SHOULD DO THE TRICK
+
+/*
+Need:
+object holding the sessions of logged in users
+*/
+let activeUsers = {
+	__id: {socket: "socket", lastActivity: "datetime"}
+}
+
 
 let friends = {
 	
@@ -48,139 +55,12 @@ function tokenGenerator(username) {
 	}
 }
 
-const desktopSymbols = {
-		symbols: [
-		{
-			pos: ["calc(50% - 10vmin)","calc(50% - 10vmin"],
-			image: "/content/images?i=folder-blender.png",
-			type: "folder",
-			name: "Blender",
-			data: null, // null for folders
-			sub: [
-				{
-					image: "",
-					name: "text",
-					type: "internal",
-					data: "request"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				}
-			]
-		},{
-			pos: ["calc(50% - 15vmin)","calc(50% - 60vmin"],
-			image: "/content/images?i=github-logo.png",
-			type: "link",
-			name: "Github",
-			data: "https://github.com/callmedarkfried/ooer", //url for links (external)
-			
-		},{
-			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
-			image: "/content/images?i=utilities-terminal-icon.png",
-			type: "page",
-			name: "Terminal",
-			data: "terminal", //identifier of application or page to request from server
-		},{
-			pos: ["calc(50% - 15vmin)","calc(50% - 20vmin"],
-			image: "/content/images?i=folder-base.png",
-			type: "folder",
-			name: "Testing",
-			data: null,
-			sub: [
-				{
-					image: "",
-					name: "text",
-					type: "internal",
-					data: "request"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				}
-			]
-		}
-	]
-	}
+const desktopSymbols = JSON.parse(fs.readFileSync("./data/desktop_symbols.json").toString())
 
 
 let settingsOBJ = JSON.parse(fs.readFileSync("./data/available_settings.json").toString())
 
-let users = [
-	{
-		id: "id",
-		password: "password",
-		username: "username",
-		handle: "0000", //4 digit number like discord
-		nickname: "nickname",
-		settings: {
-			some: "settings"
-		},
-		email: "email@example.com",
-		verified: true,
-		registered_since: 0,
-	},
-	{
-		id: "test",
-		password: "test",
-		username: "test_user",
-		handle: "0909",
-		nickname: "for testing",
-		settings: {
-			
-		},
-		email: "test@example.com",
-		verified: true,
-		registered_since: 0,
-	}
-]
+let users = JSON.parse(fs.readFileSync("./data/users.json").toString()).users
 
 
 app.get('/', (req, res) => {
@@ -322,6 +202,12 @@ io.on('connection', (socket) => {
 		}
 		*/
 	})
+	socket.on("outgoing_friendrequest", (data) => {
+		const exampledata = {
+			sendingUser: {things: "such as token, username etc"},
+			recipient: "username"
+		}
+	})
 });
 
 function terminal({cmd, fp, id}, socket) {
@@ -356,10 +242,18 @@ function reqSettingsSub(socket, msg) {
 }
 
 function serveSettings(msg, socket) {
-	const sub = msg.page || "settings_appearance"
-	const html = fs.readFileSync(`./html/settings/${sub.split("_")[1]}.html`).toString();
+	const sub = msg.page!=undefined?msg.page:"appearance"
+	console.log(sub)
 	const js = undefined;// `alert("ooo");`
-	socket.emit("add_window", {title: "Settings", "html":fs.readFileSync("./settings.html").toString(), icon: "/content/images?i=settings.png", windowClass: "settingswindow", selected: sub, subhtml: html, js: js});
+	socket.emit("add_window", {
+		title: "Settings",
+		"html":fs.readFileSync("./settings.html").toString(),
+		icon: "/content/images?i=settings.png",
+		windowClass: "settingswindow",
+		selected: sub,
+		js: js,
+		command: `SystemRequestSetting~${sub}`
+	});
 	let reqS = msg.requested || "appearance";
 	
 }

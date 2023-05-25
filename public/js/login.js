@@ -62,7 +62,8 @@ function openUserSettings(event) {
  */
 function openUserSettingsS(sub) {
 	closeStartMenu()
-	socket.emit("request_settings", {"page": sub})
+	requestSettings('profile', 'category', this)
+	// socket.emit("request_settings", {"page": sub})
 }
 
 /**
@@ -85,7 +86,7 @@ function initialise (msg) {
 	const usernameField = create("div", {
 		id: "username-field",
 		classList: ["absolute", "pointer","username-field", "block", "font-18"],
-		eventListener: {"mouseup": (e)=>{openUserSettingsS("settings_profile")}}
+		eventListener: {"mouseup": (e)=>{socket.emit("request_settings", {page: "profile"});}}
 	})
 	const  parent = getElement("startmenu");
 	

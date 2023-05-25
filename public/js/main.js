@@ -120,7 +120,7 @@ socket.on("init", Login.initialise);
 
 socket.on("return_subsettings", (msg) => {
 	const window = document.getElementById(`window${msg.id}`);
-	const body = window.querySelectorAll(".settings-container")[0];
+	const body = window.querySelectorAll(".settings-main")[0];
 	body.textContent = "";
 	for (let o in msg.data) {
 		if (msg.data[o].type == undefined) {
@@ -152,7 +152,7 @@ function makeSettingsElement(body, data, name) {
 			rightsideElement.onclick = toggleSwitchT;
 			break
 		case "text":
-			right
+			// right
 			break
 		case "button":
 			break

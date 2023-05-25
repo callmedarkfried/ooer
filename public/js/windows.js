@@ -41,6 +41,28 @@ const taskbarContextMenuElements = [
 function addWindow(args) {
 	const w = new Window(windows.length, args);
 	windows.push(w);
+	// Special window commands are dealt with here
+	let cmd = args.command;
+	// Its horrendous
+	/* For "SystemRequestSetting":
+	The settings window is requested by the client and served by the server
+	with the special command for the specific settings category.
+	This then makes another request from the server to grab the actual settings
+	page. 
+	in other words: its a bit like the olympic torch. or a joint.
+	things get passed around several times and shits on fire.
+	*/
+	if (cmd) {
+		cmd = cmd.split(";")
+		for (let c of cmd) {
+			console.log(c)
+			const cmdargs = c.split("~");
+			if (cmdargs[0]=="SystemRequestSetting"){
+				requestSettings(cmdargs[1], 'category', w.windowObject)
+			}
+		}
+	}
+	
 }
 
 /**
@@ -145,9 +167,9 @@ class Window {
 		refreshWindows(this.windowObject);
 		
 		
-		if (args.windowClass=="settingswindow") {
-			settingswindow(args)
-		}
+		// if (args.windowClass=="settingswindow") {
+		// 	settingswindow(args)
+		// }
 		
 		if (args.js && args.js != "") {
 			this.javascript = addScript(args.js);
@@ -319,7 +341,7 @@ function makeTaskBarIcon(id, icon) {
  * @method
  */
 function settingswindow(args) {
-	Util.getElement(args.selected || "settings_appearance").dataset.selected = "true";
+	Util.getElement("settings_" + args.selected || "settings_appearance").dataset.selected = "true";
 	const pfp = Util.getElement("sidebar-pfp-top")
 	pfp.style = `background-image: url(${login.profilePicture})`
 	pfp.id = `sidebar-pfp-top${windows.length}`

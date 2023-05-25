@@ -147,24 +147,26 @@ function errorMessage(parent, layout, title, text, functions) {
 	// window-button[data-action="close"]
 	
 	
-	const dbh = create("dialog-header", {
-		innerHTML: `<font class="indent">${title}</font>`
-	}); // Header
+	
 	
 	const dbx = create("window-button", {
-		style: "width: 45px !important",
 		dataset: {action: "close"},
 		eventListener: {mouseup: errorBoxCloseButton}
 	}); // Close button
 	
 	const dbwc = create("div", {
 		classList: ["windowControls"],
-		style: "width: 50px !important",
+		style: "width: 50px !important;top: 4px",
 		childElements: [dbx]
 	});	// Close button container
 
+	const dbh = create("dialog-header", {
+		innerHTML: `<font class="indent">${title}</font>`,
+		childElements: [dbwc]
+	}); // Header
+
 	const dbb = create("dialog-box", {
-		childElements: [dbh, dbwc]
+		childElements: [dbh]
 	});    // Main dialog box
 	
 	const symbols = [
@@ -228,7 +230,8 @@ function errorMessage(parent, layout, title, text, functions) {
  * @listens mouseup
  */
 function errorBoxCloseButton(event) {
-	let db = event.target.parentNode.parentNode;
+	let db = event.target.parentNode.parentNode.parentNode;
+	console.log(db)
 	if (db.parentNode.id.match(/errorDarkener\d+/g)) db = db.parentNode;
 	db.remove();
 	if (db.dataset.id == "connectionLost") {

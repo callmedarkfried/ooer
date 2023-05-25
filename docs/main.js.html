@@ -42,13 +42,20 @@ const io = new Server(server);
 const fs = require("fs");
 const Terminal = require("./terminal.js")
 app.use(express.static('public'));
-let notes = {
-	"test": [{"d": 0, "t": "testoman"},{"d": 10000, "t":"another"}]
-}
+let notes = JSON.parse(fs.readFileSync("./data/notes.json").toString())
 
 //PASSWORDS ARE TEMPORARY AND TO BE REPLACED WITH AN ENCRYPTED VERSION
 // WHOLE THING NEEDS REWORKING
 // A DATABASE SHOULD DO THE TRICK
+
+/*
+Need:
+object holding the sessions of logged in users
+*/
+let activeUsers = {
+	__id: {socket: "socket", lastActivity: "datetime"}
+}
+
 
 let friends = {
 	
@@ -76,136 +83,12 @@ function tokenGenerator(username) {
 	}
 }
 
-const desktopSymbols = {
-		symbols: [
-		{
-			pos: ["calc(50% - 10vmin)","calc(50% - 10vmin"],
-			image: "/content/images?i=folder-blender.png",
-			type: "folder",
-			name: "Blender",
-			data: null, // null for folders
-			sub: [
-				{
-					image: "",
-					name: "text",
-					type: "internal",
-					data: "request"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				}
-			]
-		},{
-			pos: ["calc(50% - 15vmin)","calc(50% - 60vmin"],
-			image: "/content/images?i=github-logo.png",
-			type: "folder",
-			name: "Test",
-			data: null,
-			sub: [
-				{
-					image: "",
-					name: "text",
-					type: "internal",
-					data: "request"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				},{
-					image: "",
-					name: "text",
-					type: "external",
-					data: "link"
-				}
-			]
-		},{
-			pos: ["calc(50% - 15vmin)","calc(50% - 40vmin"],
-			image: "/content/images?i=logo.png",
-			type: "page",
-			name: "Terminal",
-			data: "terminal", //identifier of application or page to request from server
-		},{
-			pos: ["calc(50% - 15vmin)","calc(50% - 20vmin"],
-			image: "/content/images?i=youtube.png",
-			type: "link",
-			name: "Blender",
-			data: "url", //url for links (external)
-		}
-	]
-	}
+const desktopSymbols = JSON.parse(fs.readFileSync("./data/desktop_symbols.json").toString())
 
 
-let users = [
-	{
-		id: "id",
-		password: "password",
-		username: "username",
-		handle: "0000", //4 digit number like discord
-		nickname: "nickname",
-		settings: {
-			some: "settings"
-		},
-		email: "email@example.com",
-		verified: true,
-		registered_since: 0,
-	},
-	{
-		id: "test",
-		password: "test",
-		username: "test_user",
-		handle: "0909",
-		nickname: "for testing",
-		settings: {
-			
-		},
-		email: "test@example.com",
-		verified: true,
-		registered_since: 0,
-	}
-]
+let settingsOBJ = JSON.parse(fs.readFileSync("./data/available_settings.json").toString())
+
+let users = JSON.parse(fs.readFileSync("./data/users.json").toString()).users
 
 
 app.get('/', (req, res) => {
@@ -334,6 +217,25 @@ io.on('connection', (socket) => {
 	socket.on("req_subsettings", (msg) => {
 		reqSettingsSub(socket, msg); 
 	});
+	socket.on("request_subsettings", (msg) => {
+		socket.emit("return_subsettings", {data: grabsettings(msg), id: msg.id})
+	});
+	socket.on("update_settings", (msg) => {
+		/*
+		{
+			token: token,
+			settings: {
+				changesSettingName: newvalue
+			}
+		}
+		*/
+	})
+	socket.on("outgoing_friendrequest", (data) => {
+		const exampledata = {
+			sendingUser: {things: "such as token, username etc"},
+			recipient: "username"
+		}
+	})
 });
 
 function terminal({cmd, fp, id}, socket) {
@@ -410,8 +312,17 @@ function serveSubpage({requested}, socket) {
 	switch(requested) {
 		case "terminal":
 			let js = fs.readFileSync("./terminal/terminal.js").toString()
-			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal/terminal.html").toString(), icon: "/content/images?i=settings.png", js: js, width: "800px", height: "480px"});
+			socket.emit("add_window", {title: "Terminal", "html":fs.readFileSync("./terminal/terminal.html").toString(), icon: "/content/images?i=utilities-terminal-icon.png", js: js, width: "800px", height: "480px"});
 			break;
+	}
+}
+
+function grabsettings(data) {
+	if (data.type == "category") {
+		return settingsOBJ[data.req]
+	} else if (data.type == "search") {
+		// Filter the object to find the settings.
+		// still needs a search field in the settings menu...
 	}
 }
 
@@ -437,7 +348,7 @@ server.listen(8080, () => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 23 2023 23:23:32 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu May 25 2023 14:09:24 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
