@@ -190,7 +190,7 @@ io.on('connection', (socket) => {
 		reqSettingsSub(socket, msg); 
 	});
 	socket.on("request_subsettings", (msg) => {
-		socket.emit("return_subsettings", {data: grabsettings(msg), id: msg.id})
+		socket.emit("return_subsettings", {data: grabsettings(msg), id: msg.id, category: msg.req})
 	});
 	socket.on("update_settings", (msg) => {
 		/*

@@ -136,6 +136,12 @@ socket.on("return_subsettings", (msg) => {
 			makeSettingsElement(body, msg.data[o], o)
 		}
 	}
+	let sidebarbuttons = window.querySelectorAll(".settings-sidebar-element");
+	console.log(msg.category)
+	for (let s of sidebarbuttons) {
+		s.dataset.selected = s.id.match(new RegExp(msg.category, "g"))!=null
+		console.log(s)
+	}
 })
 
 function makeSettingsElement(body, data, name) {
