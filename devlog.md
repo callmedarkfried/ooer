@@ -1,5 +1,11 @@
 # Devlog
 
+
+### Day i dont know when i started, lets call this 42
+- Things are being taken in a different direction visually
+- The settings system has been redone (once more)
+- made welcome screen hidden until i figure out if i wanna keep it or not
+
 ### Day 37
 - Color wheel
 - Reworked settings (again)
