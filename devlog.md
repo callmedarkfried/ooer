@@ -1,5 +1,11 @@
 # Devlog
 
+### Day 44
+- Desktop symbols are now placed dynamically.
+- Widgets, clocks, windows are now visible when a desktop folder is opened
+	- This is kind of a mistake, z-indexes got wonky
+- other minor visual changes
+- It seems to be broken somewhat, taking forever to load even on localhost, at least on my laptop. 
 
 ### Day i dont know when i started, lets call this 42
 - Things are being taken in a different direction visually
