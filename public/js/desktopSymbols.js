@@ -46,7 +46,7 @@ function setupDesktopSymbols({symbols}) {
 				break;
 			default:
 		}
-		getElement("bodydiv").appendChild(s);
+		getElement("desktop-symbol-container").appendChild(s);
 	}
 }
 
@@ -117,11 +117,11 @@ function makeTextField({name}) {
  */
 function makeSymbol ({pos, type}) {
 	const s = create("desktop-symbol",{
-		classList: "desktop-symbol",
-		style: {
-			top: pos[0],
-			left: pos[1]
-		},
+		classList: ["desktop-symbol"],
+		// style: {
+		// 	top: pos[0],
+		// 	left: pos[1]
+		// },
 		eventListener: {mouseup: desktopSymbolClicked},
 		dataset: {
 			symboltype: type,
@@ -179,12 +179,13 @@ function desktopSymbolClicked(event) {
 			if (x.name == "desktop-symbol-submenu") submenu = x;
 		}
 		parent.dataset.open = true;
+
 		const darken = create("div", {
 			classList: ["folder-bg", "fixed", "block"],
 			id: "submenu-darken",
 			eventListener: {click: (e)=>{closeDesktopFolder(e, submenu, parent, darken)}}
 		})
-		getElement("bodydiv").appendChild(darken);
+		getElement("desktop-symbol-container").appendChild(darken);
 		submenu.classList.add("desktop-folder-open");
 		parent.style["z-index"] = 10;
 	}

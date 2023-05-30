@@ -301,7 +301,6 @@ widget-button {
 	position: absolute;
 	right: 36px;
 	display: inline-block;
-	top: 6px;
 	font-size: 24px;
 	cursor: pointer;
 	transition: background-color 0.2s;
@@ -317,6 +316,7 @@ widget-button:hover {
 
 .toggle-button {
 	right: 6px;
+	top: 6px;
 }
 
 .toggle-button::after {
@@ -340,6 +340,8 @@ widget-button:hover {
 }
 .add-button::after {
 	content: "+";
+	position: absolute;
+	inset: 0;
 }
 .add-button[data-small="true"] {
 	visibility: hidden;
@@ -449,17 +451,45 @@ clock-handle.hours {
 	font-weight: 300;
 }
 
-
-
-desktop-symbol {
+.dsc-outer {
 	position: fixed;
 	z-index: -1;
+	height: 100dvh;
+	width: 100dvw;
+	display: grid;
+	align-items: center;
+	justify-items: center;
+	grid-template-columns: auto;
+	/* top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%); */
+}
+
+.dsc {
+	width: 50vmax;
+	max-height: 80dvh;
+	aspect-ratio: 3 / 2;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, 15vmin);
+	justify-items: center;
+	align-items: center;
+	row-gap: 1dvh;
+	column-gap: 1dvw;
+	z-index: revert-layer;
+	overflow-y: scroll;
+	scrollbar-width: thin;
+	overflow-x: hidden;
+}
+
+desktop-symbol {
+	position: relative;
+	z-index: 0;
 	width: 15vmin;
 	aspect-ratio: 3 / 2;
 	display: block;
 	border-radius: 3px;
 	border: solid 2px rgba(127,164,255,0);
-	transform: translateX(-50%) translateY(-50%);
+	/* transform: translateX(-50%) translateY(-50%); */
 }
 
 desktop-symbol[data-open="true"] {

@@ -99,9 +99,8 @@ user-select: none; /* Standard */
 /* Clock START */
 
 div.desktop-clock {
-	left: 20%;
-	transform: translateX(-50%);
-	bottom: 10%;
+	left: 10%;
+	bottom: 0%;
 	height: 25%;
 }
 
@@ -157,7 +156,7 @@ div.taskbar {
 	left: 50%;
 	transform: translateX(-50%);
 	bottom: 20px;
-	background-color: rgba(255,255,255,0.3);
+	background-color: rgba(255,255,255,0.1);
 	backdrop-filter: blur(15px);
 	border-radius: 9px;
 	padding-block: 3px;
@@ -230,7 +229,7 @@ div.taskbar-button:hover {
 div.window {
 	width: 800px;
 	height: 600px;
-	background-color: rgba(0,0,0,0.3);
+	background-color: rgba(0,0,0,0.5);
 	backdrop-filter: blur(25px) contrast(50%);
 	border-radius: 12px;
 	filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.3));
@@ -282,7 +281,7 @@ div.clockbottom {
 	height: 36px;
 	display: grid;
 	font-size: 15px;
-	background-color: rgb(43, 0, 44);
+	background-color: rgb(2, 44, 0);
 	border-radius: 6px;
 	visibility: hidden;
 	align-items: center;
@@ -294,7 +293,7 @@ div.clockbottom {
 
 div.clockbottom[data-hasmax="true"]::before {
 	padding: 6px;
-	background-color: #451243;
+	background-color: rgb(2, 44, 0);
 	border-radius: 6px;
 	font-size: 15px;
 	content: attr(data-date);
