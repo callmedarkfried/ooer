@@ -100,25 +100,29 @@ user-select: none; /* Standard */
 
 div.desktop-clock {
 	left: 10%;
-	bottom: 0%;
-	height: 25%;
+	bottom: 5%;
+	height: 18vh;
 }
 
-div.desktop-clock-time {
+
+
+div.desktop-clock-time::after {
+	content: attr(data-value);
 	filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.3));
 	font-weight: 100;
 	font-size: 12vh;
 	height: 80%;
 }
 
-div.desktop-clock-date {
+
+div.desktop-clock-date::after {
+	content: attr(data-value);
 	filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.3));
 	font-size: 3vh;
-	top: -6.0vh;
+	top: -12.0vh;
 	font-family: Roboto;
 	font-weight: 300;
 }
-
 /* Clock END  */
 
 div.contextmenu {
@@ -289,6 +293,16 @@ div.clockbottom {
 	padding-inline: 24px;
 	padding-block: 6px;
 	z-index: 10000;
+	justify-items: center;
+}
+
+div.clockbottom::after {
+	content: attr(data-hm) "\a" attr(data-date-btm);
+	display: block;
+	width: 100%;
+	font-size: 14px;
+	white-space: pre;
+	text-align: center;
 }
 
 div.clockbottom[data-hasmax="true"]::before {

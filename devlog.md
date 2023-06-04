@@ -1,4 +1,8 @@
 # Devlog
+
+### Day 47
+- Now using pseudo elements for text clocks for no goddamn reason. Thought it would cut down on the amount of code, benefits were minimal. But it works
+- Removed the lockscreen, that was a stupid decision
 ### Day 45
 - Fixed weird z-index, now only taskbar remains in foreground
 

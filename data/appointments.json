@@ -1,0 +1,13 @@
+{
+    "data": {
+        "__user_id":  [
+            {
+                "time": "timestamp",
+                "color": "hexcode",
+                "name": "string",
+                "wholeDay": "boolean"
+            }
+        ]
+        
+    }
+}

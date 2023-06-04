@@ -93,39 +93,23 @@ function dayMonthYearshort(date) {
 function clockTick() {
 	let currDate = new Date(Date.now());
 	analog(currDate)
-	let hourminute = `<center>${hourMinutes(currDate)}</center>`
-	let dateString = `<center>${dayMonthYear(currDate)}</center>`
-	let shortdatestring = `<center>${dayMonthYearshort(currDate)}</center>`
+
+	let hourminute = hourMinutes(currDate)
+	let dateString = dayMonthYear(currDate)
 
 	const overlay = getElement("clockoverlay")
 	let clockTime = getElement("desktop-clock-time");
 	let clockDate = getElement("desktop-clock-date");
-	let lockClock = getElement("lockscreen-clock");
-	let lockDate = getElement("lockscreen-date");
-	clockTime.innerHTML = hourminute;
-	clockDate.innerHTML = dateString;
-	if (lockClock) lockClock.innerHTML = hourminute;
-	if (lockDate) lockDate.innerHTML = dateString;
-	lockscreenTimer++;
-	if (lockscreenTimer == lockscreenTriggerTime) showLockscreen();
-	
-	overlay.childNodes[0].innerHTML = hourminute;
-	overlay.childNodes[1].innerHTML = shortdatestring;
-	overlay.dataset["date"] = dayMonthYear(currDate);
+
+	clockTime.dataset["value"] = hourminute;
+	clockDate.dataset["value"] = dateString;
+	overlay.dataset["hm"] = hourminute;
+	overlay.dataset["dateBtm"] = dayMonthYearshort(currDate);
+	overlay.dataset["date"] = dateString;
 }
 
 document.addEventListener("mousemove", (event) => {lockscreenTimer = 0})
-getElement("welcome-screen").addEventListener("click", removeLockscreen)
 
-function showLockscreen() {
-	getElement("welcome-screen").classList.remove("hidden")
-	getElement("welcome-screen").classList.remove("welcome-screen-transition")
-}
-function removeLockscreen(event) {
-	getElement("welcome-screen").classList.add("welcome-screen-transition");
-	lockscreenTimer = 0;
-	setTimeout(()=>{getElement("welcome-screen").classList.add("hidden")}, 300)
-}
 
 
 // CALENDAR ///////////////////////////////////////////////////////////////////////////////

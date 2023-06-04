@@ -31,11 +31,11 @@
 
   <!-- CLOCK -->
 	<div class="fixed block desktop-clock unselectable" id="desktop-clock-container">
-		<div class="desktop-clock-time unselectable relative" id="desktop-clock-time">9:50</div>
-		<div class="desktop-clock-date unselectable relative" id="desktop-clock-date">Monday, January 1st 1900</div>
+		<div class="desktop-clock-time unselectable relative" id="desktop-clock-time"></div>
+		<div class="desktop-clock-date unselectable relative" id="desktop-clock-date"></div>
 	</div>
 
-	<div class="clockbottom unselectable" data-hasmax="false" id="clockoverlay"><p>HH:MM</p><p>dd.mm.yyyy</p></div>
+	<div class="clockbottom unselectable" data-hasmax="false" id="clockoverlay"><!--<p>HH:MM</p><p>dd.mm.yyyy</p>--></div>
   <!-- ANALOG CLOCK -->
 	<analog-clock style="visibility: visible;">
 		<clock-handle class="seconds" id="chs" style="--rotation: 0deg;"></clock-handle>
@@ -119,13 +119,6 @@
 	</div>
 	<a class="sidebar-opener right" id="sidebar-right-opener">&lt;</a>
 
-  <!-- Welcome screen -->
-  <div class="welcome-screen fixed" id="welcome-screen">
-		<div class="lockscreen-clock-container fixed">
-			<p class="lockscreen-clock relative" id="lockscreen-clock">test</p>
-			<p class="lockscreen-date relative font-24" id="lockscreen-date">test</p>
-		</div>
-  </div>
 	<div id="snapping-prev" class="fixed block snapping-preview-full-hidden snapping-preview-full"></div>
 		<!-- DESKTOP SYMBOL CONTAINER -->
 		<div class="dsc-outer" id="dsc-outer">
