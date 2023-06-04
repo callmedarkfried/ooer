@@ -1,4 +1,6 @@
 # Devlog
+### Day 45
+- Fixed weird z-index, now only taskbar remains in foreground
 
 ### Day 44
 - Desktop symbols are now placed dynamically.

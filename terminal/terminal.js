@@ -8,7 +8,7 @@ function terminalMain() {
     let pathelement     = get("path");
     let recentTerminalCommands = [];
     let recentIndex = -1;
-    terminallabel.dataset.path = "C>Users/Documents"; //This is the filepath
+    terminallabel.dataset.path = "C>Users/admin/Documents"; //This is the filepath
     terminalinput.dataset.rand = Math.round(Math.random() * 100000000);
     terminalinput.id = terminalinput.id + terminalinput.dataset.rand;
     terminallabel.id = terminallabel.id + terminalinput.dataset.rand;

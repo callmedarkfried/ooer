@@ -158,7 +158,8 @@ function closeDesktopFolder(event, submenu, symbol, darken) {
 	submenu.classList.remove("desktop-folder-open");
 	symbol.style["z-index"] = null;
 	symbol.dataset.open = false;
-	darken.remove()
+	darken.remove();
+	getElement("dsc-outer").style["z-index"] = -1
 }
 
 /**
@@ -181,12 +182,13 @@ function desktopSymbolClicked(event) {
 		parent.dataset.open = true;
 
 		const darken = create("div", {
-			classList: ["folder-bg", "fixed", "block"],
-			id: "submenu-darken",
-			eventListener: {click: (e)=>{closeDesktopFolder(e, submenu, parent, darken)}}
+	 	classList: ["folder-bg", "fixed", "block"],
+		 	id: "submenu-darken",
+		 	eventListener: {click: (e)=>{closeDesktopFolder(e, submenu, parent, darken)}}
 		})
 		getElement("desktop-symbol-container").appendChild(darken);
 		submenu.classList.add("desktop-folder-open");
+		getElement("dsc-outer").style["z-index"] = 10;
 		parent.style["z-index"] = 10;
 	}
 }

@@ -476,9 +476,6 @@ clock-handle.hours {
 	row-gap: 1dvh;
 	column-gap: 1dvw;
 	z-index: revert-layer;
-	overflow-y: scroll;
-	scrollbar-width: thin;
-	overflow-x: hidden;
 }
 
 desktop-symbol {
@@ -551,5 +548,9 @@ a.abort-button {
 	right: 36px;
 	top: 36px;
 	line-height: 14px;
+	cursor: pointer;
+}
 
+a.abort-button:hover {
+	background-color: rgba(69, 69, 69, 0.3);;
 }

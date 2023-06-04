@@ -60,6 +60,7 @@ Util.getElement("snapping-prev").addEventListener("click", Util.closeStartMenu)
 Util.getElement("desktop-clock-container").addEventListener("mousedown", Util.closeStartMenu)
 Util.getElement("widget-body-notes").addEventListener("mousedown", Util.closeStartMenu)
 Util.getElement("widget-body-friends").addEventListener("mousedown", Util.closeStartMenu)
+Util.getElement("dsc-outer").addEventListener("mousedown", Util.closeStartMenu)
 Clock.initCalendar();
 
 Util.getElement("taskbar-search").addEventListener("mouseup", StartMenu.searchAreaHandler);
