@@ -44,7 +44,7 @@ function addWindow(args) {
 	// Special window commands are dealt with here
 	let cmd = args.command;
 	// Its horrendous
-	/* For "SystemRequestSetting":
+	/* For "RequestSetting":
 	The settings window is requested by the client and served by the server
 	with the special command for the specific settings category.
 	This then makes another request from the server to grab the actual settings
@@ -52,16 +52,16 @@ function addWindow(args) {
 	in other words: its a bit like the olympic torch. or a joint.
 	things get passed around several times and shits on fire.
 	*/
-	if (cmd) {
-		cmd = cmd.split(";")
-		for (let c of cmd) {
-			console.log(c)
-			const cmdargs = c.split("~");
-			if (cmdargs[0]=="SystemRequestSetting"){
-				requestSettings(cmdargs[1], 'category', w.windowObject)
-			}
+	let cmdnames = cmd.match(/^\w*(?=:)/g);
+	let cmdargs = cmd.match(/(?<=:)\w*(?=;)/g)
+	for (let c in cmdnames) {
+		switch (cmdnames[c]) {
+			case "RequestSetting": 
+				requestSettings(cmdargs[c], 'category', w.windowObject);
+				break
 		}
 	}
+	
 	
 }
 

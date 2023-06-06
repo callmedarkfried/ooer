@@ -1,5 +1,9 @@
 # Devlog
 
+### Day 49
+- A problem has been identified, i am too lazy to fix it. When server connection is lost and reestablished, another set of desktop symbols is added. 
+- Changed settings. wahoo.
+
 ### Day 47
 - Now using pseudo elements for text clocks for no goddamn reason. Thought it would cut down on the amount of code, benefits were minimal. But it works
 - Removed the lockscreen, that was a stupid decision

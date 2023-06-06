@@ -243,7 +243,6 @@ function reqSettingsSub(socket, msg) {
 
 function serveSettings(msg, socket) {
 	const sub = msg.page!=undefined?msg.page:"appearance"
-	console.log(sub)
 	const js = undefined;// `alert("ooo");`
 	socket.emit("add_window", {
 		title: "Settings",
@@ -252,7 +251,7 @@ function serveSettings(msg, socket) {
 		windowClass: "settingswindow",
 		selected: sub,
 		js: js,
-		command: `SystemRequestSetting~${sub}`
+		command: `RequestSetting:${sub};`
 	});
 	let reqS = msg.requested || "appearance";
 	
